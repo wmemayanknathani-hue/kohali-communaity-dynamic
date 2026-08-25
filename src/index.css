@@ -1,0 +1,193 @@
+@import "tailwindcss";
+@source "../src";
+@import "tw-animate-css";
+
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --font-display: 'Cinzel', serif;
+  --font-body: "Mukta", sans-serif;
+  --font-heading: "Cinzel", serif;
+  --font-marathi: "Yatra One", cursive;
+  --font-short: "Cormorant Garamond", serif;
+}
+
+:root {
+  --radius: 0.75rem;
+  /* Deep maroon red primary + cream background + gold accent (matching reference site) */
+  --background: oklch(0.975 0.022 75);          /* warm cream */
+  --foreground: oklch(0.25 0.08 30);            /* deep maroon text */
+  --surface: oklch(0.96 0.028 70);
+  --surface-foreground: oklch(0.25 0.08 30);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.08 30);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.08 30);
+  --primary: #4a0b1a;               /* deep maroon red #8B1A1F */
+  --primary-foreground: oklch(0.99 0.005 80);
+  --secondary: oklch(0.72 0.14 75);             /* warm gold */
+  --secondary-foreground: oklch(0.25 0.08 30);
+  --accent: oklch(0.72 0.14 75);                /* gold accent */
+  --accent-foreground: oklch(0.25 0.08 30);
+  --muted: oklch(0.94 0.022 75);
+  --muted-foreground: oklch(0.45 0.05 40);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.985 0.012 80);
+  --border: oklch(0.88 0.025 70);
+  --input: oklch(0.88 0.025 70);
+  --ring: oklch(0.38 0.15 25);
+
+  --gradient-hero: linear-gradient(135deg, oklch(0.3 0.12 25) 0%, oklch(0.4 0.16 28) 50%, oklch(0.48 0.18 32) 100%);
+  --gradient-warm: linear-gradient(180deg, oklch(0.975 0.022 75) 0%, oklch(0.95 0.035 65) 100%);
+  --shadow-soft: 0 4px 20px -8px oklch(0.38 0.15 25 / 0.3);
+  --shadow-elegant: 0 20px 50px -20px oklch(0.38 0.15 25 / 0.4);
+
+  /* core brand vars */
+  --maroon-950:#2c050d;
+  --maroon-900:#4a0b1a;
+  --maroon-850:#5c0f21;
+  --maroon-800:#6f1327;
+  --maroon-700:#8c182f;
+  --gold-700:#9c7220;
+  --gold-600:#b8862c;
+  --gold-500:#d4af37;
+  --gold-400:#e6c765;
+  --gold-300:#f0d585;
+  --gold-100:#fbf0d0;
+  --cream:#fbf3e2;
+  --paper:#fffbf0;
+  --ink:#2a0810;
+  --text-muted:#6b3a45;
+  --shadow-maroon:0 22px 55px -22px rgba(44,5,13,0.5);
+  --shadow-gold: 0 0 0 1px rgba(212,175,55,0.5), 0 18px 40px -18px rgba(44,5,13,0.55);
+
+  /* additional brand vars*/
+  --maroon-925:#3d0a16;       
+  --maroon-910:#3d000f;       
+  --maroon-black:#1a0104;     
+  --ivory-100:#fff5e7;        
+  --gold-text-alt:#e8c468;    
+  --cream-text:#f5e6c8;       
+  --maroon-icon-ink:#3b0a0a;  
+  --service-icon-from:#6b1024;
+  --service-icon-to:#3d0912;  
+  --gold-stroke:#d4a847;      
+  --gold-soft:rgba(212,175,55,0.35); 
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-feature-settings: "kern";
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+}
+.script-heading {
+    font-family: 'Yatra One', cursive;
+    color: #f0d585;
+    text-shadow: 0 2px 26px rgba(212, 175, 55, 0.28);
+}
+.script-heading2 {
+    font-family: 'Yatra One', cursive;
+    color: var(--maroon-700);
+    text-shadow: 0 2px 26px rgba(212, 175, 55, 0.28);
+}
+@utility gradient-hero {
+  background-image: var(--gradient-hero);
+}
+@utility gradient-warm {
+  background-image: var(--gradient-warm);
+}
+@utility shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+@utility shadow-elegant {
+  box-shadow: var(--shadow-elegant);
+}
+@utility text-balance {
+  text-wrap: balance;
+}
+
+.arch-card {
+  border-radius: 28px 28px 10px 10px;
+  overflow: hidden;
+  clip-path: path(
+    "M0,40 C0,17.9 17.9,0 40,0 L calc(100% - 40px),0 C calc(100% - 17.9px),0 100%,17.9 100%,40 L 100%,100% L 0,100% Z"
+  );
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+.arch-card--sm {
+  border-radius: 20px 20px 8px 8px;
+}
+.scroll-row {
+  scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Toran — zigzag temple-bunting divider, reused as the site-wide connective motif */
+.toran-divider {
+  height: 10px;
+  width: 100%;
+  opacity: 0.85;
+  background-image: linear-gradient(135deg, #d4af37 25%, transparent 25.5%),
+    linear-gradient(-135deg, #d4af37 25%, transparent 25.5%);
+  background-size: 16px 16px;
+}
+
+/* Soft ambient glows behind sections, gives depth without needing images */
+.glow-gold {
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.22), transparent 70%);
+  filter: blur(50px);
+}
+.glow-maroon {
+  background: radial-gradient(circle, rgba(139, 20, 43, 0.18), transparent 70%);
+  filter: blur(50px);
+}
+
+/* Faint repeating diagonal grain, used behind dark sections for texture */
+.texture-grain {
+  background-image: repeating-linear-gradient(60deg, rgba(212, 175, 55, 0.05) 0 1.5px, transparent 1.5px 26px),
+    repeating-linear-gradient(-60deg, rgba(212, 175, 55, 0.05) 0 1.5px, transparent 1.5px 26px);
+}
