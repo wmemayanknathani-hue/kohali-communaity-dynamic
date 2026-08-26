@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/kohali-logo.png";
 import {
   Phone,
   ShieldCheck,
@@ -175,8 +176,8 @@ export function LoginPage() {
 
         {/* ---- hero: logo + heading sit directly on the page background ---- */}
         <div className="text-center px-1 pb-6 shrink-0">
-          <div className="relative mx-auto mb-3.5 grid h-[58px] w-[58px] place-items-center rounded-full border-2 border-[var(--gold-100)]/60 bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-[0_6px_18px_rgba(0,0,0,0.3)]">
-            <span className="kc-font-display text-[19px] font-extrabold text-[var(--maroon-950)]">KS</span>
+          <div className="relative mx-auto mb-3.5 grid h-[70px] w-[70px] place-items-center rounded-full border-2 border-[var(--gold-100)]/60 bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-[0_6px_18px_rgba(0,0,0,0.3)]">
+            <img src={logo} alt="logo" />
           </div>
           <h1 className="kc-font-display text-[21px] font-extrabold text-white tracking-wide">
             Kohali Samaj

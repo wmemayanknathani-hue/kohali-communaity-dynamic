@@ -9,33 +9,9 @@ import {
   ChevronRight,
   Wallet,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-
-/* ============================= SECTION HEADER ============================= */
-
-function SectionHeader({ eyebrow, title, actionLabel, actionTo }: { eyebrow: string; title: string; actionLabel?: string; actionTo?: string }) {
-  return (
-    <div className="mb-3.5 flex items-end justify-between">
-      <div className="flex items-center gap-2">
-        <span className="h-4 w-1 rounded-full bg-[var(--gold-500)]" />
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--gold-600)]">{eyebrow}</p>
-          <h3 className="mt-0.5 text-[18px] md:text-[20px] lg:text-[22px] font-extrabold tracking-tight text-[var(--maroon-700)] font-['Yatra_One',cursive]">{title}</h3>
-        </div>
-      </div>
-      {actionLabel && actionTo && (
-        <Link
-          to={actionTo}
-          className="kc-btn-shine group flex items-center gap-0.5 rounded-full bg-[linear-gradient(120deg,var(--maroon-800),var(--maroon-950))] px-3 py-1.5 text-[11px] md:text-xs font-bold text-[var(--gold-300)] no-underline shadow-[0_6px_16px_-6px_rgba(59,10,22,0.55)] transition-transform duration-200 hover:scale-105 active:scale-95"
-        >
-          {actionLabel}
-          <ChevronRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
-        </Link>
-      )}
-    </div>
-  );
-}
-
+// import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import SectionHeader from "../SectionHeader";
 
 /* ============================= MOTION / MOTIF (brand-consistent) ============================= */
 
@@ -152,6 +128,7 @@ function relationIcon(relation: string) {
 /* ============================= PAGE ============================= */
 
 export default function Family() {
+  const navigate = useNavigate();
   const totalMembers = members.length;
   const earningCount = 2;
 
@@ -160,23 +137,17 @@ export default function Family() {
       <MotionStyles />
 
       <div className="mx-auto w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
-        {/* ---- Header ---- */}
-        <div className="mx-auto flex w-full items-center gap-3 px-4 py-3.5 sm:px-6 md:max-w-3xl md:gap-4 md:px-8 md:py-5 lg:max-w-4xl lg:px-10 xl:max-w-5xl">
-          <button className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
-            <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px]" strokeWidth={2.2} />
-          </button>
-
-          <div className="text-center">
-            <div className="text-[17px] font-bold text-[var(--maroon-900)] md:text-[20px] lg:text-[22px]">
-              My Family
-            </div>
-          </div>
-        </div>
-
+        
         {/* ---- Family Overview — hero membership-card treatment ---- */}
         <div className="px-4 sm:px-6 md:px-8 lg:px-10">
-          <SectionHeader eyebrow="Explore" title="Family Overview"/>
-          
+          {/* ---- Header ---- */}
+           <div className="mt-5 mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl">
+              <SectionHeader eyebrow="Explore" title="Family Overview"/>
+    
+              <button onClick={() => navigate("/committee")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
+                <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
+              </button>
+            </div>
 
           <div className="relative mt-3">
             <div className="relative overflow-hidden rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_40%,var(--maroon-700)_100%)] p-4 shadow-[var(--shadow-maroon)] md:rounded-[26px] md:p-6">
@@ -192,7 +163,6 @@ export default function Family() {
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--gold-300)] md:text-[11px]">
                     Total members
                   </p>
-                  <p className="font-mr -mt-0.5 text-[11px] text-[var(--gold-300)]/75">एकूण सदस्य</p>
                   <p className="font-display mt-1.5 text-4xl font-bold text-white md:text-5xl">
                     {totalMembers}
                   </p>

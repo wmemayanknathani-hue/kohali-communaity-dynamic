@@ -1,5 +1,7 @@
 import type { ReactNode, FC } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import SectionHeader from "../SectionHeader";
+// import SectionHeader from "../SectionHeader";
 import {
   ChevronLeft,
   ChevronRight,
@@ -58,30 +60,6 @@ const defaultProfile: ProfileData = {
   },
 };
 
-// ---------- Motion styles (brand-consistent shimmer/pulse) ----------
-
-const MotionStyles = () => (
-  <style>{`
-    @keyframes kc-pulse-ring {
-      0%   { box-shadow: 0 0 0 0 rgba(212,175,55,0.55); }
-      100% { box-shadow: 0 0 0 10px rgba(212,175,55,0); }
-    }
-    @keyframes kc-shimmer {
-      0%   { transform: translateX(-120%) skewX(-15deg); }
-      100% { transform: translateX(220%) skewX(-15deg); }
-    }
-    .kc-edit-pulse { animation: kc-pulse-ring 2.2s ease-out infinite; }
-    .kc-row-shine { position: relative; overflow: hidden; }
-    .kc-row-shine::after {
-      content: "";
-      position: absolute; inset: 0;
-      width: 40%;
-      background: linear-gradient(115deg, transparent, rgba(255,255,255,0.4), transparent);
-      transform: translateX(-120%) skewX(-15deg);
-    }
-    .kc-row-shine:active::after { animation: kc-shimmer 0.6s ease forwards; }
-  `}</style>
-);
 
 // ---------- Warli motif — brand watermark, reused from the Home screen language ----------
 
@@ -119,14 +97,14 @@ interface ListRowProps {
 const ListRow: FC<ListRowProps> = ({ icon, label, value, first, href, external }) => {
   const content = (
     <>
-      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[11px] bg-[linear-gradient(155deg,var(--gold-100),var(--gold-300))] transition-transform duration-200 group-hover:scale-105 md:h-11 md:w-11 md:rounded-[13px]">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]  shadow-sm">
         <span className="text-[var(--maroon-800)]">{icon}</span>
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-[11.5px] text-[var(--text-muted)] md:text-[12.5px]">
+        <div className="font-display block text-[14px] font-bold text-[var(--ink)] md:text-[14px]">
           {label}
         </div>
-        <div className="truncate text-[14.5px] font-bold text-[var(--ink)] md:text-[16px]">
+        <div className="font-mr block text-[12px] text-[var(--text-muted)]">
           {value}
         </div>
       </div>
@@ -156,45 +134,28 @@ const ListRow: FC<ListRowProps> = ({ icon, label, value, first, href, external }
   return <div className={rowClasses}>{content}</div>;
 };
 
-const GroupLabel: FC<{ children: ReactNode }> = ({ children }) => (
-  <div className="mb-2 mt-6 flex items-center gap-2 px-1 md:mb-2.5">
-    <div className="h-[3px] w-[18px] rounded-full bg-[var(--gold-500)] md:w-[22px]" />
-    <span className="text-[12px] font-bold uppercase tracking-[0.1em] text-[var(--maroon-800)] md:text-[13px]">
-      {children}
-    </span>
-  </div>
-);
-
 // ---------- Main component ----------
 
 export default function Profile({
   profile = defaultProfile,
-  onBack,
   onEditProfile,
   onLogout,
 }: ProfileProps) {
   const waDigits = profile.contact.whatsapp.replace(/\D/g, "");
   const mobileDigits = profile.contact.mobile.replace(/\D/g, "");
+   const navigate = useNavigate();
 
   return (
     <div>
-      <MotionStyles />
 
       {/* Header */}
-      <Link to={`/`}>
-        <div className="mx-auto flex w-full items-center gap-3 px-4 py-3.5 sm:px-6 md:max-w-3xl md:gap-4 md:px-8 md:py-5 lg:max-w-4xl lg:px-10 xl:max-w-5xl">
-          <button
-            onClick={onBack}
-            aria-label="Go back"
-            className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]"
-          >
-            <ChevronLeft className="h-4 w-4 text-[var(--maroon-900)] md:h-5 md:w-5" />
+       <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
+          <SectionHeader eyebrow="Personal Info" title="My Profile"/>
+
+          <button onClick={() => navigate("/")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
+            <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
           </button>
-          <div className="text-[17px] font-bold text-[var(--maroon-900)] md:text-[20px] lg:text-[22px]">
-            My Profile
-          </div>
         </div>
-      </Link>
 
       {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto bg-[var(--cream)] px-4 pb-6 pt-2 [scrollbar-width:none] sm:px-6 md:px-8 md:pb-10 md:pt-4 lg:px-10 [&::-webkit-scrollbar]:hidden">
@@ -202,9 +163,10 @@ export default function Profile({
           {/* ===== Signature element: membership card ===== */}
           <div className="relative">
             <div className="relative overflow-hidden rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_38%,var(--maroon-700)_100%)] px-5 pb-6 pt-5 shadow-[var(--shadow-maroon)] md:rounded-[28px] md:px-8 md:pb-8 md:pt-7 lg:px-10">
-              {/* subtle dot texture for depth */}
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(240,213,133,0.9)_1px,transparent_1.3px)] bg-[length:16px_16px] opacity-[0.14] md:bg-[length:20px_20px]" />
-
+              {/* diagonal cross-hatch texture */}
+              <div
+                className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px),repeating-linear-gradient(-60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px)]"
+              />
               {/* foil shine streak */}
               <div className="pointer-events-none absolute -left-12 -top-20 h-64 w-28 rotate-[22deg] bg-[linear-gradient(90deg,transparent,rgba(240,213,133,0.22),transparent)] md:h-80 md:w-36" />
 
@@ -273,11 +235,11 @@ export default function Profile({
             </button>
           </div>
 
-          {/* ===== Info groups — stacked on phone/iPad portrait, side by side from lg (iPad Pro / landscape) ===== */}
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
+          {/*  Info groups */}
+          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-6 mt-5">
             {/* Contact — elevated list group, rows are tappable */}
             <div>
-              <GroupLabel>Contact Info</GroupLabel>
+              <SectionHeader eyebrow="Get in Touch" title="Contact Info" />
               <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
                 <ListRow
                   first
@@ -303,8 +265,8 @@ export default function Profile({
             </div>
 
             {/* Personal details — elevated list group */}
-            <div>
-              <GroupLabel>Personal Details</GroupLabel>
+            <div className="mt-5">
+              <SectionHeader eyebrow="About Me" title="Personal Details" />
               <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
                 <ListRow
                   first

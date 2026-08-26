@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>कोहळी समाज विकास मंडळ, नागपूर</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark-green:#123322;
+    --dark-green-2:#0e2a1c;
+    --olive:#7fae2e;
+    --olive-light:#9bcf49;
+    --cream:#faf6ea;
+    --cream-2:#f3ecd9;
+    --gold:#e7c873;
+    --ink:#1d2a20;
+    --muted:#5f6a5f;
+    --white:#ffffff;
+    --radius:10px;
+    --shadow:0 10px 30px rgba(18,51,34,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Noto Sans Devanagari','Poppins',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  img{max-width:100%;display:block;}
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  .container{max-width:1180px;margin:0 auto;padding:0 24px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:13px 26px;border-radius:6px;font-weight:600;font-size:14.5px;
+    border:none;cursor:pointer;transition:.25s;
+  }
+  .btn-primary{background:var(--olive);color:var(--white);}
+  .btn-primary:hover{background:var(--olive-light);}
+  .btn-outline{background:transparent;border:1.5px solid rgba(255,255,255,.6);color:var(--white);}
+  .btn-outline:hover{background:rgba(255,255,255,.12);}
+  .btn-outline-dark{background:transparent;border:1.5px solid var(--dark-green);color:var(--dark-green);}
+  .eyebrow{
+    text-align:center;color:var(--olive);font-weight:700;letter-spacing:.5px;
+    margin-bottom:10px;font-size:15px;
+  }
+  .eyebrow::before,.eyebrow::after{content:"◆◇";margin:0 10px;color:var(--gold);font-size:11px;}
+  .section{padding:70px 0;}
+  .section-head{text-align:center;margin-bottom:44px;}
+
+  /* ===== TOP BAR ===== */
+  .topbar{background:var(--dark-green-2);color:#cfe0cf;font-size:13px;padding:8px 0;}
+  .topbar .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+  .topbar-left,.topbar-right{display:flex;gap:22px;align-items:center;flex-wrap:wrap;}
+  .topbar-right{gap:14px;}
+  .topbar a:hover{color:var(--gold);}
+  .social-dot{
+    width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.12);
+    display:inline-flex;align-items:center;justify-content:center;font-size:11px;
+  }
+
+  /* ===== HEADER ===== */
+  header{background:var(--cream);padding:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.04);position:relative;z-index:20;}
+  header .container{display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand .logo{
+    width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--olive),var(--gold),var(--olive));
+    display:flex;align-items:center;justify-content:center;color:var(--dark-green);font-weight:800;font-size:11px;
+    border:3px solid var(--white);box-shadow:0 0 0 1px var(--gold);
+  }
+  .brand-text .t1{font-weight:800;color:var(--dark-green);font-size:19px;}
+  .brand-text .t2{font-size:12.5px;color:var(--muted);}
+  nav.mainnav ul{display:flex;gap:30px;}
+  nav.mainnav a{font-weight:600;font-size:14.5px;color:var(--ink);}
+  nav.mainnav a:hover{color:var(--olive);}
+  .header-cta{display:flex;align-items:center;gap:18px;}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;background:linear-gradient(100deg,rgba(14,42,28,.92) 30%,rgba(14,42,28,.35) 65%),url('https://picsum.photos/seed/hero-study/1400/650') center/cover no-repeat;color:var(--white);}
+  .hero-inner{padding:90px 0 100px;max-width:640px;position:relative;}
+  .hero-tags{color:var(--gold);font-weight:600;letter-spacing:1px;margin-bottom:16px;font-size:14px;}
+  .hero h1{font-size:44px;font-weight:800;line-height:1.25;margin-bottom:8px;}
+  .hero h1 span{color:var(--olive-light);}
+  .hero p{color:#dfe8de;margin:18px 0 26px;font-size:15.5px;max-width:480px;}
+  .hero-btns{display:flex;gap:14px;}
+  .hero-arrow{
+    position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;
+    background:rgba(255,255,255,.15);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:18px;cursor:pointer;
+  }
+  .hero-arrow.left{left:20px;}
+  .hero-arrow.right{right:20px;}
+
+  /* ===== ABOUT ===== */
+  .about-wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:60px;align-items:center;}
+  .about-collage{position:relative;}
+  .about-collage img{border-radius:14px;border:6px solid var(--white);box-shadow:var(--shadow);}
+  .collage-1{width:78%;}
+  .collage-2{width:60%;position:absolute;bottom:-40px;right:0;}
+  .collage-badge{
+    position:absolute;top:44%;left:60%;width:76px;height:76px;border-radius:50%;
+    background:var(--white);box-shadow:0 6px 18px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;
+  }
+  .collage-badge .dot{width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--olive),var(--gold),var(--olive));}
+  .about-text h2{font-size:32px;font-weight:800;color:var(--dark-green);margin-bottom:16px;}
+  .about-text p{color:var(--muted);margin-bottom:22px;font-size:15px;}
+  .about-list{display:grid;grid-template-columns:1fr 1fr;gap:14px 30px;margin-bottom:26px;}
+  .about-list li{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14.5px;color:var(--ink);}
+  .about-list li .ic{
+    width:30px;height:30px;border-radius:50%;background:var(--cream-2);color:var(--olive);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;
+  }
+
+  /* ===== STATS ===== */
+  .stats{background:var(--dark-green-2);padding:44px 0;
+    background-image:radial-gradient(circle at 10% 30%, rgba(255,255,255,.03) 0, transparent 40%);}
+  .stats .container{display:flex;justify-content:space-between;flex-wrap:wrap;gap:26px;text-align:center;}
+  .stat{flex:1;min-width:140px;color:#fff;}
+  .stat .ic{font-size:26px;margin-bottom:10px;}
+  .stat .num{font-size:26px;font-weight:800;color:var(--gold);}
+  .stat .lbl{font-size:13.5px;color:#cfe0cf;margin-top:4px;}
+
+  /* ===== INITIATIVES ===== */
+  .initiatives-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;}
+  .init-card{
+    background:var(--white);border-radius:var(--radius);padding:30px 20px;text-align:center;
+    box-shadow:var(--shadow);transition:.25s;
+  }
+  .init-card:hover{transform:translateY(-6px);}
+  .init-card .ic{
+    width:56px;height:56px;border-radius:50%;background:var(--cream-2);color:var(--olive);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;
+  }
+  .init-card h3{font-size:15.5px;font-weight:700;color:var(--dark-green);margin-bottom:10px;}
+  .init-card p{font-size:13px;color:var(--muted);margin-bottom:14px;}
+  .init-card .more{color:var(--olive);font-weight:700;font-size:13px;}
+
+  /* ===== EVENTS ===== */
+  .section-head-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:34px;}
+  .events-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;position:relative;}
+  .event-card{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+  .event-thumb{position:relative;height:130px;}
+  .event-thumb img{width:100%;height:100%;object-fit:cover;}
+  .event-date{
+    position:absolute;top:10px;left:10px;background:var(--white);border-radius:6px;padding:6px 10px;
+    text-align:center;font-weight:800;color:var(--dark-green);font-size:13px;line-height:1.2;
+  }
+  .event-body{padding:16px 18px;}
+  .event-body h4{font-size:14.5px;font-weight:700;color:var(--dark-green);margin-bottom:8px;}
+  .event-meta{font-size:12px;color:var(--muted);margin-bottom:12px;display:flex;flex-direction:column;gap:4px;}
+  .event-tag{
+    display:inline-block;font-size:11.5px;font-weight:700;color:var(--olive);
+    border:1px solid var(--olive);padding:4px 10px;border-radius:5px;
+  }
+  .carousel-arrow{
+    width:38px;height:38px;border-radius:50%;background:var(--olive);color:#fff;
+    display:flex;align-items:center;justify-content:center;position:absolute;top:50%;
+    transform:translateY(-50%);cursor:pointer;box-shadow:var(--shadow);
+  }
+  .carousel-arrow.left{left:-55px;}
+  .carousel-arrow.right{right:-55px;}
+  .events-wrap{position:relative;}
+
+  /* ===== GALLERY ===== */
+  .gallery-grid{display:grid;grid-template-columns:1.1fr 1fr 1.3fr 1fr 1.1fr;grid-template-rows:1fr 1fr;gap:12px;height:340px;}
+  .gallery-grid img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+  .g5{grid-row:1/3;}
+  .gallery-btn-wrap{text-align:center;margin-top:28px;}
+
+  /* ===== COMMITTEE ===== */
+  .committee-grid{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;}
+  .member-card{
+    background:var(--white);border-radius:var(--radius);width:180px;text-align:center;padding:0 0 18px;
+    box-shadow:var(--shadow);overflow:hidden;
+  }
+  .member-card.featured{border:2px solid var(--olive);}
+  .member-photo{
+    height:170px;background:var(--cream-2);display:flex;align-items:center;justify-content:center;
+    color:var(--dark-green-2);font-size:64px;overflow:hidden;
+  }
+  .member-photo img{width:100%;height:100%;object-fit:cover;}
+  .member-role{color:var(--olive);font-weight:700;font-size:11.5px;margin:14px 0 4px;letter-spacing:.5px;}
+  .member-name{font-weight:700;font-size:13.5px;color:var(--dark-green);}
+  .member-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .committee-btn-wrap{text-align:center;margin-top:30px;}
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials{background:var(--cream-2);}
+  .test-wrap{display:flex;align-items:center;gap:26px;position:relative;}
+  .test-card{
+    background:var(--white);border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);flex:1;
+  }
+  .test-card .quote-ic{color:var(--gold);font-size:30px;font-weight:800;margin-bottom:10px;}
+  .test-card p{color:var(--muted);font-size:14.5px;margin-bottom:18px;}
+  .test-author{font-weight:700;color:var(--dark-green);font-size:14px;}
+  .test-author span{display:block;font-weight:400;color:var(--muted);font-size:12.5px;}
+
+  /* ===== CTA ===== */
+  .cta-band{background:var(--dark-green-2);color:#fff;padding:50px 0;}
+  .cta-band .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:28px;}
+  .cta-band h2{font-size:24px;font-weight:800;margin-bottom:8px;}
+  .cta-band p{color:#cfe0cf;font-size:14px;}
+  .cta-left .btns{display:flex;gap:14px;margin-top:20px;}
+  .cta-icons{display:flex;gap:34px;}
+  .cta-icons .item{text-align:center;font-size:12.5px;color:#cfe0cf;}
+  .cta-icons .ic{
+    width:52px;height:52px;border-radius:50%;background:var(--olive);color:#fff;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:20px;
+  }
+
+  /* ===== NEWS ===== */
+  .news-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;}
+  .news-feature{border-radius:var(--radius);overflow:hidden;position:relative;box-shadow:var(--shadow);}
+  .news-feature img{width:100%;height:280px;object-fit:cover;}
+  .news-feature-overlay{
+    position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(14,42,28,.92),transparent);
+    padding:60px 22px 20px;color:#fff;
+  }
+  .news-feature-overlay h3{font-size:17px;font-weight:700;margin-bottom:6px;}
+  .news-feature-overlay p{font-size:13px;color:#dbe6db;margin-bottom:10px;}
+  .news-date-badge{
+    position:absolute;top:14px;left:14px;background:var(--white);border-radius:6px;padding:8px 12px;
+    text-align:center;font-weight:800;color:var(--dark-green);font-size:12.5px;line-height:1.2;
+  }
+  .news-list-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #e6e0cf;}
+  .news-list-item img{width:90px;height:70px;object-fit:cover;border-radius:8px;flex-shrink:0;}
+  .news-list-item .date{font-size:11.5px;color:var(--olive);font-weight:700;margin-bottom:4px;}
+  .news-list-item h4{font-size:14.5px;font-weight:700;color:var(--dark-green);margin-bottom:6px;}
+  .news-list-item .more{font-size:12px;color:var(--muted);font-weight:600;}
+  .link-more{color:var(--olive);font-weight:700;}
+
+  /* ===== PARTNERS ===== */
+  .partners-row{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+    background:var(--white);border-radius:var(--radius);padding:26px 40px;box-shadow:var(--shadow);
+  }
+  .partners-row .p-logo{font-weight:800;font-size:18px;color:var(--dark-green);opacity:.75;}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--dark-green-2);color:#cfe0cf;padding:56px 0 0;}
+  .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:36px;padding-bottom:36px;}
+  .footer-brand{display:flex;gap:12px;margin-bottom:14px;}
+  .footer-brand .logo{
+    width:44px;height:44px;border-radius:50%;background:conic-gradient(var(--olive),var(--gold),var(--olive));flex-shrink:0;
+  }
+  .footer-brand .t1{color:#fff;font-weight:800;font-size:15.5px;}
+  footer p.desc{font-size:13px;color:#a9bba9;margin-top:10px;line-height:1.7;}
+  .footer-social{display:flex;gap:10px;margin-top:18px;}
+  .footer-social .social-dot{background:rgba(255,255,255,.08);}
+  footer h5{color:#fff;font-weight:700;margin-bottom:16px;font-size:15px;}
+  footer ul li{margin-bottom:10px;font-size:13.5px;}
+  footer ul li a:hover{color:var(--gold);}
+  .footer-contact li{display:flex;gap:10px;margin-bottom:14px;font-size:13.5px;align-items:flex-start;}
+  .footer-bottom{
+    border-top:1px solid rgba(255,255,255,.08);padding:18px 0;display:flex;justify-content:space-between;
+    font-size:12.5px;color:#8ea18e;flex-wrap:wrap;gap:8px;
+  }
+
+  @media(max-width:1000px){
+    .about-wrap{grid-template-columns:1fr;}
+    .initiatives-grid{grid-template-columns:repeat(3,1fr);}
+    .events-grid{grid-template-columns:repeat(2,1fr);}
+    .gallery-grid{grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;height:auto;}
+    .news-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    nav.mainnav{display:none;}
+  }
+  @media(max-width:600px){
+    .initiatives-grid,.events-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:30px;}
+    .stats .container{justify-content:center;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="container">
+    <div class="topbar-left">
+      <span>स्थापना: 1995 | सेवा, शिक्षण, संस्कार आणि विकास</span>
+    </div>
+    <div class="topbar-right">
+      <a href="mailto:info@kohalisamaj.org">✉ info@kohalisamaj.org</a>
+      <a href="tel:07121234567">☎ 0712-1234567</a>
+      <span class="social-dot">f</span>
+      <span class="social-dot">in</span>
+      <span class="social-dot">▶</span>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <div class="brand">
+      <div class="logo">कोहळी</div>
+      <div class="brand-text">
+        <div class="t1">कोहळी समाज विकास मंडळ</div>
+        <div class="t2">नागपूर</div>
+      </div>
+    </div>
+    <nav class="mainnav">
+      <ul>
+        <li><a href="#">मुख्यपृष्ठ</a></li>
+        <li><a href="#">आमच्याविषयी</a></li>
+        <li><a href="#">उपक्रम</a></li>
+        <li><a href="#">वार्तांदे</a></li>
+        <li><a href="#">सहाय्यता</a></li>
+        <li><a href="#">संपर्क</a></li>
+      </ul>
+    </nav>
+    <div class="header-cta">
+      <a href="#" class="btn btn-primary">सदस्य व्हा</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-arrow left">&#8592;</div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-tags">• एकता • शिक्षण • विकास • सेवा •</div>
+      <h1>आजचु महत्वाचे<br><span>सदस्य व्हा,</span></h1>
+      <p>एकत्र येऊ, शिघु आणि समाजाचा विकास पडावु.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-primary">सदस्य व्हा →</a>
+        <a href="#" class="btn btn-outline">आम्हापाहिलता →</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-arrow right">&#8594;</div>
+</section>
+
+<!-- ABOUT -->
+<section class="section">
+  <div class="container">
+    <div class="about-wrap">
+      <div class="about-collage">
+        <img class="collage-1" src="https://picsum.photos/seed/temple-gate/560/380" alt="">
+        <img class="collage-2" src="https://picsum.photos/seed/classroom-kids/420/320" alt="">
+        <div class="collage-badge"><div class="dot"></div></div>
+      </div>
+      <div class="about-text">
+        <div class="eyebrow" style="text-align:left;">|| आम्च्याविहिल ||</div>
+        <h2>आमच्याविषयी</h2>
+        <p>कोहळी समाज विकास मंडळ नागपूर हे समाजबांधवांना एकत्र आणून शिक्षण, रोजगार, सामाजिक सहाय्य आणि सर्वंगीण विकासासाठी अविरत कार्य करणारी संस्था आहे.</p>
+        <p>विद्यापाठीच्या वारसा जपत, आम्ही उद्याचा दिशा रोवत नव्या वाटा पडवत असतो.</p>
+        <ul class="about-list">
+          <li><span class="ic">🎓</span> शिक्षण आणि मार्गदर्शन</li>
+          <li><span class="ic">👥</span> रोजगार व उद्योजकता</li>
+          <li><span class="ic">🕊</span> सामाजिक न्याय</li>
+          <li><span class="ic">📖</span> संस्कृती आणि संस्कार</li>
+          <li><span class="ic">👩</span> महिला सक्षमीकरण</li>
+          <li><span class="ic">🤝</span> आरोग्य आणि जनजागृती</li>
+        </ul>
+        <a href="#" class="btn btn-primary">अधिक वाचा</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="container">
+    <div class="stat"><div class="ic">📍</div><div class="num">40+</div><div class="lbl">वर्षांची सेवा</div></div>
+    <div class="stat"><div class="ic">🎫</div><div class="num">5000+</div><div class="lbl">नोंदणीकृत सदस्य</div></div>
+    <div class="stat"><div class="ic">📈</div><div class="num">300+</div><div class="lbl">कार्यक्रम आयोजित</div></div>
+    <div class="stat"><div class="ic">🎓</div><div class="num">1000+</div><div class="lbl">विद्यार्थ्यांना मदत</div></div>
+    <div class="stat"><div class="ic">📷</div><div class="num">100+</div><div class="lbl">गावे व परिसर</div></div>
+  </div>
+</div>
+
+<!-- INITIATIVES -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">समाज विकासासाठी आमचे उपक्रम</div>
+    </div>
+    <div class="initiatives-grid">
+      <div class="init-card">
+        <div class="ic">🎓</div>
+        <h3>शैक्षणिक उपक्रम</h3>
+        <p>विद्यार्थ्यांसाठी मार्गदर्शन, शिष्यवृत्ती आणि गुणवत्तापूर्ण शिक्षण संधी.</p>
+        <a href="#" class="more">अधिक माहितीसाठी →</a>
+      </div>
+      <div class="init-card">
+        <div class="ic">💼</div>
+        <h3>रोजगार व उद्योजकता</h3>
+        <p>रोजगार मेळावे, प्रशिक्षण आणि स्वयंरोजगार प्रोत्साहन कार्यक्रम.</p>
+        <a href="#" class="more">अधिक माहितीसाठी →</a>
+      </div>
+      <div class="init-card">
+        <div class="ic">👩‍👧</div>
+        <h3>महिला सक्षमीकरण</h3>
+        <p>महिलांसाठी कौशल्य वाढ, प्रशिक्षण आणि आर्थिक सक्षमीकरण कार्यक्रम.</p>
+        <a href="#" class="more">अधिक माहितीसाठी →</a>
+      </div>
+      <div class="init-card">
+        <div class="ic">❤️</div>
+        <h3>आरोग्य व जनजागृती</h3>
+        <p>मोफत आरोग्य शिबिरे, तपासणी आणि जनजागृती कार्यक्रम.</p>
+        <a href="#" class="more">अधिक माहितीसाठी →</a>
+      </div>
+      <div class="init-card">
+        <div class="ic">🎭</div>
+        <h3>संस्कृती व संस्कार</h3>
+        <p>पारंपरिक सण, सांस्कृतिक कार्यक्रम आणि संस्कार वर्गांचे आयोजन.</p>
+        <a href="#" class="more">अधिक माहितीसाठी →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="section" style="background:var(--cream-2);">
+  <div class="container">
+    <div class="section-head-row">
+      <div class="eyebrow" style="margin:0;">येणारे कार्यक्रम</div>
+      <a href="#" class="btn btn-outline-dark">सर्व कार्यक्रम पहा</a>
+    </div>
+    <div class="events-wrap">
+      <div class="carousel-arrow left">&#8592;</div>
+      <div class="events-grid">
+        <div class="event-card">
+          <div class="event-thumb">
+            <img src="https://picsum.photos/seed/event-seminar/300/180" alt="">
+            <div class="event-date">15<br>जून</div>
+          </div>
+          <div class="event-body">
+            <h4>स्पर्धा परीक्षा मार्गदर्शन शिबिर</h4>
+            <div class="event-meta"><span>📍 नागपूर</span><span>🕒 सकाळी 10.00 वा.</span></div>
+            <span class="event-tag">शैक्षणिक</span>
+          </div>
+        </div>
+        <div class="event-card">
+          <div class="event-thumb">
+            <img src="https://picsum.photos/seed/blood-donation/300/180" alt="">
+            <div class="event-date">25<br>जून</div>
+          </div>
+          <div class="event-body">
+            <h4>रक्तदान शिबिर</h4>
+            <div class="event-meta"><span>📍 नागपूर</span><span>🕒 सकाळी 9.00 वा.</span></div>
+            <span class="event-tag">आरोग्य</span>
+          </div>
+        </div>
+        <div class="event-card">
+          <div class="event-thumb">
+            <img src="https://picsum.photos/seed/samaj-melava/300/180" alt="">
+            <div class="event-date">10<br>जुलै</div>
+          </div>
+          <div class="event-body">
+            <h4>समाज मेळावा 2024</h4>
+            <div class="event-meta"><span>📍 नागपूर</span><span>🕒 सायं. 5.00 वा.</span></div>
+            <span class="event-tag">सांस्कृतिक</span>
+          </div>
+        </div>
+        <div class="event-card">
+          <div class="event-thumb">
+            <img src="https://picsum.photos/seed/workshop-hall/300/180" alt="">
+            <div class="event-date">28<br>जून</div>
+          </div>
+          <div class="event-body">
+            <h4>कौशल्य विकास कार्यशाळा</h4>
+            <div class="event-meta"><span>📍 नागपूर</span><span>🕒 सकाळी 10.00 वा.</span></div>
+            <span class="event-tag">प्रशिक्षण</span>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-arrow right">&#8594;</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">क्षणचित्रे</div>
+    </div>
+    <div class="gallery-grid">
+      <img src="https://picsum.photos/seed/gallery1/280/260" alt="">
+      <img src="https://picsum.photos/seed/gallery2/280/160" alt="">
+      <img class="g5" src="https://picsum.photos/seed/gallery3/340/340" alt="">
+      <img src="https://picsum.photos/seed/gallery4/280/160" alt="">
+      <img src="https://picsum.photos/seed/gallery5/280/260" alt="">
+      <img src="https://picsum.photos/seed/gallery6/280/160" alt="">
+      <img src="https://picsum.photos/seed/gallery7/280/160" alt="">
+    </div>
+    <div class="gallery-btn-wrap"><a href="#" class="btn btn-primary">गॅलरी पहा</a></div>
+  </div>
+</section>
+
+<!-- COMMITTEE -->
+<section class="section" style="background:var(--cream-2);">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">कार्यकारिणी मंडळ</div>
+    </div>
+    <div class="committee-grid">
+      <div class="member-card featured">
+        <div class="member-photo"><img src="https://picsum.photos/seed/president-man/200/220" alt=""></div>
+        <div class="member-role">अध्यक्ष</div>
+        <div class="member-name">श्री. किरण पांडु कोहळी</div>
+      </div>
+      <div class="member-card">
+        <div class="member-photo">👤</div>
+        <div class="member-role">उपाध्यक्ष</div>
+        <div class="member-name">श्री. अमित जी कोहळी</div>
+      </div>
+      <div class="member-card">
+        <div class="member-photo">👤</div>
+        <div class="member-role">सचिव</div>
+        <div class="member-name">श्री. मोहित र. कोहळी</div>
+      </div>
+      <div class="member-card">
+        <div class="member-photo">👤</div>
+        <div class="member-role">कोषाध्यक्ष</div>
+        <div class="member-name">श्री. राजेंद्र एम. कोहळी</div>
+      </div>
+      <div class="member-card">
+        <div class="member-photo">👤</div>
+        <div class="member-role">सदस्य</div>
+        <div class="member-name">श्री. पुरुष बी. कोहळी</div>
+      </div>
+    </div>
+    <div class="committee-btn-wrap"><a href="#" class="btn btn-primary">सर्व सदस्य पहा</a></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">समाजाचा आवाज</div>
+    </div>
+    <div class="test-wrap">
+      <div class="carousel-arrow left" style="position:static;transform:none;flex-shrink:0;">&#8592;</div>
+      <div class="test-card">
+        <div class="quote-ic">"</div>
+        <p>मंडळामुळे मला शिष्यवृत्ती आर्थिक मदत मिळाली आणि माझे स्वप्न पूर्ण करण्यासाठी खुप मिळाली.</p>
+        <div class="test-author">- पुजा कोहळी<span>विद्यार्थिनी</span></div>
+      </div>
+      <div class="test-card">
+        <div class="quote-ic">"</div>
+        <p>समाजाच्या एकत्रितुडे आम्ही वाढाबाच्या प्रगती केली आणि आमच्या रोजगार शिबिरा विकसित आहेत.</p>
+        <div class="test-author">- महेश कोहळी<span>उद्योजक</span></div>
+      </div>
+      <div class="carousel-arrow right" style="position:static;transform:none;flex-shrink:0;">&#8594;</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="container">
+    <div class="cta-left">
+      <h2>चला, एकत्र येऊया आणि समाजाच्या प्रगतीचा भाग बनूया!</h2>
+      <p>आजव सदस्य व्हा आणि बदलाची मुख्यपात करा.</p>
+      <div class="btns">
+        <a href="#" class="btn btn-primary">सदस्य व्हा →</a>
+        <a href="#" class="btn btn-outline">संपर्क साधा →</a>
+      </div>
+    </div>
+    <div class="cta-icons">
+      <div class="item"><div class="ic">👥</div>एकता</div>
+      <div class="item"><div class="ic">🎓</div>शिक्षण</div>
+      <div class="item"><div class="ic">📈</div>विकास</div>
+      <div class="item"><div class="ic">🤝</div>सेवा</div>
+    </div>
+  </div>
+</div>
+
+<!-- NEWS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head-row">
+      <div class="eyebrow" style="margin:0;">ताव्या वात्म्या</div>
+      <a href="#" class="btn btn-outline-dark">सर्व वार्तांप पहा</a>
+    </div>
+    <div class="news-grid">
+      <div class="news-feature">
+        <div class="news-date-badge">20<br>मे</div>
+        <img src="https://picsum.photos/seed/felicitation-hall/600/400" alt="">
+        <div class="news-feature-overlay">
+          <h3>शैक्षणिक साहित्य वाटप कार्यक्रम यशस्वी संपन्न</h3>
+          <p>विद्यार्थ्यांना शैक्षणिक साहित्य वाटप कार्यक्रम मोठ्या उत्साहात पार पडला.</p>
+          <a href="#" class="link-more">वाचा पुढे →</a>
+        </div>
+      </div>
+      <div class="news-list">
+        <div class="news-list-item">
+          <img src="https://picsum.photos/seed/womens-training/160/120" alt="">
+          <div>
+            <div class="date">15 मे, 2024</div>
+            <h4>महिला बचत गट प्रशिक्षण शिबिर संम्न</h4>
+            <a href="#" class="more">अधिक वाचा →</a>
+          </div>
+        </div>
+        <div class="news-list-item">
+          <img src="https://picsum.photos/seed/health-camp/160/120" alt="">
+          <div>
+            <div class="date">10 मे, 2024</div>
+            <h4>आरोग्य तपासणी शिबिराला उस्मुर्त प्रतिसाद</h4>
+            <a href="#" class="more">अधिक वाचा →</a>
+          </div>
+        </div>
+        <div class="news-list-item">
+          <img src="https://picsum.photos/seed/samaj-prep/160/120" alt="">
+          <div>
+            <div class="date">05 मे, 2024</div>
+            <h4>समाज मेळावा 2024 ची तयारी पूर्ण</h4>
+            <a href="#" class="more">अधिक वाचा →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="eyebrow">आमचे सहकार्य</div>
+    <div class="partners-row">
+      <div class="p-logo">SWEEDU</div>
+      <div class="p-logo">Rotary</div>
+      <div class="p-logo">🦁 Lions</div>
+      <div class="p-logo">JCI Nagpur</div>
+      <div class="p-logo">सहयोगी संस्था</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="logo"></div>
+          <div>
+            <div class="t1">कोहळी समाज विकास मंडळ</div>
+            <div style="font-size:12.5px;color:#a9bba9;">नागपूर</div>
+          </div>
+        </div>
+        <p class="desc">सेवा, शिक्षण, संस्कार आणि विकास या ध्येयाद्वारे समाजबांधवांची एकत्रित प्रगतीसाठी आम्ही कार्यरत आहोत.</p>
+        <div class="footer-social">
+          <span class="social-dot">f</span>
+          <span class="social-dot">in</span>
+          <span class="social-dot">▶</span>
+          <span class="social-dot">wa</span>
+        </div>
+      </div>
+      <div>
+        <h5>त्वरित लिंक</h5>
+        <ul>
+          <li><a href="#">मुख्यपृष्ठ</a></li>
+          <li><a href="#">आमच्याविषयी</a></li>
+          <li><a href="#">उपक्रम</a></li>
+          <li><a href="#">गॅलरी</a></li>
+          <li><a href="#">संपर्क</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>उपक्रम</h5>
+        <ul>
+          <li><a href="#">शैक्षणिक उपक्रम</a></li>
+          <li><a href="#">रोजगार व उद्योजकता</a></li>
+          <li><a href="#">महिला सक्षमीकरण</a></li>
+          <li><a href="#">आरोग्य व जनजागृती</a></li>
+          <li><a href="#">संस्कृती व संस्कार</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>संपर्क माहिती</h5>
+        <ul class="footer-contact">
+          <li>📍 कोहळी समाज विकास मंडळ, नागपूर<br>हिंगणाघाट रस्ता रोड, नागपूर - 440001</li>
+          <li>☎ 0712-1234567</li>
+          <li>✉ info@kohalisamaj.org</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 कोहळी समाज विकास मंडळ, नागपूर. सर्व हक्क राखीव.</span>
+      <span>Designed with ❤️ for Samaj</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
