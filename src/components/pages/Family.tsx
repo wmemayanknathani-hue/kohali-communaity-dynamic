@@ -6,8 +6,8 @@ import {
   Crown,
   Heart,
   Sparkles,
-  ChevronRight,
-  Wallet,
+  // ChevronRight,
+  Wallet, Pencil,
 } from "lucide-react";
 // import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -40,26 +40,6 @@ function MotionStyles() {
   );
 }
 
-function HeroMotif({ className = "" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 160 160" fill="none" preserveAspectRatio="xMidYMid slice">
-      <g stroke="var(--gold-300)" strokeWidth="1.4" strokeLinecap="round" opacity="0.18">
-        <circle cx="128" cy="28" r="6" />
-        <path d="M128 34 L128 54" />
-        <path d="M128 40 L116 48" />
-        <path d="M128 40 L140 48" />
-        <path d="M128 54 L118 68" />
-        <path d="M128 54 L138 68" />
-        <circle cx="150" cy="76" r="3" />
-        <circle cx="104" cy="12" r="3" />
-        <circle cx="92" cy="34" r="4.5" />
-        <path d="M92 38.5 L92 52" />
-        <path d="M92 43 L84 49" />
-        <path d="M92 43 L100 49" />
-      </g>
-    </svg>
-  );
-}
 
 /* ============================= DATA ============================= */
 
@@ -133,7 +113,7 @@ export default function Family() {
   const earningCount = 2;
 
   return (
-    <div className="min-h-screen bg-[var(--cream)]">
+    <div className="">
       <MotionStyles />
 
       <div className="mx-auto w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
@@ -150,23 +130,20 @@ export default function Family() {
             </div>
 
           <div className="relative mt-3">
-            <div className="relative overflow-hidden rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_40%,var(--maroon-700)_100%)] p-4 shadow-[var(--shadow-maroon)] md:rounded-[26px] md:p-6">
-              {/* dot texture */}
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(240,213,133,0.9)_1px,transparent_1.3px)] bg-[length:16px_16px] opacity-[0.12]" />
-              {/* foil shine streak */}
-              <div className="pointer-events-none absolute -left-12 -top-16 h-56 w-28 rotate-[22deg] bg-[linear-gradient(90deg,transparent,rgba(240,213,133,0.2),transparent)]" />
-              {/* brand motif */}
-              <HeroMotif className="pointer-events-none absolute right-0 top-0 h-24 w-24 md:h-32 md:w-32" />
-
+            <div className="relative rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_40%,var(--maroon-700)_100%)] p-4 shadow-[var(--shadow-maroon)] md:rounded-[26px] md:p-6">
+               {/* diagonal cross-hatch texture */}
+                <div
+                  className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px),repeating-linear-gradient(-60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px)]"
+                />
               <div className="relative z-10 flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--gold-300)] md:text-[11px]">
+                  <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[var(--gold-300)] md:text-[11px]">
                     Total members
                   </p>
                   <p className="font-display mt-1.5 text-4xl font-bold text-white md:text-5xl">
                     {totalMembers}
                   </p>
-                  <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-500))] px-2.5 py-[3px] text-[10px] font-bold text-[var(--maroon-950)] shadow-sm md:text-[11px]">
+                  <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-500))] px-2.5 py-[3px] text-[12px] font-bold text-[var(--maroon-950)] shadow-sm md:text-[11px]">
                     <Sparkles className="h-3 w-3" />
                     Registered
                   </span>
@@ -174,6 +151,7 @@ export default function Family() {
                 <div className="kc-float flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] shadow-[0_6px_16px_rgba(0,0,0,0.3)] md:h-16 md:w-16">
                   <Users className="h-6 w-6 text-[var(--maroon-950)] md:h-7 md:w-7" strokeWidth={1.8} />
                 </div>
+                
               </div>
 
               {/* stat chips */}
@@ -183,24 +161,31 @@ export default function Family() {
                     <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--gold-300)]/20">
                       <GraduationCap className="h-3 w-3 text-[var(--gold-300)]" />
                     </span>
-                    <p className="text-[10.5px] font-semibold text-[var(--gold-100)] md:text-[11.5px]">Highest edu.</p>
+                    <p className="text-[10.5px] font-semibold text-[var(--gold-100)] md:text-[14px]">Highest Education</p>
                   </div>
-                  <p className="font-mr mt-1 text-[9.5px] text-[var(--gold-300)]/70">सर्वोच्च शिक्षण</p>
-                  <p className="font-display mt-1 text-[13.5px] font-semibold text-white md:text-[15px]">Post grad</p>
+                  <p className="font-display mt-1 text-[14px] font-semibold text-white md:text-[15px]">Post Graduation</p>
                 </div>
                 <div className="rounded-xl border border-[var(--gold-300)]/25 bg-[var(--maroon-950)]/45 px-3 py-2.5 md:px-4 md:py-3">
                   <div className="flex items-center gap-1.5">
                     <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[var(--gold-300)]/20">
                       <Wallet className="h-3 w-3 text-[var(--gold-300)]" />
                     </span>
-                    <p className="text-[10.5px] font-semibold text-[var(--gold-100)] md:text-[11.5px]">Earning</p>
+                    <p className="text-[10.5px] font-semibold text-[var(--gold-100)] md:text-[14px]">Earning</p>
                   </div>
-                  <p className="font-mr mt-1 text-[9.5px] text-[var(--gold-300)]/70">कमावता सदस्य</p>
-                  <p className="font-display mt-1 text-[13.5px] font-semibold text-white md:text-[15px]">
+                  <p className="font-display mt-1 text-[14px] font-semibold text-white md:text-[15px]">
                     {earningCount} members
                   </p>
                 </div>
               </div>
+
+              <br />
+                 {/* floating edit action, anchored to the card */}
+                <button
+                  aria-label="Edit profile"
+                  className="kc-edit-pulse absolute -bottom-5 -right-2 flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)] shadow-[var(--shadow-gold)] transition-transform duration-150 active:scale-95 md:-bottom-6 md:-right-3 md:h-14 md:w-14"
+                >
+                  <Pencil className="h-4.5 w-4.5 md:h-5 md:w-5" />
+                </button>
             </div>
           </div>
         </div>
@@ -236,9 +221,9 @@ export default function Family() {
 
 function MemberCard({
   name,
-  nameMr,
+  // nameMr,
   relation,
-  relationMr,
+  // relationMr,
   badgeVariant,
   photo,
   education,
@@ -247,52 +232,128 @@ function MemberCard({
   const isMaroon = badgeVariant === "maroon";
   const badgeClasses = isMaroon
     ? "text-[var(--maroon-800)] bg-[var(--gold-100)]"
-    : "text-[var(--gold-700)] bg-[var(--gold-300)]";
+    : "text-[var(--maroon-800)] bg-[var(--gold-100)]";
   const RelationIcon = relationIcon(relation);
 
   return (
-    <div className="group flex items-start gap-3 rounded-2xl bg-[var(--paper)] p-3.5 shadow-[0_6px_20px_-14px_rgba(74,11,26,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-14px_rgba(74,11,26,0.45)] md:p-4">
-      {photo ? (
-        <img
-          src={photo}
-          alt={name}
-          className="h-14 w-14 shrink-0 rounded-full object-cover ring-2 ring-[var(--gold-300)] md:h-16 md:w-16"
-        />
-      ) : (
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--gold-100)] ring-2 ring-[var(--gold-300)] md:h-16 md:w-16">
-          <span className="font-display text-lg font-semibold text-[var(--gold-700)]">
-            {name.charAt(0)}
-          </span>
-        </div>
-      )}
+    <div className="group relative overflow-hidden rounded-3xl border border-[var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_8px_30px_-18px_rgba(74,11,26,0.45)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--gold-400)]/50 hover:shadow-[0_18px_40px_-20px_rgba(74,11,26,0.5)]">
 
+  
+  <div className="relative p-4 md:p-5">
+
+    {/* Top section */}
+    <div className="flex items-center gap-3.5">
+
+      {/* Avatar */}
+      <div className="relative shrink-0">
+        <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[var(--gold-300)] via-[var(--gold-500)] to-[var(--gold-700)] opacity-60 blur-[2px]" />
+
+        {photo ? (
+          <img
+            src={photo}
+            alt={name}
+            className="relative h-16 w-16 rounded-full border-2 border-[var(--paper)] object-cover shadow-md md:h-[72px] md:w-[72px]"
+          />
+        ) : (
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--paper)] bg-gradient-to-br from-[var(--gold-100)] to-[var(--gold-200)] shadow-md md:h-[72px] md:w-[72px]">
+            <span className="font-display text-xl font-bold text-[var(--gold-700)]">
+              {name.charAt(0)}
+            </span>
+          </div>
+        )}
+
+        {/* Online/status style dot */}
+        <span className="absolute bottom-0.5 right-0.5 h-3 w-3 rounded-full border-2 border-[var(--paper)] bg-[var(--gold-500)]" />
+      </div>
+
+      {/* Name */}
       <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
-            <p className="font-display truncate text-[14px] font-semibold text-[var(--ink)] md:text-[15.5px]">
+            <p className="font-display truncate text-[15px] font-bold tracking-[-0.01em] text-[var(--ink)] md:text-[16px]">
               {name}
             </p>
-            <p className="font-mr truncate text-[11px] text-[var(--text-muted)] md:text-[12px]">{nameMr}</p>
+
+            {/* <p className="font-mr mt-0.5 truncate text-[14px] text-[var(--text-muted)] md:text-[12px]">
+              {nameMr}
+            </p> */}
           </div>
-          <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-[var(--gold-500)] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100" />
+
+          {/* Arrow */}
+          {/* <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--gold-300)]/50 bg-[var(--gold-100)]/50 text-[var(--gold-700)] transition-all duration-300 group-hover:bg-[var(--gold-500)] group-hover:text-white">
+            <ChevronRight
+              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+              strokeWidth={2.2}
+            />
+          </div> */}
         </div>
 
-        <span className={`mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium md:text-[10.5px] ${badgeClasses}`}>
-          <RelationIcon className="h-2.5 w-2.5 md:h-3 md:w-3" strokeWidth={2.4} />
-          {relation} <span className="font-mr">/ {relationMr}</span>
-        </span>
+        {/* Relation badge */}
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10.5px] font-semibold md:text-[11px] ${badgeClasses}`}
+        >
+          <RelationIcon
+            className="h-3 w-3"
+            strokeWidth={2.4}
+          />
 
-        <div className="mt-2 space-y-1.5">
-          <p className="flex items-center gap-1.5 text-[12px] text-[var(--ink)]/80 md:text-[12.5px]">
-            <GraduationCap className="h-3.5 w-3.5 shrink-0 text-[var(--gold-600)]" strokeWidth={2} />
-            <span className="truncate">{education}</span>
+          <span>{relation}</span>
+
+          {/* <span className="opacity-40">•</span> */}
+
+          {/* <span className="font-mr">{relationMr}</span> */}
+        </span>
+      </div>
+    </div>
+
+    {/* Details */}
+    <div className="grid grid-cols-1 gap-2.5 mt-2">
+
+      {/* Education */}
+      <div className="flex items-center gap-2.5 rounded-xl bg-[var(--gold-100)]/35 px-3 py-2 transition-colors duration-200 group-hover:bg-[var(--gold-100)]/55">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)]">
+          <GraduationCap
+            className="h-4 w-4 text-[var(--maroon-800)]"
+            strokeWidth={2.2}
+          />
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-[12px] font-medium uppercase tracking-wider text-[var(--text-muted)]">
+            Education
           </p>
-          <p className="flex items-center gap-1.5 text-[12px] text-[var(--ink)]/80 md:text-[12.5px]">
-            <Briefcase className="h-3.5 w-3.5 shrink-0 text-[var(--gold-600)]" strokeWidth={2} />
-            <span className="truncate">{occupation}</span>
+
+          <p className="truncate text-[14px] font-medium text-[var(--ink)] md:text-[12px]">
+            {education}
           </p>
         </div>
       </div>
+
+      {/* Occupation */}
+      <div className="flex items-center gap-2.5 rounded-xl bg-[var(--gold-100)]/35 px-3 py-2 transition-colors duration-200 group-hover:bg-[var(--gold-100)]/55">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)]">
+          <Briefcase
+            className="h-4 w-4 text-[var(--maroon-800)]"
+            strokeWidth={2.2}
+          />
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-[12px] font-medium uppercase tracking-wider text-[var(--text-muted)]">
+            Occupation
+          </p>
+
+          <p className="truncate text-[14px] font-medium text-[var(--ink)] md:text-[12px]">
+            {occupation}
+          </p>
+        </div>
+      </div>
+
     </div>
+  </div>
+
+  {/* Bottom accent */}
+  <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-[var(--gold-500)] to-[var(--gold-700)] transition-all duration-500 group-hover:w-full" />
+</div>
   );
 }

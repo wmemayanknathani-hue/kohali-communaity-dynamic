@@ -1,5 +1,5 @@
-import { ChevronRight, X, BellOff, CheckCheck } from "lucide-react";
-
+import { ChevronRight, X, BellOff, } from "lucide-react";
+import { Link } from "react-router-dom";
 export type NotificationCategory =
   | "notice"        // Latest notices
   | "event"         // Event notifications
@@ -28,8 +28,7 @@ const categoryLabel: Record<NotificationCategory, string> = {
   service: "सेवा",
 };
 
-// One accent color per category — used as a thin left bar + text color only,
-// not a filled pill. Keeps the list calm; color still carries meaning.
+// One accent color per category 
 const categoryAccent: Record<NotificationCategory, string> = {
   notice: "var(--gold-500)",
   event: "var(--maroon-700)",
@@ -55,7 +54,6 @@ export function NotificationDropdown({
   notifications,
   onClose,
   onMarkRead,
-  onMarkAllRead,
 }: {
   open: boolean;
   notifications: Notification[];
@@ -72,7 +70,16 @@ export function NotificationDropdown({
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
 
-      <div className="absolute right-0 top-11 z-50 w-[336px] max-w-[90vw] overflow-hidden rounded-2xl border border-[var(--gold-500)]/40 bg-[var(--paper)] shadow-[var(--shadow-maroon)]">
+      <div
+        className="
+          fixed inset-x-3 top-16 z-50
+          sm:absolute sm:inset-x-auto sm:right-0 sm:top-11
+          w-auto sm:w-[336px]
+          max-w-full sm:max-w-[90vw]
+          mx-auto sm:mx-0
+          overflow-hidden rounded-2xl border border-[var(--gold-500)]/40 bg-[var(--paper)] shadow-[var(--shadow-maroon)]
+        "
+      >
         {/* Header */}
         <div className="relative flex items-center justify-between overflow-hidden bg-[linear-gradient(120deg,var(--maroon-800),var(--maroon-950))] px-4 py-3.5">
           <div className="relative">
@@ -91,7 +98,7 @@ export function NotificationDropdown({
         </div>
 
         {/* List */}
-        <div className="max-h-[64vh] overflow-y-auto">
+        <div className="max-h-[70vh] sm:max-h-[64vh] overflow-y-auto">
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
               <BellOff size={22} className="text-[var(--gold-500)]/60" />
@@ -147,9 +154,9 @@ export function NotificationDropdown({
                         {n.description}
                       </p>
 
-                      <span className="mt-1.5 flex items-center gap-0.5 text-[10.5px] font-bold text-[var(--maroon-800)]">
+                      {/* <span className="mt-1.5 flex items-center gap-0.5 text-[10.5px] font-bold text-[var(--maroon-800)]">
                         तपशील पहा <ChevronRight size={11} />
-                      </span>
+                      </span> */}
                     </div>
                   </button>
                 ))}
@@ -160,13 +167,14 @@ export function NotificationDropdown({
 
         {/* Footer action — only shown when there's something to act on */}
         {unreadCount > 0 && (
-          <button
-            onClick={onMarkAllRead}
+          <Link
+            to="/notices"
+            onClick={onClose}
             className="flex w-full cursor-pointer items-center justify-center gap-1.5 border-t border-[var(--gold-500)]/25 bg-[var(--paper)] py-2.5 text-center text-[11px] font-bold text-[var(--maroon-800)] transition-colors hover:bg-[var(--gold-100)]/40"
           >
-            सर्व वाचले म्हणून चिन्हांकित करा
-            <CheckCheck size={13} strokeWidth={2.4} />
-          </button>
+            View All
+            <ChevronRight size={13} strokeWidth={2.4} />
+          </Link>
         )}
       </div>
     </>

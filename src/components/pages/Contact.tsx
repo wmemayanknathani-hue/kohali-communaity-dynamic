@@ -75,22 +75,12 @@ const STYLES = `
   }
 
   .kc-field:focus-within {
-    border-color: var(--maroon-600);
+    border-color: var(--maroon-700);
     box-shadow: 0 0 0 3px rgba(122,31,43,0.12);
   }
 `;
 
-interface EyebrowProps {
-  children: React.ReactNode;
-}
 
-function Eyebrow({ children }: EyebrowProps) {
-  return (
-    <p className="mb-1 text-[11px] font-bold tracking-[0.18em] uppercase text-[var(--gold-600)]">
-      {children}
-    </p>
-  );
-}
 
 interface InfoRowProps {
   Icon: LucideIcon;
@@ -110,16 +100,12 @@ function InfoRow({
   return (
     <div
       className={
-        "flex items-center gap-3.5 py-3.5" +
-        (last ? "" : " border-b border-[var(--gold-500)]")
+        "group flex cursor-pointer items-center gap-3 px-4 py-3.5 transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99] md:gap-4 md:px-5 md:py-4" +
+        (last ? "" : " border-b border-[var(--gold-300)]/50")
       }
     >
       <div
-        className="grid h-10 w-10 shrink-0 place-items-center rounded-xl shadow-sm"
-        style={{
-          background:
-            "linear-gradient(160deg, var(--gold-300), var(--gold-500))",
-        }}
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm"
       >
         <Icon
           className="h-[18px] w-[18px] text-[var(--maroon-900)]"
@@ -128,11 +114,11 @@ function InfoRow({
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="text-[10.5px] font-bold uppercase tracking-wide text-[var(--maroon-600)]/60">
+        <h1 className="block font-display text-[14px] font-bold text-[var(--ink)]">
           {label}
-        </p>
+        </h1>
 
-        <p className="truncate text-[14.5px] font-semibold text-[var(--ink)]">
+        <p className="block font-mr text-[12px] text-[var(--text-muted)]">
           {value}
         </p>
       </div>
@@ -251,15 +237,11 @@ export default function Contact() {
 
       <div
         className="min-h-screen w-full pb-10"
-        style={{
-          background: "var(--cream)",
-          color: "var(--ink)",
-        }}
       >
         <div className="mx-auto max-w-md px-4 pt-5 sm:max-w-lg md:max-w-3xl md:px-8 lg:max-w-4xl">
           {/* Header */}
             <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4 lg:max-w-4xl xl:max-w-5xl">
-              <SectionHeader eyebrow="Kohli Samaj Nagpur" title="Support" />
+              <SectionHeader eyebrow="Kohli Samaj Nagpur" title="Contact Us" />
               <button
                 onClick={() => navigate("/")}
                 className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]"
@@ -291,11 +273,9 @@ export default function Contact() {
           
 
           {/* Unified info panel */}
-          <div className="kc-pop mt-5 rounded-3xl bg-[var(--paper)] px-5 py-1 shadow-[0_4px_16px_rgba(58,13,20,0.1)]">
-            <div className="pt-3">
-              <Eyebrow>Get In Touch</Eyebrow>
-            </div>
-
+          <SectionHeader eyebrow="Contact Details" title="Get In Touch" />
+          <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
+         
             <InfoRow
               Icon={MapPin}
               label="Central Office"
@@ -322,7 +302,7 @@ export default function Contact() {
             />
 
             {/* Social row */}
-            <div className="flex items-center gap-2.5 border-t border-[var(--gold-500)] py-3.5">
+            <div className="group flex cursor-pointer items-center gap-3 px-4 py-3.5 transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99] md:gap-4 md:px-5 md:py-4 border-b border-[var(--gold-300)]/50">
               <span className="text-[11px] font-bold uppercase tracking-wide text-[var(--maroon-600)]/60">
                 Follow
               </span>
@@ -347,22 +327,21 @@ export default function Contact() {
           </div>
 
           {/* Map */}
-          <div className="kc-pop mt-5 overflow-hidden rounded-3xl shadow-[0_4px_16px_rgba(58,13,20,0.1)]">
+          <div className="kc-pop mt-5 overflow-hidden rounded-3xl shadow-[0_4px_16px_rgba(58,13,20,0.1)] mb-5">
             <div
-              className="relative flex h-36 items-center justify-center"
+              className="relative h-40 sm:h-48 md:h-64 lg:h-72"
               style={{
                 background:
-                  "repeating-linear-gradient(135deg, var(--maroon-50), var(--maroon-50) 10px, var(--paper) 10px, var(--paper) 20px)",
+                  "repeating-linear-gradient(135deg, var(--gold-100), var(--gold-100) 10px, var(--paper) 10px, var(--paper) 20px)",
               }}
             >
-              {/* <MapPin
-                className="h-9 w-9 drop-shadow"
-                style={{
-                  color: "var(--maroon-700)",
-                }}
-                strokeWidth={2}
-              /> */}
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3722.217284193431!2d79.0817205!3d21.103901799999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd4bf2c8f241ec9%3A0xc0e3514369ce5f55!2sKohali%20Samajbhawan%20Nagpur!5e0!3m2!1sen!2sin!4v1787742601709!5m2!1sen!2sin" width="600" height="450"  loading="lazy"></iframe>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3722.217284193431!2d79.0817205!3d21.103901799999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd4bf2c8f241ec9%3A0xc0e3514369ce5f55!2sKohali%20Samajbhawan%20Nagpur!5e0!3m2!1sen!2sin!4v1787742601709!5m2!1sen!2sin"
+                className="absolute inset-0 h-full w-full border-0"
+                loading="lazy"
+                allowFullScreen
+                title="Kohali Samajbhawan Nagpur location"
+              />
             </div>
 
             <button
@@ -379,22 +358,9 @@ export default function Contact() {
           </div>
 
           {/* Contact form */}
-          <div className="kc-pop relative mt-5 overflow-hidden rounded-3xl bg-[var(--paper)] shadow-[0_6px_20px_rgba(58,13,20,0.12)]">
-            <div
-              className="h-1.5 w-full"
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--gold-300), var(--gold-500), var(--maroon-700))",
-              }}
-            />
-
-            <div className="p-5">
-              <Eyebrow>Send a Message</Eyebrow>
-
-              <h2 className="mb-4 text-[16px] font-extrabold text-[var(--maroon-800)]">
-                We'd love to hear from you
-              </h2>
-
+           <SectionHeader eyebrow="Send a Message" title="We'd love to hear from you"/>
+          <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
+            <div className="px-4 py-3.5 md:px-5 md:py-4 ">
               <form
                 onSubmit={handleSubmit}
                 className="grid grid-cols-1 gap-3.5 sm:grid-cols-2"
@@ -461,7 +427,7 @@ export default function Contact() {
                       {fileName || "PDF, JPG or PNG, up to 5 MB"}
                     </div>
 
-                    <label className="cursor-pointer whitespace-nowrap rounded-full border border-[var(--maroon-600)] px-3 py-1.5 text-[11px] font-bold text-[var(--maroon-700)] transition active:scale-95">
+                    <label className="cursor-pointer whitespace-nowrap rounded-full border border-[var(--maroon-700)] px-3 py-1.5 text-[11px] font-bold text-[var(--maroon-700)] transition active:scale-95">
                       Browse
 
                       <input

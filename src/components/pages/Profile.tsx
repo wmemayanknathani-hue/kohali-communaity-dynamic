@@ -1,7 +1,6 @@
 import type { ReactNode, FC } from "react";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
-// import SectionHeader from "../SectionHeader";
 import {
   ChevronLeft,
   ChevronRight,

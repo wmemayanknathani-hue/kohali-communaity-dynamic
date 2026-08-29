@@ -19,8 +19,14 @@ import Support from "./components/pages/Support";
 import LiveEvents from "./components/pages/LiveEvents";
 import Contact from "./components/pages/Contact";
 import BusinessPromotion from "./components/pages/BusinessPromotion";
+import Business from "./components/pages/Business";
+import BusinessDetails from "./components/BusinessDetailsSheet";
 import CommitteeDetail from "./components/pages/CommitteeDetail";
-
+import Notices from "./components/pages/Notices";
+import PhotoGallery from "./components/pages/PhotoGallery";
+import VideoGallery from "./components/pages/VideoGallery";
+import Events from "./components/pages/Events";
+// import EventDetails from "./components/pages/EventDetails";
 import { getBookById } from "./data/books";
 
 function BookDetailRoute() {
@@ -62,22 +68,18 @@ export default function App() {
           <Route path="/committee/:id" element={<CommitteeDetail />} />
           <Route path="/services" element={<Services />} />
           <Route path="/stats" element={<Stats />} />
-
           <Route path="/books" element={<Books />} />
-
-          {/* Book details */}
-          <Route
-            path="/books/:bookId"
-            element={<BookDetailRoute />}
-          />
-
+          <Route path="/books/:bookId" element={<BookDetailRoute />} />
           <Route path="/support" element={<Support />} />
           <Route path="/live-events" element={<LiveEvents />} />
           <Route path="/contact" element={<Contact />} />
-          <Route
-            path="/business-promotion"
-            element={<BusinessPromotion />}
-          />
+          <Route path="/business" element={<Business />} />
+          <Route path="/business/:businessId" element={<BusinessDetails />} />
+          <Route path="/business-promotion" element={<BusinessPromotion />} />
+          <Route path="/notices" element={<Notices />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/photo-gallery" element={<PhotoGallery />} />
+          <Route path="/video-gallery" element={<VideoGallery />} />
         </Route>
       </Routes>
     </BrowserRouter>

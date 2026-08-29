@@ -1,6 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate  } from "react-router-dom";
+import SectionHeader from "../SectionHeader";
+import { books as allBooks, type Book } from "../../data/books";
+
+import {
+  ArrowLeft,
+  // Share2,
+  // Bookmark,
+  Calendar,
+  BookOpen,
+  FileText,
+  Download,
+  ChevronRight,
+  User,
+} from "lucide-react";
 
 export interface BookDetailProps {
+  id: string | number;
   image: string;
   category: string;
   title: string;
@@ -19,11 +35,11 @@ export interface BookDetailProps {
   isBookmarked?: boolean;
 }
 
+const CONTAINER = "mx-auto w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl";
+
+
 /* =====================================================
    MOBILE DETECTION HELPER
-   iOS Safari and most Android WebViews cannot render
-   PDFs inside a plain <iframe> — they just show blank.
-   We detect that and swap to a wrapper viewer instead.
 ===================================================== */
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
@@ -56,22 +72,23 @@ function IconButton({
       className={
         active
           ? `
-            flex h-9 w-9 items-center justify-center
+            flex h-9 w-9 md:h-10 md:w-10 shrink-0 items-center justify-center
             rounded-full
-            bg-[var(--gold-500)]
+            bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]
             text-[var(--maroon-900)]
-            transition-transform
-            active:scale-90
+            shadow-[0_2px_8px_rgba(0,0,0,0.25)]
+            transition-transform duration-200
+            hover:scale-110 active:scale-90
           `
           : `
-            flex h-9 w-9 items-center justify-center
+            flex h-9 w-9 md:h-10 md:w-10 shrink-0 items-center justify-center
             rounded-full
-            border border-[var(--gold-400)]
-            bg-[var(--paper)]
-            text-[var(--maroon-900)]
-            transition-colors
-            hover:bg-[var(--gold-300)]/20
-            active:scale-90
+            border border-white/30
+            bg-white/10
+            text-white
+            backdrop-blur-sm
+            transition-all duration-200
+            hover:bg-white/20 hover:scale-110 active:scale-90
           `
       }
     >
@@ -80,109 +97,6 @@ function IconButton({
   );
 }
 
-function SectionTitle({
-  title,
-  icon,
-}: {
-  title: string;
-  icon?: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      {icon && (
-        <div
-          className="
-            flex h-8 w-8 shrink-0
-            items-center justify-center
-            rounded-lg
-            bg-[var(--maroon-900)]
-            text-[var(--gold-300)]
-          "
-        >
-          {icon}
-        </div>
-      )}
-
-      <div>
-        <h2
-          className="
-            font-['Tiro_Devanagari_Marathi']
-            text-base font-bold
-            text-[var(--maroon-950)]
-          "
-        >
-          {title}
-        </h2>
-
-        <div className="mt-1 h-0.5 w-9 bg-[var(--gold-500)]" />
-      </div>
-    </div>
-  );
-}
-
-/* =====================================================
-   BOOK COVER IMAGE
-===================================================== */
-function BookCoverImage({ image, title }: { image: string; title: string }) {
-  const [status, setStatus] = useState<"loading" | "loaded" | "error">(
-    image ? "loading" : "error"
-  );
-
-  useEffect(() => {
-    setStatus(image ? "loading" : "error");
-  }, [image]);
-
-  return (
-    <div className=" relative h-60 w-[180px] overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--maroon-850)] to-[var(--maroon-700)] shadow-[0_14px_32px_rgba(44,5,13,0.25)] ring-1 ring-inset ring-[var(--gold-400)]/60 " >
-      {status !== "error" && (
-        <img
-          src={image}
-          alt={title}
-          className={`h-full w-full object-cover transition-opacity duration-300 `}
-          onLoad={() => setStatus("loaded")}
-          onError={(e) => {
-            console.warn("Book cover image failed to load:", image, e);
-            setStatus("error");
-          }}
-        />
-      )}
-
-      {status === "error" && (
-        <div
-          className="
-            flex h-full w-full
-            flex-col items-center justify-center
-            gap-2
-            px-4
-            text-center
-          "
-        >
-          <svg
-            className="h-8 w-8 text-[var(--gold-300)]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-          >
-            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
-            <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20" />
-          </svg>
-          <p className="font-['Noto_Sans_Devanagari'] text-[11px] leading-tight text-[var(--gold-300)]">
-            {title}
-          </p>
-        </div>
-      )}
-
-      <div
-        className="
-          absolute bottom-0 left-0 right-0
-          h-1.5
-          bg-[var(--gold-500)]
-        "
-      />
-    </div>
-  );
-}
 
 /* =====================================================
    PDF VIEWER
@@ -193,36 +107,14 @@ function PdfViewer({ pdfUrl, title }: { pdfUrl: string; title: string }) {
 
   const viewerSrc =
     isMobile && !viewerFailed
-      ? `https://docs.google.com/viewer?url=${encodeURIComponent(
-          pdfUrl
-        )}&embedded=true`
+      ? `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`
       : pdfUrl;
 
   if (viewerFailed) {
     return (
-      <div
-        className="
-          flex flex-col items-center justify-center
-          gap-3
-          rounded-xl
-          border-4
-          border-[var(--maroon-900)]
-          bg-[var(--maroon-950)]
-          px-6 py-10
-          text-center
-        "
-      >
-        <svg
-          className="h-9 w-9 text-[var(--gold-300)]"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-        >
-          <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
-          <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20" />
-        </svg>
-        <p className="font-['Noto_Sans_Devanagari'] text-sm text-[var(--gold-300)]">
+      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border-4 border-[var(--maroon-900)] bg-[var(--maroon-950)] px-6 py-10 text-center">
+        <FileText className="h-9 w-9 text-[var(--gold-300)]" strokeWidth={1.6} />
+        <p className="text-sm text-[var(--gold-300)]">
           हे पुस्तक येथे थेट दाखवता येत नाही.
           <br />
           कृपया खालील बटणावर टॅप करून वाचा.
@@ -231,14 +123,7 @@ function PdfViewer({ pdfUrl, title }: { pdfUrl: string; title: string }) {
           href={pdfUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="
-            rounded-lg
-            bg-[var(--gold-500)]
-            px-4 py-2
-            font-['Noto_Sans_Devanagari']
-            text-sm font-semibold
-            text-[var(--maroon-900)]
-          "
+          className="rounded-lg bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] px-4 py-2 text-sm font-semibold text-[var(--maroon-900)] transition-transform duration-200 hover:scale-105 active:scale-95"
         >
           PDF उघडा
         </a>
@@ -247,74 +132,76 @@ function PdfViewer({ pdfUrl, title }: { pdfUrl: string; title: string }) {
   }
 
   return (
-    <div
-      className="
-        relative
-        overflow-hidden
-        rounded-xl
-        border-4
-        border-[var(--maroon-900)]
-        bg-[var(--maroon-950)]
-        p-1
-        shadow-[0_15px_35px_rgba(44,5,13,0.25)]
-      "
-    >
-      {/* Gold corner decorations */}
-      <div
-        className="
-          pointer-events-none
-          absolute left-1 top-1
-          h-4 w-4
-          border-l border-t
-          border-[var(--gold-400)]
-        "
-      />
-      <div
-        className="
-          pointer-events-none
-          absolute right-1 top-1
-          h-4 w-4
-          border-r border-t
-          border-[var(--gold-400)]
-        "
-      />
-      <div
-        className="
-          pointer-events-none
-          absolute bottom-1 left-1
-          h-4 w-4
-          border-b border-l
-          border-[var(--gold-400)]
-        "
-      />
-      <div
-        className="
-          pointer-events-none
-          absolute bottom-1 right-1
-          h-4 w-4
-          border-b border-r
-          border-[var(--gold-400)]
-        "
-      />
+    <div className="relative overflow-hidden rounded-xl border-4 border-[var(--maroon-900)] bg-[var(--maroon-950)] p-1 shadow-[0_15px_35px_rgba(44,5,13,0.25)] transition-shadow duration-300 hover:shadow-[0_20px_44px_rgba(44,5,13,0.35)]">
+      <div className="pointer-events-none absolute left-1 top-1 h-4 w-4 border-l border-t border-[var(--gold-400)]" />
+      <div className="pointer-events-none absolute right-1 top-1 h-4 w-4 border-r border-t border-[var(--gold-400)]" />
+      <div className="pointer-events-none absolute bottom-1 left-1 h-4 w-4 border-b border-l border-[var(--gold-400)]" />
+      <div className="pointer-events-none absolute bottom-1 right-1 h-4 w-4 border-b border-r border-[var(--gold-400)]" />
 
       <iframe
         key={viewerSrc}
         src={viewerSrc}
         title={`${title} PDF`}
-        className="
-          h-[65vh]
-          min-h-[480px]
-          w-full
-          rounded-sm
-          bg-white
-        "
+        className="h-[65vh] min-h-[480px] md:min-h-[560px] lg:min-h-[640px] xl:min-h-[700px] w-full rounded-sm bg-white"
         onError={() => setViewerFailed(true)}
       />
     </div>
   );
 }
 
+/* =====================================================
+   RELATED BOOK ROW (matches Books.tsx list styling)
+===================================================== */
+function RelatedBookRow({ book, index }: { book: Book; index: number }) {
+  return (
+    <Link to={`/books/${book.id}`} style={{ animationDelay: `${index * 70}ms` }} className=" group relative flex w-full items-center gap-3 md:gap-4 overflow-hidden rounded-2xl border border-[var(--gold-400)] bg-[var(--paper)] p-3 md:p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[var(--gold-500)] hover:shadow-[0_10px_22px_rgba(44,5,13,0.14)] animate-[fadeUp_0.4s_ease-out_backwards] " >
+      <div
+        className="
+          relative h-20 w-16 md:h-24 md:w-[76px] shrink-0 overflow-hidden rounded-xl
+          bg-gradient-to-br from-[var(--maroon-850)] to-[var(--maroon-700)]
+          shadow-[inset_0_0_0_1px_var(--gold-400)]
+          transition-transform duration-300 ease-out
+          group-hover:scale-[1.05] group-hover:-rotate-1
+        "
+      >
+        <img src={book.image} alt={book.title} className="h-full w-full object-cover" />
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-[var(--gold-500)]" />
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <span className="
+          inline-block rounded-full bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] px-2 py-[1px]
+          text-[10px] font-bold uppercase tracking-[0.5px] text-[var(--gold-300)]
+        ">
+          {book.category}
+        </span>
+
+        <h3 className="m-0 mt-1 truncate text-[15px] md:text-base font-bold leading-[1.3] text-[var(--maroon-950)]">
+          {book.title}
+        </h3>
+        <p className="m-0 truncate text-xs md:text-sm text-[var(--text-muted)]">{book.author}</p>
+
+        <div className="mt-1.5 flex items-center gap-3 text-[11px] md:text-xs text-[var(--text-muted)]">
+          <span className="flex items-center gap-1">
+            <Calendar className="h-3 w-3 text-[var(--gold-600)]" strokeWidth={2.2} />
+            {book.date}
+          </span>
+          <span className="flex items-center gap-1">
+            <BookOpen className="h-3 w-3 text-[var(--gold-600)]" strokeWidth={2.2} />
+            {book.pages} पाने
+          </span>
+        </div>
+      </div>
+
+      <div className=" flex h-9 w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-[0_2px_6px_rgba(180,140,20,0.35)] transition-transform duration-300 ease-out group-hover:translate-x-1 " >
+        <ChevronRight className="h-4 w-4 text-[var(--maroon-900)]" strokeWidth={2.6} />
+      </div>
+    </Link>
+  );
+}
+
 export default function BookDetail({
+  id,
   image,
   category,
   title,
@@ -325,795 +212,266 @@ export default function BookDetail({
   highlights = [],
   pdfUrl = "",
 
-  onBack = () => window.history.back(),
-  onReadOnline,
-  onBookmark = () => {},
-  onShare = () => {},
+  onBack,
+onReadOnline,
+  // onBookmark = () => {},
+  // onShare = () => {},
 
-  isBookmarked = false,
+  // isBookmarked = false,
 }: BookDetailProps) {
+   const navigate = useNavigate();
+
+    const handleBack = () => {
+      if (onBack) {
+        onBack();
+        return;
+      }
+
+      navigate("/books");
+    };
   const handleReadOnline = () => {
     if (onReadOnline) {
       onReadOnline();
       return;
     }
-
-    document
-      .getElementById("book-reader")
-      ?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+    document.getElementById("book-reader")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const handleShare = async () => {
-    if (onShare) {
-      onShare();
-      return;
-    }
+  // const handleShare = async () => {
+  //   if (onShare) {
+  //     onShare();
+  //     return;
+  //   }
+  //   if (navigator.share) {
+  //     try {
+  //       await navigator.share({ title, text: description, url: window.location.href });
+  //     } catch {
+  //       // cancelled
+  //     }
+  //   }
+  // };
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title,
-          text: description,
-          url: window.location.href,
-        });
-      } catch {
-        // User cancelled share
-      }
-    }
-  };
+  // real, non-repeating related books: prefer same category, exclude current book
+  const relatedBooks = React.useMemo(() => {
+    const others = allBooks.filter((b) => String(b.id) !== String(id));
+    const sameCategory = others.filter((b) => b.category === category);
+    const rest = others.filter((b) => b.category !== category);
+    return [...sameCategory, ...rest].slice(0, 4);
+  }, [id, category]);
 
   return (
     <div className="min-h-screen bg-[var(--cream)]">
-      {/* =================================================
-          TOP BAR
-      ================================================= */}
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(14px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes coverIn {
+          from { opacity: 0; transform: translateY(10px) scale(0.94); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes shine {
+          0% { transform: translateX(-120%) rotate(8deg); }
+          100% { transform: translateX(220%) rotate(8deg); }
+        }
+      `}</style>
 
-      <header
-        className="
-          sticky top-0 z-40
-          flex items-center justify-between
-          border-b border-[var(--gold-400)]/50
-          bg-[var(--paper)]/95
-          px-3.5 py-3
-          backdrop-blur-md
-        "
-      >
-        <IconButton
-          onClick={onBack}
-          ariaLabel="मागे जा"
-        >
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.4"
-          >
-            <path d="M15 6l-6 6 6 6" />
-          </svg>
-        </IconButton>
-
-        <div className="flex items-center gap-2">
-          <IconButton
-            onClick={handleShare}
-            ariaLabel="पुस्तक शेअर करा"
-          >
-            <svg
-              className="h-[15px] w-[15px]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="18" cy="5" r="2.5" />
-              <circle cx="6" cy="12" r="2.5" />
-              <circle cx="18" cy="19" r="2.5" />
-              <path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4" />
-            </svg>
-          </IconButton>
-
-          <IconButton
-            onClick={onBookmark}
-            active={isBookmarked}
-            ariaLabel="पुस्तक जतन करा"
-          >
-            <svg
-              className="h-[15px] w-[15px]"
-              viewBox="0 0 24 24"
-              fill={isBookmarked ? "currentColor" : "none"}
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M6 3.5h12v17l-6-3.8-6 3.8v-17Z" />
-            </svg>
-          </IconButton>
-        </div>
-      </header>
 
       {/* =================================================
           PAGE CONTENT
       ================================================= */}
 
-      <main className="px-5 pb-28 pt-5">
-
-        {/* =================================================
-            BOOK COVER
-        ================================================= */}
-
-        <div className="flex justify-center">
-          <BookCoverImage image={image} title={title} />
-        </div>
-
-        {/* =================================================
-            CATEGORY
-        ================================================= */}
-
-        <div className="mt-5 flex justify-center">
-          <span
-            className="
-              rounded-full
-              border border-[var(--gold-400)]
-              bg-[var(--paper)]
-              px-3 py-1
-              font-['Noto_Sans_Devanagari']
-              text-[11px]
-              font-semibold
-              uppercase
-              tracking-[0.4px]
-              text-[var(--gold-700)]
-            "
-          >
-            {category}
-          </span>
-        </div>
-
-        {/* =================================================
-            TITLE
-        ================================================= */}
-
-        <h1
-          className="
-            mt-3
-            text-center
-            font-['Tiro_Devanagari_Marathi']
-            text-2xl
-            font-bold
-            leading-snug
-            text-[var(--maroon-950)]
-          "
-        >
-          {title}
-        </h1>
-
-        <p
-          className="
-            mt-1
-            text-center
-            font-['Noto_Sans_Devanagari']
-            text-sm
-            text-[var(--text-muted)]
-          "
-        >
-          {author}
-        </p>
-
-        {/* =================================================
-            META
-        ================================================= */}
-
-        <div className="mt-4 flex flex-wrap justify-center gap-2">
-          <span
-            className="
-              flex items-center gap-1.5
-              rounded-full
-              border border-[var(--gold-400)]
-              bg-[var(--paper)]
-              px-3 py-1.5
-              font-['Noto_Sans_Devanagari']
-              text-[12px]
-              text-[var(--text-muted)]
-            "
-          >
-            <svg
-              className="h-[13px] w-[13px] text-[var(--gold-700)]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <rect x="3" y="4" width="18" height="18" rx="2" />
-              <path d="M16 2v4M8 2v4M3 10h18" />
-            </svg>
-
-            {date}
-          </span>
-
-          <span
-            className="
-              flex items-center gap-1.5
-              rounded-full
-              border border-[var(--gold-400)]
-              bg-[var(--paper)]
-              px-3 py-1.5
-              font-['Noto_Sans_Devanagari']
-              text-[12px]
-              text-[var(--text-muted)]
-            "
-          >
-            <svg
-              className="h-[13px] w-[13px] text-[var(--gold-700)]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
-            </svg>
-
-            {pages} पाने
-          </span>
-        </div>
-
-        {/* =================================================
-            DIVIDER
-        ================================================= */}
-
-        <div className="my-6 h-px bg-[var(--gold-400)]/40" />
-
-        {/* =================================================
-            DESCRIPTION
-        ================================================= */}
-
-        <section>
-          <SectionTitle
-            title="पुस्तकाबद्दल"
-            icon={
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              >
-                <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
-                <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20" />
-              </svg>
-            }
-          />
-
-          <p
-            className="
-              mt-4
-              font-['Noto_Sans_Devanagari']
-              text-sm
-              leading-7
-              text-[var(--text-muted)]
-            "
-          >
-            {description}
-          </p>
-        </section>
-
-        {/* =================================================
-            HIGHLIGHTS
-        ================================================= */}
-
-        {highlights.length > 0 && (
-          <section className="mt-7">
-            <SectionTitle
-              title="पुस्तकाची वैशिष्ट्ये"
-              icon={
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <path d="M12 3l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" />
-                </svg>
-              }
-            />
-
-            <div className="mt-4 space-y-2">
-              {highlights.map((highlight) => (
-                <div
-                  key={highlight}
-                  className="
-                    flex items-start gap-3
-                    rounded-xl
-                    border
-                    border-[var(--gold-400)]/40
-                    bg-[var(--paper)]
-                    px-3.5 py-3
-                  "
-                >
-                  <span
-                    className="
-                      mt-2
-                      h-1.5 w-1.5
-                      shrink-0
-                      rounded-full
-                      bg-[var(--gold-500)]
-                    "
-                  />
-
-                  <p
-                    className="
-                      font-['Noto_Sans_Devanagari']
-                      text-sm
-                      leading-6
-                      text-[var(--text-muted)]
-                    "
-                  >
-                    {highlight}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* =================================================
-            BOOK DETAILS
-        ================================================= */}
-
-        <section className="mt-7">
-          <SectionTitle
-            title="पुस्तक तपशील"
-            icon={
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              >
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 8v4M12 16h.01" />
-              </svg>
-            }
-          />
-
+      {/* pb-24 leaves room for the sticky CTA bar so it never covers content */}
+      <main className={`${CONTAINER} px-4 pb-6 pt-6 md:px-6 md:pt-9 lg:px-8 xl:px-0`}>
+        
+      {/* =================================================
+          MAROON HERO
+      ================================================= */}
+      <div className="mb-5 relative mt-0 overflow-hidden rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_38%,var(--maroon-700)_100%)] px-5 pb-6 pt-5 shadow-[var(--shadow-maroon)] md:rounded-[28px] md:px-8 md:pb-8 md:pt-7 lg:px-10">
+       {/* diagonal cross-hatch texture */}
           <div
-            className="
-              mt-4
-              overflow-hidden
-              rounded-xl
-              border
-              border-[var(--gold-400)]/50
-              bg-[var(--paper)]
-            "
-          >
-            <div
-              className="
-                flex items-center justify-between
-                border-b
-                border-[var(--gold-400)]/30
-                px-4 py-3
-              "
-            >
-              <span
-                className="
-                  font-['Noto_Sans_Devanagari']
-                  text-sm
-                  text-[var(--text-muted)]
-                "
-              >
-                लेखक / संपादक
+            className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px),repeating-linear-gradient(-60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px)]"
+          />
+
+        <div className={`relative`}>
+          <div className="flex items-center justify-between">
+            <IconButton onClick={handleBack} ariaLabel="मागे जा">
+              <ArrowLeft className="h-4 w-4" strokeWidth={2.4} />
+            </IconButton>
+
+            {/* <div className="flex items-center gap-2">
+              <IconButton onClick={handleShare} ariaLabel="पुस्तक शेअर करा">
+                <Share2 className="h-[15px] w-[15px]" strokeWidth={2} />
+              </IconButton>
+              <IconButton onClick={onBookmark} active={isBookmarked} ariaLabel="पुस्तक जतन करा">
+                <Bookmark className="h-[15px] w-[15px]" strokeWidth={2} fill={isBookmarked ? "currentColor" : "none"} />
+              </IconButton>
+            </div> */}
+          </div>
+
+          {/* cover + info: stacked/centered on mobile, side-by-side from md up */}
+          <div className="mt-0 flex flex-col items-center gap-6 text-center md:mt-8 md:flex-row md:items-center md:gap-8 md:text-left">
+            <div className=" group relative h-56 w-[168px] shrink-0 md:h-64 md:w-[188px] lg:h-72 lg:w-[208px] overflow-hidden rounded-2xl shadow-[0_20px_44px_rgba(0,0,0,0.4)] ring-2 ring-[var(--gold-400)]/70 transition-transform duration-500 ease-out hover:-translate-y-1.5 hover:rotate-[-1deg] animate-[coverIn_0.6s_ease-out_backwards] " >
+              <img
+                src={image}
+                alt={title}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+              />
+              <div className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent,rgba(255,255,255,0.28),transparent)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--gold-500)]" />
+            </div>
+
+            <div className="flex flex-1 flex-col items-center md:items-start">
+              <span className=" inline-block rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] px-3 py-1 font-['Noto_Sans_Devanagari'] text-[11px] font-bold uppercase tracking-[0.5px] text-[var(--maroon-900)] shadow-[0_3px_10px_rgba(0,0,0,0.2)] transition-transform duration-200 hover:scale-105 " >
+                {category}
               </span>
 
-              <span
-                className="
-                  max-w-[55%]
-                  text-right
-                  font-['Noto_Sans_Devanagari']
-                  text-sm
-                  font-semibold
-                  text-[var(--maroon-950)]
-                "
-              >
+              <h1 className="mt-3 max-w-md lg:max-w-lg text-2xl md:text-3xl lg:text-[34px] xl:text-[38px] font-bold leading-snug text-white">
+                {title}
+              </h1>
+              <p className="mt-1 flex items-center gap-1.5 text-sm md:text-base text-[var(--gold-300)]">
+                <User className="h-[13px] w-[13px]" strokeWidth={2} />
                 {author}
-              </span>
-            </div>
+              </p>
 
-            <div
-              className="
-                flex items-center justify-between
-                border-b
-                border-[var(--gold-400)]/30
-                px-4 py-3
-              "
-            >
-              <span
-                className="
-                  font-['Noto_Sans_Devanagari']
-                  text-sm
-                  text-[var(--text-muted)]
-                "
-              >
-                प्रकाशन
-              </span>
-
-              <span
-                className="
-                  font-['Noto_Sans_Devanagari']
-                  text-sm
-                  font-semibold
-                  text-[var(--maroon-950)]
-                "
-              >
-                {date}
-              </span>
-            </div>
-
-            <div
-              className="
-                flex items-center justify-between
-                px-4 py-3
-              "
-            >
-              <span
-                className="
-                  font-['Noto_Sans_Devanagari']
-                  text-sm
-                  text-[var(--text-muted)]
-                "
-              >
-                एकूण पाने
-              </span>
-
-              <span
-                className="
-                  font-['Noto_Sans_Devanagari']
-                  text-sm
-                  font-semibold
-                  text-[var(--maroon-950)]
-                "
-              >
-                {pages}
-              </span>
+              <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
+                <span className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20">
+                  <Calendar className="h-[13px] w-[13px] text-[var(--gold-300)]" strokeWidth={2} />
+                  {date}
+                </span>
+                <span className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20">
+                  <BookOpen className="h-[13px] w-[13px] text-[var(--gold-300)]" strokeWidth={2} />
+                  {pages} पाने
+                </span>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
+        {/* On tablet/desktop: description+details in a 2-col grid so width is used well */}
+        <div className="md:grid md:grid-cols-5 md:gap-5 lg:gap-8">
+          <div className="md:col-span-3">
+            {/* DESCRIPTION */}
+            <section>
+              <SectionHeader eyebrow="Introduction" title="पुस्तकाबद्दल" />
+              <p className="mt-3 text-sm md:text-[15px] leading-7 text-[var(--text-muted)]">
+                {description}
+              </p>
+            </section>
 
-        {/* =================================================
-            PDF READER
-        ================================================= */}
+            {/* HIGHLIGHTS */}
+            {highlights.length > 0 && (
+              <section className="mt-6">
+                <SectionHeader eyebrow="Key Highlights" title="पुस्तकाची वैशिष्ट्ये" />
+                <div className="mt-3 grid gap-2.5">
+                  {highlights.map((highlight, i) => (
+                    <div
+                      key={highlight}
+                      style={{ animationDelay: `${i * 60}ms` }}
+                      className="group flex items-start gap-3 rounded-xl border border-[var(--gold-500)] bg-[var(--paper)] px-3.5 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--gold-600)] hover:shadow-[0_6px_16px_rgba(44,5,13,0.1)] animate-[fadeUp_0.4s_ease-out_backwards]"
+                    >
+                      <span
+                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold text-[var(--maroon-900)] shadow-sm transition-transform duration-200 group-hover:scale-110"
+                        style={{ background: "linear-gradient(160deg, var(--gold-300), var(--gold-500))" }}
+                      >
+                        {i + 1}
+                      </span>
+                      <p className="pt-0.5 text-sm leading-6 font-bold text-[var(--text-muted)]">
+                        {highlight}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
 
+          <div className="mt-6 md:col-span-2 md:mt-0">
+            {/* BOOK DETAILS */}
+            <section>
+              <SectionHeader eyebrow="Information" title="पुस्तक तपशील" />
+              <div className="mt-3 overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
+                {[
+                  { label: "लेखक / संपादक", value: author, Icon: User },
+                  { label: "प्रकाशन", value: date, Icon: Calendar },
+                  { label: "एकूण पाने", value: pages, Icon: BookOpen },
+                ].map((row, i, arr) => (
+                  <div
+                    key={row.label}
+                    className={`flex items-center gap-3 px-4 py-3 md:py-3.5 transition-colors duration-150 hover:bg-[var(--gold-300)]/10 ${
+                      i < arr.length - 1 ? "border-b border-[var(--gold-400)]/30" : ""
+                    }`}
+                  >
+                    <span
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]  shadow-sm"
+                      style={{ background: "linear-gradient(160deg, var(--gold-300), var(--gold-500))" }}
+                    >
+                      <row.Icon className="h-[15px] w-[15px] text-[var(--maroon-900)]" strokeWidth={2.2} />
+                    </span>
+                    <div>
+                      <span className="font-display block text-[14px] font-bold text-[var(--ink)] md:text-[14px]">
+                        {row.label}
+                      </span>
+                      <span className="font-mr block text-[12px] text-[var(--text-muted)]">
+                        {row.value}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+
+        {/* PDF READER */}
         {pdfUrl && (
           <section
             id="book-reader"
-            className="mt-8 scroll-mt-20"
+            className="mt-6"
           >
             <div className="flex items-center justify-between">
-              <SectionTitle
-                title="ऑनलाइन वाचा"
-                icon={
-                  <svg
-                    className="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                  >
-                    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
-                    <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20" />
-                  </svg>
-                }
-              />
-
-              <span
-                className="
-                  rounded-full
-                  bg-[var(--gold-500)]/15
-                  px-2.5 py-1
-                  font-['Noto_Sans_Devanagari']
-                  text-[10px]
-                  font-semibold
-                  text-[var(--gold-700)]
-                "
-              >
+              <SectionHeader eyebrow="Digital Reading" title="ऑनलाइन वाचा" />
+              <span className="rounded-full bg-[var(--maroon-700)] px-2.5 py-1 text-[12px] font-semibold text-white">
                 PDF
               </span>
             </div>
 
-            {/* Reader frame (handles desktop iframe + mobile viewer + failure fallback) */}
-            <div className="mt-4">
+            <div className="mt-3">
               <PdfViewer pdfUrl={pdfUrl} title={title} />
             </div>
 
-            <p
-              className="
-                mt-2
-                text-center
-                font-['Noto_Sans_Devanagari']
-                text-[11px]
-                text-[var(--text-muted)]
-              "
-            >
+            <p className="mt-2 text-center text-[14px] text-[var(--text-muted)]">
               खालील व्ह्यूअरमध्ये पुस्तक थेट वाचता येईल.
             </p>
 
-            {/* Download */}
-            <a
-              href={pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                mt-3
-                flex w-full
-                items-center justify-center gap-2
-                rounded-xl
-                border
-                border-[var(--gold-400)]
-                bg-[var(--paper)]
-                py-3
-                font-['Noto_Sans_Devanagari']
-                text-sm
-                font-semibold
-                text-[var(--maroon-900)]
-                transition-colors
-                hover:bg-[var(--gold-300)]/20
-                active:scale-[0.98]
-              "
-            >
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M12 3v12" />
-                <path d="m7 10 5 5 5-5" />
-                <path d="M5 21h14" />
-              </svg>
-
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className=" mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-400)] bg-[var(--cream)] py-3 text-sm font-semibold text-[var(--maroon-900)] transition-all duration-200 hover:bg-[var(--gold-300)]/20 hover:border-[var(--gold-500)] active:scale-[0.98] " >
+              <Download className="h-4 w-4" strokeWidth={2} />
               PDF डाउनलोड करा
             </a>
           </section>
         )}
 
-        {/* =================================================
-            RELATED BOOKS
-        ================================================= */}
+        {/* RELATED BOOKS — same row style as Books.tsx, real distinct data */}
+        {relatedBooks.length > 0 && (
+          <section className="mt-6">
+            <div className="">
+              <SectionHeader eyebrow="More to Explore" title="इतर पुस्तके" actionLabel="सर्व पहा" actionTo="/books" />
+            </div>
 
-        <section className="mt-8">
-          <div className="flex items-center justify-between">
-            <SectionTitle
-              title="इतर पुस्तके"
-              icon={
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
-                  <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20" />
-                </svg>
-              }
-            />
-
-            <button
-              type="button"
-              className="
-                font-['Noto_Sans_Devanagari']
-                text-xs font-semibold
-                text-[var(--gold-700)]
-              "
-            >
-              सर्व पहा
-            </button>
-          </div>
-
-          <div className="mt-4 space-y-2.5">
-            {/* Replace these with your actual related books */}
-            <RelatedBook
-              image={image}
-              category={category}
-              title={title}
-              author={author}
-            />
-
-            <RelatedBook
-              image={image}
-              category={category}
-              title={title}
-              author={author}
-            />
-          </div>
-        </section>
-      </main>
-
-      {/* =================================================
-          STICKY BOTTOM CTA
-      ================================================= */}
-
-      <div
-        className="
-          fixed inset-x-0 bottom-0 z-50
-          border-t
-          border-[var(--gold-400)]/50
-          bg-[var(--paper)]/95
-          px-5 pb-5 pt-3
-          backdrop-blur-md
-        "
-      >
-        <button
-          type="button"
-          onClick={handleReadOnline}
-          className="
-            flex w-full
-            items-center justify-center gap-2
-            rounded-xl
-            bg-gradient-to-r
-            from-[var(--maroon-900)]
-            to-[var(--maroon-700)]
-            py-3.5
-            font-['Noto_Sans_Devanagari']
-            text-sm
-            font-semibold
-            text-[var(--gold-300)]
-            shadow-[0_6px_18px_rgba(44,5,13,0.2)]
-            transition-transform
-            active:scale-[0.98]
-          "
-        >
-          ऑनलाइन वाचा
-
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.4"
-          >
-            <path d="M5 12h14M13 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  );
-}
-
-
-/* =====================================================
-   RELATED BOOK
-===================================================== */
-
-function RelatedBook({
-  image,
-  category,
-  title,
-  author,
-}: {
-  image: string;
-  category: string;
-  title: string;
-  author: string;
-}) {
-  const [imgError, setImgError] = useState(false);
-
-  return (
-    <button
-      type="button"
-      className="
-        flex w-full
-        items-center gap-3
-        rounded-xl
-        border
-        border-[var(--gold-400)]
-        bg-[var(--paper)]
-        p-3
-        text-left
-        shadow-[0_2px_8px_rgba(74,17,25,0.05)]
-        transition-transform
-        active:scale-[0.98]
-      "
-    >
-      <div
-        className="
-          h-[72px] w-[52px]
-          shrink-0
-          overflow-hidden
-          rounded-md
-          border-2
-          border-[var(--gold-400)]
-          bg-[var(--maroon-900)]
-        "
-      >
-        {!imgError && image ? (
-          <img
-            src={image}
-            alt={title}
-            className="h-full w-full object-cover"
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <svg
-              className="h-4 w-4 text-[var(--gold-300)]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-            >
-              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
-              <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20" />
-            </svg>
-          </div>
+            <div className="mt-3 grid gap-2.5 md:grid-cols-2">
+              {relatedBooks.map((b, i) => (
+                <RelatedBookRow key={b.id} book={b} index={i} />
+              ))}
+            </div>
+          </section>
         )}
-      </div>
+         <button type="button" onClick={handleReadOnline} className="mt-5 group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[var(--maroon-900)] to-[var(--maroon-700)] py-3.5 md:py-4 text-sm md:text-base font-semibold text-[var(--gold-300)] shadow-[0_6px_18px_rgba(44,5,13,0.2)] transition-all duration-200 hover:shadow-[0_10px_26px_rgba(44,5,13,0.3)] active:scale-[0.98] " >
+            <span className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent,rgba(255,255,255,0.18),transparent)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
+            ऑनलाइन वाचा
+            <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.4} />
+          </button>
 
-      <div className="min-w-0 flex-1">
-        <p
-          className="
-            truncate
-            font-['Noto_Sans_Devanagari']
-            text-[10px]
-            font-semibold
-            uppercase
-            tracking-wide
-            text-[var(--gold-700)]
-          "
-        >
-          {category}
-        </p>
-
-        <h3
-          className="
-            mt-0.5
-            line-clamp-2
-            font-['Tiro_Devanagari_Marathi']
-            text-sm
-            font-bold
-            leading-5
-            text-[var(--maroon-950)]
-          "
-        >
-          {title}
-        </h3>
-
-        <p
-          className="
-            mt-0.5
-            truncate
-            font-['Noto_Sans_Devanagari']
-            text-xs
-            text-[var(--text-muted)]
-          "
-        >
-          {author}
-        </p>
-      </div>
-
-      <div
-        className="
-          flex h-8 w-8
-          shrink-0
-          items-center justify-center
-          rounded-full
-          bg-[var(--gold-500)]
-          text-[var(--maroon-950)]
-        "
-      >
-        <svg
-          className="h-4 w-4"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-        >
-          <path d="M9 6l6 6-6 6" />
-        </svg>
-      </div>
-    </button>
+      </main>
+    </div>
   );
 }

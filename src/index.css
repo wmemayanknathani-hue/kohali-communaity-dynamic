@@ -246,3 +246,21 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .animate-support-pop { animation: support-pop 0.35s cubic-bezier(.2,.8,.3,1.1) both; }
+
+      .kc-field:focus-within {
+    border-color: var(--maroon-700);
+    box-shadow: 0 0 0 4px rgba(122,31,43,0.12);
+  }
+
+  .kc-field:focus-within .kc-field-icon {
+    color: var(--maroon-700);
+  }
+
+  .kc-file:hover {
+    border-color: var(--maroon-700);
+  }
+
+  .kc-file:focus-within {
+    border-color: var(--maroon-700);
+    box-shadow: 0 0 0 4px rgba(122,31,43,0.12);
+  }
