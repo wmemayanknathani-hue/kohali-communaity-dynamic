@@ -67,9 +67,9 @@ export function BusinessCard({ business }: BusinessCardProps) {
         </div>
 
         <div className="px-3 pt-2.5">
-          <h3 className="text-[14px] font-bold text-[var(--ink)]" title={displayName}>
+          <div className="text-[14px] font-bold text-[var(--ink)]" title={displayName}>
             {displayName}
-          </h3>
+          </div>
 
           {typeof rating === "number" && (
             <div

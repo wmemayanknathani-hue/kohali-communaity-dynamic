@@ -27,7 +27,6 @@ export interface CommitteeMember {
 /* ---------------------------------------------------------------------- */
 /* Committee Members                                                      */
 /* ---------------------------------------------------------------------- */
-
 export const MEMBERS: CommitteeMember[] = [
   {
     id: "m1",
@@ -45,6 +44,8 @@ export const MEMBERS: CommitteeMember[] = [
       "Represent the community at important meetings and events.",
     ],
     contactPublic: true,
+    phone: "+91 98XXXXXXXX",
+    email: "president@kohlisamaj.org",
   },
 
   {
@@ -62,8 +63,8 @@ export const MEMBERS: CommitteeMember[] = [
       "Help manage important committee responsibilities.",
     ],
     contactPublic: true,
-    phone: "+91 98XXXXXX02",
-    email: "vp@kohlisamaj.org",
+    phone: "+91 98XXXXXXXX",
+    email: "vicepresident@kohlisamaj.org",
   },
 
   {
@@ -80,7 +81,9 @@ export const MEMBERS: CommitteeMember[] = [
       "Coordinate meetings and official communications.",
       "Maintain important organizational information.",
     ],
-    contactPublic: false,
+    contactPublic: true,
+    phone: "+91 98XXXXXXXX",
+    email: "secretary@kohlisamaj.org",
   },
 
   {
@@ -97,7 +100,9 @@ export const MEMBERS: CommitteeMember[] = [
       "Support budgeting and financial planning.",
       "Assist with transparent management of community funds.",
     ],
-    contactPublic: false,
+    contactPublic: true,
+    phone: "+91 98XXXXXXXX",
+    email: "treasurer@kohlisamaj.org",
   },
 
   {
@@ -114,7 +119,9 @@ export const MEMBERS: CommitteeMember[] = [
       "Support meeting coordination.",
       "Help with community communications and activities.",
     ],
-    contactPublic: false,
+    contactPublic: true,
+    phone: "+91 98XXXXXXXX",
+    email: "jointsecretary@kohlisamaj.org",
   },
 
   {
@@ -131,7 +138,9 @@ export const MEMBERS: CommitteeMember[] = [
       "Encourage participation in community programs.",
       "Support initiatives focused on women and families.",
     ],
-    contactPublic: false,
+    contactPublic: true,
+    phone: "+91 98XXXXXXXX",
+    email: "women@kohlisamaj.org",
   },
 
   {
@@ -148,7 +157,9 @@ export const MEMBERS: CommitteeMember[] = [
       "Encourage youth participation in community programs.",
       "Support sports, cultural and educational initiatives.",
     ],
-    contactPublic: false,
+    contactPublic: true,
+    phone: "+91 98XXXXXXXX",
+    email: "youth@kohlisamaj.org",
   },
 
   {
@@ -165,7 +176,9 @@ export const MEMBERS: CommitteeMember[] = [
       "Promote community traditions and heritage.",
       "Support festivals and cultural events.",
     ],
-    contactPublic: false,
+    contactPublic: true,
+    phone: "+91 98XXXXXXXX",
+    email: "culture@kohlisamaj.org",
   },
 
   {
@@ -182,10 +195,11 @@ export const MEMBERS: CommitteeMember[] = [
       "Support students and educational initiatives.",
       "Encourage educational awareness within the community.",
     ],
-    contactPublic: false,
+    contactPublic: true,
+    phone: "+91 98XXXXXXXX",
+    email: "education@kohlisamaj.org",
   },
 ];
-
 /* ---------------------------------------------------------------------- */
 /* Scroll reveal                           */
 /* ---------------------------------------------------------------------- */
@@ -457,7 +471,7 @@ export default function ExecutiveCommittee() {
         )}
 
         {/* Rest of the committee */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 md:gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 md:gap-4">
           {rest.map((member, index) => (
             <CommitteeCard
               key={member.id}

@@ -207,7 +207,7 @@ export default function CommitteeDetail() {
               </div>
 
               <h1
-                className="mt-4 text-center text-3xl font-extrabold leading-tight text-[var(--maroon-950)] lg:text-left lg:text-4xl"
+                className="mt-2 text-center text-3xl font-extrabold leading-tight text-[var(--maroon-950)] lg:text-left lg:text-4xl"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
                 {displayName}
@@ -221,7 +221,7 @@ export default function CommitteeDetail() {
               </p> */}
 
               <div
-                className="mx-auto mt-4 h-0.5 w-16 bg-[var(--gold-500)] lg:mx-0"
+                className="mx-auto mt-2 h-0.5 w-16 bg-[var(--gold-500)] lg:mx-0"
                 aria-hidden="true"
               />
 

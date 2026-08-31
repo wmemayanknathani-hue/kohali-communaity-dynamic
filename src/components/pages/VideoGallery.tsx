@@ -254,7 +254,7 @@ export default function VideoGallery() {
 
         {/* Grid */}
         {list.length > 0 ? (
-          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
             {list.map((v, i) => (
               <button
                 key={v.id}

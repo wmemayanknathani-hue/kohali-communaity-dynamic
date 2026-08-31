@@ -349,7 +349,7 @@ onReadOnline,
         </div>
       </div>
         {/* On tablet/desktop: description+details in a 2-col grid so width is used well */}
-        <div className="md:grid md:grid-cols-5 md:gap-5 lg:gap-8">
+        <div className="md:grid md:grid-cols-2 md:gap-5 lg:gap-8">
           <div className="md:col-span-3">
             {/* DESCRIPTION */}
             <section>

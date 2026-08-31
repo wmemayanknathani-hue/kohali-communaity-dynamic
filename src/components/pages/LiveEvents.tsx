@@ -196,24 +196,24 @@ function CloseIcon({ className }: { className?: string }) {
 function Thumb({ youtubeId }: { youtubeId?: string }) {
   if (!youtubeId) {
     return (
-      <span className="relative flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))]">
+      <span className="relative flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] md:h-20 md:w-28">
         <span
           className="absolute inset-0 opacity-20"
           style={{ backgroundImage: "radial-gradient(circle at 30% 25%, var(--gold-300) 0%, transparent 60%)" }}
         />
-        <CalendarIcon className="relative h-5 w-5 text-[var(--gold-300)]/80" />
+        <CalendarIcon className="relative h-5 w-5 text-[var(--gold-300)]/80 md:h-6 md:w-6" />
       </span>
     );
   }
   return (
-    <span className="group/thumb relative flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--maroon-950)]">
+    <span className="group/thumb relative flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--maroon-950)] md:h-20 md:w-28">
       <img
         src={ytThumb(youtubeId)}
         alt=""
         className="h-full w-full object-cover transition-transform duration-300 group-hover/thumb:scale-110"
       />
       <span className="absolute inset-0 bg-black/15 transition-colors group-hover/thumb:bg-black/30" />
-      <PlayIcon className="absolute h-5 w-5 text-white drop-shadow transition-transform group-hover/thumb:scale-110" />
+      <PlayIcon className="absolute h-5 w-5 text-white drop-shadow transition-transform group-hover/thumb:scale-110 md:h-6 md:w-6" />
     </span>
   );
 }
@@ -226,7 +226,7 @@ function VideoLightbox({ youtubeId, title, onClose }: { youtubeId: string; title
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-[var(--gold-400)]/30"
+        className="w-full max-w-lg overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-[var(--gold-400)]/30 md:max-w-2xl lg:max-w-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between bg-[var(--maroon-950)] px-3 py-2">
@@ -311,9 +311,14 @@ export default function LiveEvents() {
         <VideoLightbox youtubeId={playing.youtubeId} title={playing.title} onClose={() => setPlaying(null)} />
       )}
 
+      {/* Single width-constrained column, same steps as the rest of the
+          site (Home/Services/Family), so header and content line up
+          instead of the header being centered while the list below
+          stretched edge-to-edge. */}
+      <div className="mx-auto w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
         {/* Header */}
-        <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
-          <SectionHeader eyebrow="Live Streaming" title="Live Events"/>
+        <div className="flex w-full items-center justify-between gap-3 px-4 pt-3 sm:px-6 md:gap-4 md:px-8 md:pt-5 lg:px-10">
+          <SectionHeader eyebrow="Live Streaming" title="Live Events" />
 
           <button
             onClick={() => navigate("/home")}
@@ -324,117 +329,39 @@ export default function LiveEvents() {
           </button>
         </div>
 
+        <div className="px-4 pb-6 sm:px-6 md:px-8 lg:px-10">
+          {/* CURRENTLY LIVE */}
+          {isLiveNow && (
+            <section className="ei-enter group relative isolate mb-6 overflow-hidden rounded-3xl border border-[var(--gold-500,#D4AF37)]/30 shadow-[0_16px_38px_-16px_rgba(58,10,18,0.55)]">
 
-      <div className="px-4 pb-6 sm:px-6">
-        {/* CURRENTLY LIVE */}
-        {isLiveNow && (
-        <section className="ei-enter group relative isolate mb-6 overflow-hidden rounded-3xl border border-[var(--gold-500,#D4AF37)]/30 shadow-[0_16px_38px_-16px_rgba(58,10,18,0.55)]">
+              {/* FULL CARD IMAGE */}
+              <div className="absolute inset-0 -z-30">
+                <img
+                  src={ytThumb(LIVE_YOUTUBE_ID)}
+                  alt=""
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+              </div>
 
-          {/* FULL CARD IMAGE */}
-          <div className="absolute inset-0 -z-30">
-            <img
-              src={ytThumb(LIVE_YOUTUBE_ID)}
-              alt=""
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-            />
-          </div>
+              {/* DARK GRADIENT OVER ENTIRE CARD */}
+              <div
+                className="absolute inset-0 -z-20"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(31,5,10,0.18) 0%, rgba(31,5,10,0.20) 25%, rgba(31,5,10,0.38) 45%, rgba(31,5,10,0.78) 68%, rgba(31,5,10,0.97) 100%)",
+                }}
+              />
 
-          {/* DARK GRADIENT OVER ENTIRE CARD */}
-          <div
-            className="absolute inset-0 -z-20"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(31,5,10,0.18) 0%, rgba(31,5,10,0.20) 25%, rgba(31,5,10,0.38) 45%, rgba(31,5,10,0.78) 68%, rgba(31,5,10,0.97) 100%)",
-            }}
-          />
+              {/* SUBTLE COLOR GLOW */}
+              <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_35%,rgba(227,181,74,0.12),transparent_38%)]" />
 
-          {/* SUBTLE COLOR GLOW */}
-          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_35%,rgba(227,181,74,0.12),transparent_38%)]" />
-
-          {/* SHINE SWEEP */}
-          <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-            <div className="ei-hero-shine absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.20),transparent)]" />
-          </div>
-
-
-          {/* VIDEO AREA */}
-          <button
-            onClick={() =>
-              setPlaying({
-                youtubeId: LIVE_YOUTUBE_ID,
-                title: "रक्षाबंधन स्नेहसंमेलन",
-              })
-            }
-            className="relative flex aspect-video w-full items-center justify-center overflow-hidden"
-          >
-
-            {/* ON AIR */}
-            <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 backdrop-blur-md">
-              <span className="live-dot h-1.5 w-1.5 rounded-full bg-red-500" />
-              <span className="text-[11px] font-bold uppercase tracking-wide text-white">
-                On Air
-              </span>
-            </span>
-
-          
-            {/* GOLD AMBIENT GLOW */}
-            <span className="absolute h-28 w-28 rounded-full bg-[var(--gold-400)]/25 blur-3xl" />
-
-            {/* PLAY BUTTON */}
-            <span className="relative z-10 flex h-[68px] w-[68px] items-center justify-center rounded-full border border-white/25 bg-black/20 backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:bg-white/20 group-active:scale-95">
-
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-950)] shadow-[0_8px_25px_-6px_rgba(0,0,0,0.6)]">
-                <PlayIcon className="h-5 w-5" />
-              </span>
-
-            </span>
-
-          </button>
+              {/* SHINE SWEEP */}
+              <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+                <div className="ei-hero-shine absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.20),transparent)]" />
+              </div>
 
 
-          {/* CONTENT — SITS DIRECTLY ON GRADIENT */}
-          <div className="relative z-10 px-5 pb-5 pt-0 sm:px-6">
-
-            {/* ON AIR LABEL */}
-            <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--gold-300,#F3D98B)]">
-              <span className="ei-pulse h-2 w-2 shrink-0 rounded-full bg-[var(--gold-300,#F3D98B)]" />
-              प्रसारण चालू आहे
-            </div>
-
-            {/* TITLE */}
-            <h2 className="text-[17px] font-extrabold leading-snug text-white sm:text-2xl">
-              रक्षाबंधन स्नेहसंमेलन
-            </h2>
-
-            <p className="mt-1 text-sm text-[var(--gold-100)]">
-              Raksha Bandhan Get-together
-            </p>
-
-            {/* DETAILS */}
-            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] font-medium text-white/90">
-
-              <span className="flex items-center gap-1.5">
-                <CalendarIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
-                29 August 2026
-              </span>
-
-              <span className="flex items-center gap-1.5">
-                <ClockIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
-                6:00 PM
-              </span>
-
-              <span className="flex items-center gap-1.5">
-                <PinIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
-                समाज भवन, नागपूर
-              </span>
-
-            </div>
-
-
-            {/* ACTIONS */}
-            <div className="mt-4 flex gap-2">
-
-              {/* WATCH NOW */}
+              {/* VIDEO AREA */}
               <button
                 onClick={() =>
                   setPlaying({
@@ -442,164 +369,246 @@ export default function LiveEvents() {
                     title: "रक्षाबंधन स्नेहसंमेलन",
                   })
                 }
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] py-2.5 text-sm font-bold text-[var(--maroon-950)] shadow-[0_8px_22px_-8px_rgba(227,181,74,0.75)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_25px_-8px_rgba(227,181,74,0.9)] active:scale-[0.98]"
+                className="relative flex aspect-video w-full items-center justify-center overflow-hidden md:aspect-[21/9] lg:aspect-[21/8]"
               >
-                <PlayIcon className="h-3.5 w-3.5" />
-                Watch Now
+
+                {/* ON AIR */}
+                <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 backdrop-blur-md md:left-4 md:top-4 md:px-3 md:py-1.5">
+                  <span className="live-dot h-1.5 w-1.5 rounded-full bg-red-500" />
+                  <span className="text-[11px] font-bold uppercase tracking-wide text-white md:text-xs">
+                    On Air
+                  </span>
+                </span>
+
+
+                {/* GOLD AMBIENT GLOW */}
+                <span className="absolute h-28 w-28 rounded-full bg-[var(--gold-400)]/25 blur-3xl md:h-36 md:w-36" />
+
+                {/* PLAY BUTTON */}
+                <span className="relative z-10 flex h-[68px] w-[68px] items-center justify-center rounded-full border border-white/25 bg-black/20 backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:bg-white/20 group-active:scale-95 md:h-20 md:w-20">
+
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-950)] shadow-[0_8px_25px_-6px_rgba(0,0,0,0.6)] md:h-14 md:w-14">
+                    <PlayIcon className="h-5 w-5 md:h-6 md:w-6" />
+                  </span>
+
+                </span>
+
               </button>
 
-              {/* SHARE / YOUTUBE */}
-              <button
-                aria-label="Share"
-                className="flex items-center justify-center rounded-xl border border-white/30 bg-black/15 px-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:border-[var(--gold-400)]/60 hover:bg-white/10 hover:text-[var(--gold-200)] active:scale-[0.98]"
-              >
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M21.6 7.2c-.2-1-1-1.8-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5c-1 .2-1.8 1-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8c.2 1 1 1.8 2 2 1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5c1-.2 1.8-1 2-2 .4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8zM10 15.5v-7l6 3.5-6 3.5z" />
-                </svg>
-              </button>
 
-            </div>
+              {/* CONTENT — SITS DIRECTLY ON GRADIENT */}
+              <div className="relative z-10 px-5 pb-5 pt-0 sm:px-6 md:px-8 md:pb-7 lg:px-10">
+
+                {/* ON AIR LABEL */}
+                <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--gold-300,#F3D98B)] md:text-xs">
+                  <span className="ei-pulse h-2 w-2 shrink-0 rounded-full bg-[var(--gold-300,#F3D98B)]" />
+                  प्रसारण चालू आहे
+                </div>
+
+                {/* TITLE */}
+                <h2 className="text-[17px] font-extrabold leading-snug text-white sm:text-2xl md:text-3xl">
+                  रक्षाबंधन स्नेहसंमेलन
+                </h2>
+
+                <p className="mt-1 text-sm text-[var(--gold-100)] md:text-base">
+                  Raksha Bandhan Get-together
+                </p>
+
+                {/* DETAILS */}
+                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] font-medium text-white/90 md:text-sm">
+
+                  <span className="flex items-center gap-1.5">
+                    <CalendarIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
+                    29 August 2026
+                  </span>
+
+                  <span className="flex items-center gap-1.5">
+                    <ClockIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
+                    6:00 PM
+                  </span>
+
+                  <span className="flex items-center gap-1.5">
+                    <PinIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
+                    समाज भवन, नागपूर
+                  </span>
+
+                </div>
+
+
+                {/* ACTIONS */}
+                <div className="mt-4 flex gap-2 sm:max-w-sm md:max-w-md">
+
+                  {/* WATCH NOW */}
+                  <button
+                    onClick={() =>
+                      setPlaying({
+                        youtubeId: LIVE_YOUTUBE_ID,
+                        title: "रक्षाबंधन स्नेहसंमेलन",
+                      })
+                    }
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] py-2.5 text-sm font-bold text-[var(--maroon-950)] shadow-[0_8px_22px_-8px_rgba(227,181,74,0.75)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_25px_-8px_rgba(227,181,74,0.9)] active:scale-[0.98] md:py-3 md:text-base"
+                  >
+                    <PlayIcon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                    Watch Now
+                  </button>
+
+                  {/* SHARE / YOUTUBE */}
+                  <button
+                    aria-label="Share"
+                    className="flex items-center justify-center rounded-xl border border-white/30 bg-black/15 px-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:border-[var(--gold-400)]/60 hover:bg-white/10 hover:text-[var(--gold-200)] active:scale-[0.98] md:px-4"
+                  >
+                    <svg
+                      className="h-4 w-4 md:h-[18px] md:w-[18px]"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M21.6 7.2c-.2-1-1-1.8-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5c-1 .2-1.8 1-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8c.2 1 1 1.8 2 2 1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5c1-.2 1.8-1 2-2 .4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8zM10 15.5v-7l6 3.5-6 3.5z" />
+                    </svg>
+                  </button>
+
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* UPCOMING / PREVIOUS toggle — sliding gold pill instead of a hard swap.
+              Capped at a sensible width from md up so a 2-option switch
+              doesn't stretch edge-to-edge on a wide iPad. */}
+          <div className="relative mt-5 grid grid-cols-2 rounded-xl border border-[var(--gold-300)] bg-white p-1 md:mx-auto md:max-w-sm">
+            <span
+              aria-hidden="true"
+              className={`absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-lg bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] shadow-sm transition-transform duration-300 ease-out ${
+                tab === "previous" ? "translate-x-[calc(100%+2px)]" : "translate-x-0"
+              }`}
+            />
+            <button
+              onClick={() => setTab("upcoming")}
+              className={`relative z-10 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
+                tab === "upcoming" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
+              }`}
+            >
+              Upcoming 
+            </button>
+            <button
+              onClick={() => setTab("previous")}
+              className={`relative z-10 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
+                tab === "previous" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
+              }`}
+            >
+              Previous 
+            </button>
           </div>
-        </section>
-        )}
 
-        {/* UPCOMING / PREVIOUS toggle — sliding gold pill instead of a hard swap */}
-        <div className="relative mt-5 grid grid-cols-2 rounded-xl border border-[var(--gold-300)] bg-white p-1">
-          <span
-            aria-hidden="true"
-            className={`absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-lg bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] shadow-sm transition-transform duration-300 ease-out ${
-              tab === "previous" ? "translate-x-[calc(100%+2px)]" : "translate-x-0"
-            }`}
-          />
-          <button
-            onClick={() => setTab("upcoming")}
-            className={`relative z-10 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
-              tab === "upcoming" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
-            }`}
-          >
-            Upcoming 
-          </button>
-          <button
-            onClick={() => setTab("previous")}
-            className={`relative z-10 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
-              tab === "previous" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
-            }`}
-          >
-            Previous 
-          </button>
-        </div>
+          {/* Both tabs share the same card layout — stacked on phone,
+              a multi-column grid from iPad width up so the list doesn't
+              read as one long, mostly-empty column on a wide screen. */}
+          {tab === "upcoming" ? (
+            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {UPCOMING.map((ev, i) => {
+                const days = daysFromCountdown(ev.countdown);
+                const soon = days !== null && days <= 7;
+                return (
+                  <div
+                    key={ev.titleEn}
+                    style={{ animationDelay: `${i * 60}ms` }}
+                    className="fade-up relative flex items-start gap-3 overflow-hidden rounded-2xl border border-[var(--gold-300)] bg-white p-3 pl-4 md:p-4"
+                  >
 
-        {/* Both tabs share the same card layout — no timeline design */}
-        {tab === "upcoming" ? (
-          <div className="mt-5 space-y-3">
-            {UPCOMING.map((ev, i) => {
-              const days = daysFromCountdown(ev.countdown);
-              const soon = days !== null && days <= 7;
-              return (
-                <div
-                  key={ev.titleEn}
+                    <div className="relative shrink-0">
+                      <Thumb youtubeId={ev.youtubeId} />
+                      {ev.promoDuration && (
+                        <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 text-[10px] font-semibold text-white">
+                          {ev.promoDuration}
+                        </span>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                            soon ? "bg-[var(--maroon-800)] text-[var(--gold-100)]" : "bg-[var(--gold-100)] text-[var(--gold-700)]"
+                          }`}
+                        >
+                          {soon ? "Soon" : "Scheduled"}
+                        </span>
+                        <span className={`text-[11px] font-semibold ${soon ? "text-[var(--maroon-800)]" : "text-[var(--maroon-700)]"}`}>
+                          {ev.countdown}
+                        </span>
+                      </div>
+                      <p className="mt-1 truncate text-[14px] font-bold text-[var(--maroon-950)] md:text-[15px]">{ev.titleEn}</p>
+                      {/* <p className="truncate text-[12px] text-[var(--gold-700)]">{ev.titleMr}</p> */}
+
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-[var(--text-muted)]">
+                        <span className="flex items-center gap-1">
+                          <CalendarIcon className="h-3 w-3" />
+                          {ev.date}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <ClockIcon className="h-3 w-3" />
+                          {ev.time}
+                        </span>
+                        <span className="flex min-w-0 items-center gap-1">
+                          <PinIcon className="h-3 w-3 shrink-0" />
+                          <span className="truncate">{ev.location}</span>
+                        </span>
+                      </div>
+
+                      {/* <div className="mt-1 flex items-center justify-between gap-2">
+                        <p className="truncate text-[11px] text-[var(--text-muted)]">{ev.host}</p>
+                        <button className="shrink-0 rounded-full border border-[var(--gold-400)] px-2.5 py-1 text-[11px] font-semibold text-[var(--maroon-800)] active:scale-95">
+                          Remind
+                        </button>
+                      </div> */}
+
+                      {/* {ev.youtubeId && (
+                        <button
+                          onClick={() => setPlaying({ youtubeId: ev.youtubeId!, title: `${ev.titleEn} — Teaser` })}
+                          className="mt-2 flex items-center gap-1 text-[11px] font-semibold text-[var(--maroon-800)]"
+                        >
+                          <PlayIcon className="h-3 w-3" />
+                          Watch teaser
+                        </button>
+                      )} */}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {PREVIOUS.map((item, i) => (
+                <button
+                  key={item.titleEn}
+                  onClick={() => setPlaying({ youtubeId: item.youtubeId, title: item.titleEn })}
                   style={{ animationDelay: `${i * 60}ms` }}
-                  className="fade-up relative flex items-start gap-3 overflow-hidden rounded-2xl border border-[var(--gold-300)] bg-white p-3 pl-4"
+                  className="fade-up flex w-full items-start gap-3 rounded-2xl border border-[var(--gold-300)] bg-white p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--gold-400)] hover:shadow-md active:scale-[0.99] md:p-4"
                 >
-                  
                   <div className="relative shrink-0">
-                    <Thumb youtubeId={ev.youtubeId} />
-                    {ev.promoDuration && (
-                      <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 text-[10px] font-semibold text-white">
-                        {ev.promoDuration}
-                      </span>
-                    )}
+                    <Thumb youtubeId={item.youtubeId} />
+                    <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 text-[10px] font-semibold text-white">
+                      {item.duration}
+                    </span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-                          soon ? "bg-[var(--maroon-800)] text-[var(--gold-100)]" : "bg-[var(--gold-100)] text-[var(--gold-700)]"
-                        }`}
-                      >
-                        {soon ? "Soon" : "Scheduled"}
-                      </span>
-                      <span className={`text-[11px] font-semibold ${soon ? "text-[var(--maroon-800)]" : "text-[var(--maroon-700)]"}`}>
-                        {ev.countdown}
-                      </span>
-                    </div>
-                    <p className="mt-1 truncate text-[14px] font-bold text-[var(--maroon-950)]">{ev.titleEn}</p>
-                    {/* <p className="truncate text-[12px] text-[var(--gold-700)]">{ev.titleMr}</p> */}
-
-                    <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-[var(--text-muted)]">
+                    <p className="truncate text-[14px] font-bold text-[var(--maroon-950)] md:text-[15px]">{item.titleEn}</p>
+                    {/* <p className="truncate text-[12px] text-[var(--gold-700)]">{item.titleMr}</p> */}
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-[var(--text-muted)]">
                       <span className="flex items-center gap-1">
                         <CalendarIcon className="h-3 w-3" />
-                        {ev.date}
+                        {item.date}
                       </span>
                       <span className="flex items-center gap-1">
-                        <ClockIcon className="h-3 w-3" />
-                        {ev.time}
-                      </span>
-                      <span className="flex min-w-0 items-center gap-1">
-                        <PinIcon className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{ev.location}</span>
+                        <EyeIcon className="h-3 w-3" />
+                        {item.views} views
                       </span>
                     </div>
-
-                    {/* <div className="mt-1 flex items-center justify-between gap-2">
-                      <p className="truncate text-[11px] text-[var(--text-muted)]">{ev.host}</p>
-                      <button className="shrink-0 rounded-full border border-[var(--gold-400)] px-2.5 py-1 text-[11px] font-semibold text-[var(--maroon-800)] active:scale-95">
-                        Remind
-                      </button>
-                    </div> */}
-
-                    {/* {ev.youtubeId && (
-                      <button
-                        onClick={() => setPlaying({ youtubeId: ev.youtubeId!, title: `${ev.titleEn} — Teaser` })}
-                        className="mt-2 flex items-center gap-1 text-[11px] font-semibold text-[var(--maroon-800)]"
-                      >
-                        <PlayIcon className="h-3 w-3" />
-                        Watch teaser
-                      </button>
-                    )} */}
+                    <p className="truncate text-[11px] text-[var(--text-muted)]">{item.host}</p>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="mt-5 space-y-3">
-            {PREVIOUS.map((item, i) => (
-              <button
-                key={item.titleEn}
-                onClick={() => setPlaying({ youtubeId: item.youtubeId, title: item.titleEn })}
-                style={{ animationDelay: `${i * 60}ms` }}
-                className="fade-up flex w-full items-start gap-3 rounded-2xl border border-[var(--gold-300)] bg-white p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--gold-400)] hover:shadow-md active:scale-[0.99]"
-              >
-                <div className="relative shrink-0">
-                  <Thumb youtubeId={item.youtubeId} />
-                  <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 text-[10px] font-semibold text-white">
-                    {item.duration}
-                  </span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[14px] font-bold text-[var(--maroon-950)]">{item.titleEn}</p>
-                  {/* <p className="truncate text-[12px] text-[var(--gold-700)]">{item.titleMr}</p> */}
-                  <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-[var(--text-muted)]">
-                    <span className="flex items-center gap-1">
-                      <CalendarIcon className="h-3 w-3" />
-                      {item.date}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <EyeIcon className="h-3 w-3" />
-                      {item.views} views
-                    </span>
-                  </div>
-                  <p className="truncate text-[11px] text-[var(--text-muted)]">{item.host}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
