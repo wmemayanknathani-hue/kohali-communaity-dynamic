@@ -280,6 +280,31 @@ export default function LiveEvents() {
         @media (prefers-reduced-motion: reduce) {
           .live-dot, .fade-up { animation: none; }
         }
+
+        @keyframes fadeSlideUp {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseDot {
+          0% { box-shadow: 0 0 0 0 rgba(243,210,122,0.6); }
+          70% { box-shadow: 0 0 0 8px rgba(243,210,122,0); }
+          100% { box-shadow: 0 0 0 0 rgba(243,210,122,0); }
+        }
+        @keyframes hero-shine {
+          0% { transform: translateX(-120%) skewX(-12deg); }
+          100% { transform: translateX(320%) skewX(-12deg); }
+        }
+        .ei-enter { animation: fadeSlideUp 0.4s ease-out both; }
+        .ei-pulse { animation: pulseDot 1.8s ease-out infinite; }
+        .ei-scroll::-webkit-scrollbar { display: none; }
+        .ei-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        .ei-card-img img { transition: transform 0.4s ease; }
+        .ei-card:hover .ei-card-img img { transform: scale(1.04); }
+        .ei-hero-shine { animation: hero-shine 3.2s ease-in-out 0.4s 1; }
+        @media (prefers-reduced-motion: reduce) {
+          .ei-enter, .ei-pulse, .ei-hero-shine { animation: none !important; }
+          .ei-card-img img { transition: none !important; }
+        }
       `}</style>
 
       {playing && (
@@ -303,84 +328,147 @@ export default function LiveEvents() {
       <div className="px-4 pb-6 sm:px-6">
         {/* CURRENTLY LIVE */}
         {isLiveNow && (
-          <div className="fade-up relative overflow-hidden rounded-3xl bg-[var(--maroon-950)] shadow-[var(--shadow-maroon)] ring-1 ring-[var(--gold-400)]/20">
-            {/* video preview — the actual broadcast thumbnail, not just a plain gradient */}
-            <button
-              onClick={() => setPlaying({ youtubeId: LIVE_YOUTUBE_ID, title: "रक्षाबंधन स्नेहसंमेलन" })}
-              className="group relative flex aspect-video w-full items-center justify-center overflow-hidden"
-            >
-              <img
-                src={ytThumb(LIVE_YOUTUBE_ID)}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(44,5,13,0.35)_0%,rgba(44,5,13,0.15)_45%,var(--maroon-950)_100%)]" />
+        <section className="ei-enter group relative isolate mb-6 overflow-hidden rounded-3xl border border-[var(--gold-500,#D4AF37)]/30 shadow-[0_16px_38px_-16px_rgba(58,10,18,0.55)]">
 
-              <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-black/40 px-2.5 py-1 backdrop-blur-sm">
-                <span className="live-dot h-1.5 w-1.5 rounded-full bg-red-500" />
-                <span className="text-[11px] font-bold uppercase tracking-wide text-white">On Air</span>
-              </div>
-              <span className="absolute right-3 top-3 rounded-full bg-white/40 px-2.5 py-1 text-[11px] font-medium text-[var(--gold-200)] backdrop-blur-sm">
-                प्रसारण चालू आहे
+          {/* FULL CARD IMAGE */}
+          <div className="absolute inset-0 -z-30">
+            <img
+              src={ytThumb(LIVE_YOUTUBE_ID)}
+              alt=""
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+          </div>
+
+          {/* DARK GRADIENT OVER ENTIRE CARD */}
+          <div
+            className="absolute inset-0 -z-20"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(31,5,10,0.18) 0%, rgba(31,5,10,0.20) 25%, rgba(31,5,10,0.38) 45%, rgba(31,5,10,0.78) 68%, rgba(31,5,10,0.97) 100%)",
+            }}
+          />
+
+          {/* SUBTLE COLOR GLOW */}
+          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_35%,rgba(227,181,74,0.12),transparent_38%)]" />
+
+          {/* SHINE SWEEP */}
+          <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <div className="ei-hero-shine absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.20),transparent)]" />
+          </div>
+
+
+          {/* VIDEO AREA */}
+          <button
+            onClick={() =>
+              setPlaying({
+                youtubeId: LIVE_YOUTUBE_ID,
+                title: "रक्षाबंधन स्नेहसंमेलन",
+              })
+            }
+            className="relative flex aspect-video w-full items-center justify-center overflow-hidden"
+          >
+
+            {/* ON AIR */}
+            <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 backdrop-blur-md">
+              <span className="live-dot h-1.5 w-1.5 rounded-full bg-red-500" />
+              <span className="text-[11px] font-bold uppercase tracking-wide text-white">
+                On Air
+              </span>
+            </span>
+
+          
+            {/* GOLD AMBIENT GLOW */}
+            <span className="absolute h-28 w-28 rounded-full bg-[var(--gold-400)]/25 blur-3xl" />
+
+            {/* PLAY BUTTON */}
+            <span className="relative z-10 flex h-[68px] w-[68px] items-center justify-center rounded-full border border-white/25 bg-black/20 backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:bg-white/20 group-active:scale-95">
+
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-950)] shadow-[0_8px_25px_-6px_rgba(0,0,0,0.6)]">
+                <PlayIcon className="h-5 w-5" />
               </span>
 
-              {/* soft ambient glow behind the play button, drawing the eye without a hard shadow */}
-              <span className="absolute h-24 w-24 rounded-full bg-[var(--gold-400)]/25 blur-2xl" />
-              <span className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white/15 text-[var(--gold-100)] backdrop-blur transition-transform duration-200 group-hover:scale-105 group-active:scale-95">
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-950)]">
-                  <PlayIcon className="h-5 w-5 translate-x-0.5" />
-                </span>
+            </span>
+
+          </button>
+
+
+          {/* CONTENT — SITS DIRECTLY ON GRADIENT */}
+          <div className="relative z-10 px-5 pb-5 pt-0 sm:px-6">
+
+            {/* ON AIR LABEL */}
+            <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--gold-300,#F3D98B)]">
+              <span className="ei-pulse h-2 w-2 shrink-0 rounded-full bg-[var(--gold-300,#F3D98B)]" />
+              प्रसारण चालू आहे
+            </div>
+
+            {/* TITLE */}
+            <h2 className="text-[17px] font-extrabold leading-snug text-white sm:text-2xl">
+              रक्षाबंधन स्नेहसंमेलन
+            </h2>
+
+            <p className="mt-1 text-sm text-[var(--gold-100)]">
+              Raksha Bandhan Get-together
+            </p>
+
+            {/* DETAILS */}
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] font-medium text-white/90">
+
+              <span className="flex items-center gap-1.5">
+                <CalendarIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
+                29 August 2026
               </span>
-            </button>
 
-            <div className="px-5 pb-5 pt-4">
-              <h2 className="text-xl font-bold leading-snug text-white">
-                रक्षाबंधन स्नेहसंमेलन
-              </h2>
-              <p className="mt-0.5 text-sm text-[var(--gold-100)]">Raksha Bandhan Get-together</p>
+              <span className="flex items-center gap-1.5">
+                <ClockIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
+                6:00 PM
+              </span>
 
-              <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/80">
-                <span className="flex items-center gap-1">
-                  <CalendarIcon className="h-3.5 w-3.5" />
-                  29 August 2026
-                </span>
-                <span className="flex items-center gap-1">
-                  <ClockIcon className="h-3.5 w-3.5" />
-                  6:00 PM
-                </span>
-                <span className="flex items-center gap-1">
-                  <PinIcon className="h-3.5 w-3.5" />
-                  समाज भवन, नागपूर
-                </span>
-                {/* <span className="flex items-center gap-1 text-[var(--gold-200)]">
-                  <EyeIcon className="h-3.5 w-3.5" />
-                  1.2K watching
-                </span> */}
-              </div>
+              <span className="flex items-center gap-1.5">
+                <PinIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
+                समाज भवन, नागपूर
+              </span>
 
-              <div className="mt-4 flex gap-2">
-                <button
-                  onClick={() => setPlaying({ youtubeId: LIVE_YOUTUBE_ID, title: "रक्षाबंधन स्नेहसंमेलन" })}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] py-2.5 text-sm font-bold text-[var(--maroon-950)] transition-transform active:scale-[0.98]"
+            </div>
+
+
+            {/* ACTIONS */}
+            <div className="mt-4 flex gap-2">
+
+              {/* WATCH NOW */}
+              <button
+                onClick={() =>
+                  setPlaying({
+                    youtubeId: LIVE_YOUTUBE_ID,
+                    title: "रक्षाबंधन स्नेहसंमेलन",
+                  })
+                }
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] py-2.5 text-sm font-bold text-[var(--maroon-950)] shadow-[0_8px_22px_-8px_rgba(227,181,74,0.75)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_25px_-8px_rgba(227,181,74,0.9)] active:scale-[0.98]"
+              >
+                <PlayIcon className="h-3.5 w-3.5" />
+                Watch Now
+              </button>
+
+              {/* SHARE / YOUTUBE */}
+              <button
+                aria-label="Share"
+                className="flex items-center justify-center rounded-xl border border-white/30 bg-black/15 px-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:border-[var(--gold-400)]/60 hover:bg-white/10 hover:text-[var(--gold-200)] active:scale-[0.98]"
+              >
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
                 >
-                  <PlayIcon className="h-3.5 w-3.5" />
-                  Watch Now
-                </button>
-                <button
-                  aria-label="Share"
-                  className="flex items-center justify-center rounded-xl border border-white/25 px-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 active:scale-[0.98]"
-                >
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M21.6 7.2c-.2-1-1-1.8-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5c-1 .2-1.8 1-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8c.2 1 1 1.8 2 2 1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5c1-.2 1.8-1 2-2 .4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8zM10 15.5v-7l6 3.5-6 3.5z" />
-                  </svg>
-                </button>
-              </div>
+                  <path d="M21.6 7.2c-.2-1-1-1.8-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5c-1 .2-1.8 1-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8c.2 1 1 1.8 2 2 1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5c1-.2 1.8-1 2-2 .4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8zM10 15.5v-7l6 3.5-6 3.5z" />
+                </svg>
+              </button>
+
             </div>
           </div>
+        </section>
         )}
 
         {/* UPCOMING / PREVIOUS toggle — sliding gold pill instead of a hard swap */}
-        <div className="relative mt-8 grid grid-cols-2 rounded-xl border border-[var(--gold-300)] bg-white p-1">
+        <div className="relative mt-5 grid grid-cols-2 rounded-xl border border-[var(--gold-300)] bg-white p-1">
           <span
             aria-hidden="true"
             className={`absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-lg bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] shadow-sm transition-transform duration-300 ease-out ${
@@ -393,7 +481,7 @@ export default function LiveEvents() {
               tab === "upcoming" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
             }`}
           >
-            Upcoming <span className="opacity-75">· आगामी</span>
+            Upcoming 
           </button>
           <button
             onClick={() => setTab("previous")}
@@ -401,7 +489,7 @@ export default function LiveEvents() {
               tab === "previous" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
             }`}
           >
-            Previous <span className="opacity-75">· मागील</span>
+            Previous 
           </button>
         </div>
 

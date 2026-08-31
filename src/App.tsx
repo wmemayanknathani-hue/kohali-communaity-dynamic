@@ -20,7 +20,7 @@ import LiveEvents from "./components/pages/LiveEvents";
 import Contact from "./components/pages/Contact";
 import BusinessPromotion from "./components/pages/BusinessPromotion";
 import Business from "./components/pages/Business";
-import BusinessDetails from "./components/BusinessDetailsSheet";
+import BusinessDetails from "./components/BusinessDetails";
 import CommitteeDetail from "./components/pages/CommitteeDetail";
 import Notices from "./components/pages/Notices";
 import PhotoGallery from "./components/pages/PhotoGallery";

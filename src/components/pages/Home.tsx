@@ -425,7 +425,7 @@ export function Home() {
             <SectionHeader eyebrow="Directory" title="Our Businesses" actionLabel="सर्व पहा" actionTo="/business" />
           </Reveal>
           <div className="grid grid-cols-2 md:grid-cols-2 gap-3.5">
-            {sampleBusinesses.slice(0, 4).map((business, index) => (
+            {sampleBusinesses.slice(0, 2).map((business, index) => (
               <Reveal key={business.id} delay={index * 90}>
                 <BusinessCard business={business} />
               </Reveal>
