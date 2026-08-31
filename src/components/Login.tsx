@@ -139,7 +139,7 @@ export function LoginPage() {
     setTimeout(() => {
       setIsLoading(false);
       localStorage.setItem("authToken", "dummy-token");
-      navigate("/", { replace: true });
+      navigate("/home", { replace: true });
     }, 550);
   }
 
@@ -151,10 +151,7 @@ export function LoginPage() {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center py-10">
-      {/* fixed, full-viewport background layer — position:fixed is sized
-          to the browser viewport itself, not to this component's parent,
-          so it covers the whole screen even if an ancestor container is
-          narrower than the page (e.g. a centered max-width shell) */}
+    
       <div
         aria-hidden="true"
         className="fixed inset-0 -z-10"
@@ -166,12 +163,7 @@ export function LoginPage() {
         }}
       />
 
-      {/* Hero + card now travel together as one block, vertically centered
-          on the screen — previously the hero was pinned to the top and
-          the card pinned to the bottom, which left a large dead gap of
-          empty background between them on tall viewports. Capped at
-          430px so it also reads as a proper centered card (not a
-          full-bleed sheet) on tablet/desktop. */}
+     
       <div className="w-full max-w-[430px] flex flex-col px-5">
 
         {/* ---- hero: logo + heading sit directly on the page background ---- */}
@@ -297,11 +289,6 @@ export function LoginPage() {
                     <ArrowLeft size={12} />
                     Change number
                   </button>
-
-                  {/* icon treatment now matches the admin role icons (maroon
-                      gradient + gold glyph) instead of the flatter gold-chip
-                      style it had before, so this screen reads as part of
-                      the same system rather than a lighter afterthought */}
                   <span className="grid h-11 w-11 place-items-center rounded-full bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] shadow-[0_6px_16px_rgba(90,10,20,0.25)] mb-3.5">
                     <MessageSquareText size={18} className="text-[var(--gold-300)]" />
                   </span>
@@ -313,17 +300,10 @@ export function LoginPage() {
                     Enter the 6-digit code
                   </h2>
 
-                  {/* chip styled like the other input fields (same cream
-                      fill + gold border) instead of plain text, so it reads
-                      as a matched piece of the form rather than a caption */}
                   <div className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--gold-500)]/35 bg-[var(--cream)] px-3 py-2 mb-6 text-[12px] text-[var(--muted-foreground)]">
                     Sent to <span className="font-bold text-[var(--ink)]">+91 {mobile}</span>
                   </div>
 
-                  {/* centered, evenly-gapped row keeps the six boxes together
-                      and balanced regardless of the card's width, and the
-                      taller boxes + subtle inner shadow now match the
-                      weight of the other inputs and the CTA button */}
                   <div
                     className="flex justify-center gap-2.5 mb-2"
                     onPaste={handleOtpPaste}
