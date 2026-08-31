@@ -295,7 +295,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
         <SectionHeader eyebrow="Our Initiatives" title="Events & Initiatives" />
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           aria-label="Back"
           className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border border-[var(--gold-500,#D4AF37)]/30 bg-[linear-gradient(115deg,var(--maroon-900,#4A0F1A),var(--maroon-700,#7A2035)_65%,var(--maroon-850,#5C0F21))] shadow-[0_6px_14px_-6px_rgba(58,10,18,0.5)] transition-transform duration-150 hover:brightness-110 active:scale-95 md:h-[40px] md:w-[40px]"
         >

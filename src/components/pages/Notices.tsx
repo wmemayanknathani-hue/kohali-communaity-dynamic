@@ -254,7 +254,7 @@ export default function NoticesPage() {
             </button>
           )}
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
             aria-label="मागे जा"
             className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 hover:brightness-110 active:scale-95 md:h-[40px] md:w-[40px]"
           >

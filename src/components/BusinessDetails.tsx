@@ -283,7 +283,7 @@ export default function BusinessDetailPage() {
                       href={toDirectionsHref(addressLine ?? location)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--maroon-900)] px-3 py-1.5 text-xs font-bold text-white no-underline transition-colors duration-150 hover:bg-[var(--maroon-900)]/15"
+                      className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[linear-gradient(135deg,var(--maroon-700),var(--maroon-900))] px-3 py-1.5 text-xs font-bold text-white no-underline transition-colors duration-150 hover:bg-[var(--maroon-900)]/15"
                     >
                       <Navigation size={12} /> Get Directions
                     </a>

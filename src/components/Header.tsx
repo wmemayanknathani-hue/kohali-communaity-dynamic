@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Bell, User, Globe, Check, ChevronDown } from "lucide-react";
 import {
   NotificationDropdown,
@@ -55,6 +56,7 @@ const notifications: Notification[] = [
 ];
 
 export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
+  const navigate = useNavigate();
   const [notifOpen, setNotifOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [lang, setLang] = useState<"mr" | "en">("mr");
@@ -65,35 +67,40 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
     <header className="sticky top-0 z-40">
       {/* Fine maroon–gold decorative edge */}
       <div className="relative border-b border-[var(--gold-500)]/35 bg-[var(--cream)] shadow-[0_8px_22px_-18px_rgba(44,5,13,0.7)]">
-        <div className="mx-auto flex h-[70px] w-full items-center gap-2 px-4 sm:h-[76px] sm:px-6 md:h-[80px] md:max-w-3xl md:px-8 lg:h-[84px] lg:max-w-4xl lg:px-10 xl:max-w-5xl">
-          {/* Brand */}
-          <div className="flex min-w-0 flex-1 items-center gap-2.5 md:gap-3">
+        <div className="mx-auto flex h-[62px] w-full items-center gap-1.5 px-3 xs:h-[66px] sm:h-[76px] sm:gap-2 sm:px-6 md:h-[80px] md:max-w-3xl md:px-8 lg:h-[84px] lg:max-w-4xl lg:px-10 xl:max-w-5xl">
+          {/* Brand — click to go home */}
+          <button
+            type="button"
+            onClick={() => navigate("/home")}
+            aria-label="Go to home page"
+            className="flex min-w-0 flex-1 items-center gap-2 rounded-xl py-1 text-left transition-opacity duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:opacity-80 sm:gap-2.5 md:gap-3"
+          >
             <div className="relative shrink-0">
               <div className="absolute inset-0 rounded-full bg-[var(--gold-400)]/40 blur-md" />
 
-              <div className="relative grid h-11 w-11 place-items-center rounded-full border border-[var(--gold-500)] bg-[var(--paper)] shadow-[var(--shadow-gold)] sm:h-12 sm:w-12 md:h-14 md:w-14">
+              <div className="relative grid h-9 w-9 place-items-center rounded-full border border-[var(--gold-500)] bg-[var(--paper)] shadow-[var(--shadow-gold)] xs:h-10 xs:w-10 sm:h-12 sm:w-12 md:h-14 md:w-14">
                 <img
                   src={logo}
                   alt="Kohali Samaj Vikas Mandal logo"
-                  className="h-9 w-9 object-contain sm:h-10 sm:w-10 md:h-11 md:w-11"
+                  className="h-7 w-7 object-contain xs:h-8 xs:w-8 sm:h-9 sm:w-9 md:h-11 md:w-11"
                 />
               </div>
             </div>
 
             <div className="min-w-0">
-              <p className="kc-font-display truncate text-[14px] font-extrabold leading-tight tracking-tight text-[var(--maroon-900)] sm:text-[16px] md:text-[18px] lg:text-[19px]">
+              <p className="kc-font-display truncate text-[12px] font-extrabold leading-tight tracking-tight text-[var(--maroon-900)] xs:text-[13px] sm:text-[16px] md:text-[18px] lg:text-[19px]">
                 कोहळी समाज विकास मंडळ
               </p>
 
               <div className="mt-0.5 flex items-center gap-1.5">
                 <span className="h-1 w-1 rounded-full bg-[var(--gold-500)]" />
 
-                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--gold-700)] sm:text-[10px] md:text-[11px]">
+                <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-[var(--gold-700)] xs:text-[9px] sm:text-[10px] md:text-[11px]">
                   नागपूर
                 </p>
               </div>
             </div>
-          </div>
+          </button>
 
           {/* Actions */}
           <div className="flex shrink-0 items-center gap-1 sm:gap-1.5 md:gap-2">
@@ -107,15 +114,15 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 }}
                 aria-label="Change language"
                 aria-expanded={langOpen}
-                className={`flex h-10 items-center gap-1 rounded-xl border px-2.5 transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 md:h-11 md:px-3 ${
+                className={`flex h-9 items-center gap-1 rounded-xl border px-2 transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 sm:px-2.5 md:h-11 md:px-3 ${
                   langOpen
                     ? "border-[var(--gold-500)]/60 bg-[var(--gold-300)]/55 text-[var(--maroon-900)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]"
                     : "border-[var(--gold-500)]/25 bg-[var(--gold-100)] text-[var(--maroon-800)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-[var(--gold-500)]/40 hover:bg-[var(--gold-300)]/45 hover:shadow-[0_2px_6px_-2px_rgba(90,15,20,0.18)]"
                 }`}
               >
-                <Globe strokeWidth={2.2} className="h-4 w-4 md:h-[18px] md:w-[18px]" />
+                <Globe strokeWidth={2.2} className="h-3.5 w-3.5 xs:h-4 xs:w-4 md:h-[18px] md:w-[18px]" />
 
-                <span className="text-[10px] font-extrabold uppercase md:text-[11px]">
+                <span className="hidden text-[10px] font-extrabold uppercase xs:inline md:text-[11px]">
                   {lang}
                 </span>
 
@@ -181,16 +188,16 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 }}
                 aria-label="Notifications"
                 aria-expanded={notifOpen}
-                className={`relative grid h-10 w-10 place-items-center rounded-xl border transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 md:h-11 md:w-11 ${
+                className={`relative grid h-9 w-9 place-items-center rounded-xl border transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 xs:w-10 md:h-11 md:w-11 ${
                   notifOpen
                     ? "border-[var(--gold-500)]/60 bg-[var(--gold-300)]/55 text-[var(--maroon-900)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]"
                     : "border-[var(--gold-500)]/25 bg-[var(--gold-100)] text-[var(--maroon-800)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-[var(--gold-500)]/40 hover:bg-[var(--gold-300)]/45 hover:shadow-[0_2px_6px_-2px_rgba(90,15,20,0.18)]"
                 }`}
               >
-                <Bell strokeWidth={2.2} className="h-[18px] w-[18px] md:h-5 md:w-5" />
+                <Bell strokeWidth={2.2} className="h-4 w-4 xs:h-[18px] xs:w-[18px] md:h-5 md:w-5" />
 
                 {unreadCount > 0 && (
-                  <span className="absolute -right-1 -top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full border-2 border-[var(--cream)] bg-[var(--maroon-700)] px-1 text-[8px] font-extrabold text-[var(--gold-100)] shadow-[0_2px_4px_-1px_rgba(90,15,20,0.5)] md:h-5 md:min-w-[20px] md:text-[9px]">
+                  <span className="absolute -right-1 -top-1 grid h-[16px] min-w-[16px] place-items-center rounded-full border-2 border-[var(--cream)] bg-[var(--maroon-700)] px-1 text-[7px] font-extrabold text-[var(--gold-100)] shadow-[0_2px_4px_-1px_rgba(90,15,20,0.5)] xs:h-[18px] xs:min-w-[18px] xs:text-[8px] md:h-5 md:min-w-[20px] md:text-[9px]">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
@@ -208,12 +215,12 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
               type="button"
               onClick={onMenuClick}
               aria-label="Open account menu"
-              className="group relative ml-0.5 grid h-10 w-10 place-items-center overflow-hidden rounded-xl border border-[var(--gold-400)] bg-[linear-gradient(145deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-950)] shadow-[0_3px_8px_-2px_rgba(90,15,20,0.35),inset_0_1px_0_rgba(255,255,255,0.35)] transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] hover:-translate-y-0.5 hover:shadow-[0_6px_14px_-3px_rgba(90,15,20,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] active:translate-y-0 active:scale-[0.94] active:shadow-[0_1px_3px_-1px_rgba(90,15,20,0.3),inset_0_1px_2px_rgba(0,0,0,0.1)] active:duration-75 md:h-11 md:w-11"
+              className="group relative ml-0.5 grid h-9 w-9 place-items-center overflow-hidden rounded-xl border border-[var(--gold-400)] bg-[linear-gradient(145deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-950)] shadow-[0_3px_8px_-2px_rgba(90,15,20,0.35),inset_0_1px_0_rgba(255,255,255,0.35)] transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] hover:-translate-y-0.5 hover:shadow-[0_6px_14px_-3px_rgba(90,15,20,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] active:translate-y-0 active:scale-[0.94] active:shadow-[0_1px_3px_-1px_rgba(90,15,20,0.3),inset_0_1px_2px_rgba(0,0,0,0.1)] active:duration-75 xs:h-10 xs:w-10 md:h-11 md:w-11"
             >
               <span className="absolute inset-x-0 top-0 h-1/2 bg-white/20" />
               <User
                 strokeWidth={2.3}
-                className="relative h-[18px] w-[18px] transition-transform duration-200 ease-out group-hover:scale-110 md:h-5 md:w-5"
+                className="relative h-4 w-4 transition-transform duration-200 ease-out group-hover:scale-110 xs:h-[18px] xs:w-[18px] md:h-5 md:w-5"
               />
             </button>
           </div>

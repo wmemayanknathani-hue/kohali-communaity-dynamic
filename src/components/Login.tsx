@@ -128,7 +128,7 @@ export function LoginPage() {
     setTimeout(() => {
       setIsLoading(false);
       localStorage.setItem("authToken", "dummy-token");
-      navigate("/", { replace: true });
+      navigate("/home", { replace: true });
     }, 550);
   }
 

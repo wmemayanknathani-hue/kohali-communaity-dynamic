@@ -58,10 +58,11 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         {/* login sits outside MobileLayout — no bottom nav / sidebar here */}
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
 
         <Route element={<MobileLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/family" element={<Family />} />
           <Route path="/committee" element={<ExecutiveCommittee />} />

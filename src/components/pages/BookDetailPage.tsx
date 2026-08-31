@@ -465,7 +465,7 @@ onReadOnline,
             </div>
           </section>
         )}
-         <button type="button" onClick={handleReadOnline} className="mt-5 group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[var(--maroon-900)] to-[var(--maroon-700)] py-3.5 md:py-4 text-sm md:text-base font-semibold text-[var(--gold-300)] shadow-[0_6px_18px_rgba(44,5,13,0.2)] transition-all duration-200 hover:shadow-[0_10px_26px_rgba(44,5,13,0.3)] active:scale-[0.98] " >
+         <button type="button" onClick={handleReadOnline} className="mt-5 group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-[var(--maroon-900)] to-[var(--maroon-700)] py-3.5 md:py-4 text-sm md:text-base font-semibold text-[var(--gold-300)] shadow-[0_6px_18px_rgba(44,5,13,0.2)] transition-all duration-200 hover:shadow-[0_10px_26px_rgba(44,5,13,0.3)] active:scale-[0.98] " >
             <span className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent,rgba(255,255,255,0.18),transparent)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
             ऑनलाइन वाचा
             <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.4} />

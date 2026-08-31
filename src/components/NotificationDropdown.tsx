@@ -72,16 +72,16 @@ export function NotificationDropdown({
 
       <div
         className="
-          fixed inset-x-3 top-16 z-50
-          sm:absolute sm:inset-x-auto sm:right-0 sm:top-11
-          w-auto sm:w-[336px]
+          fixed inset-x-3 top-16 bottom-20 z-50
+          sm:absolute sm:inset-x-auto sm:bottom-auto sm:right-0 sm:top-11
+          flex w-auto flex-col sm:w-[336px]
           max-w-full sm:max-w-[90vw]
           mx-auto sm:mx-0
           overflow-hidden rounded-2xl border border-[var(--gold-500)]/40 bg-[var(--paper)] shadow-[var(--shadow-maroon)]
         "
       >
         {/* Header */}
-        <div className="relative flex items-center justify-between overflow-hidden bg-[linear-gradient(120deg,var(--maroon-800),var(--maroon-950))] px-4 py-3.5">
+        <div className="relative flex shrink-0 items-center justify-between overflow-hidden bg-[linear-gradient(120deg,var(--maroon-800),var(--maroon-950))] px-4 py-3.5">
           <div className="relative">
             <p className="kc-font-display text-[14px] font-extrabold text-white">सूचना फलक</p>
             <p className="text-[10px] font-medium text-[var(--gold-300)]/90">
@@ -98,7 +98,7 @@ export function NotificationDropdown({
         </div>
 
         {/* List */}
-        <div className="max-h-[70vh] sm:max-h-[64vh] overflow-y-auto">
+        <div className="min-h-0 flex-1 overflow-y-auto sm:max-h-[64vh] sm:flex-none">
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
               <BellOff size={22} className="text-[var(--gold-500)]/60" />
@@ -170,7 +170,7 @@ export function NotificationDropdown({
           <Link
             to="/notices"
             onClick={onClose}
-            className="flex w-full cursor-pointer items-center justify-center gap-1.5 border-t border-[var(--gold-500)]/25 bg-[var(--paper)] py-2.5 text-center text-[11px] font-bold text-[var(--maroon-800)] transition-colors hover:bg-[var(--gold-100)]/40"
+            className="flex w-full shrink-0 cursor-pointer items-center justify-center gap-1.5 border-t border-[var(--gold-500)]/25 bg-[var(--paper)] py-2.5 text-center text-[11px] font-bold text-[var(--maroon-800)] transition-colors hover:bg-[var(--gold-100)]/40"
           >
             View All
             <ChevronRight size={13} strokeWidth={2.4} />

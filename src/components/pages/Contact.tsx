@@ -243,7 +243,7 @@ export default function Contact() {
             <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4 lg:max-w-4xl xl:max-w-5xl">
               <SectionHeader eyebrow="Kohli Samaj Nagpur" title="Contact Us" />
               <button
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/home")}
                 className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]"
               >
                 <ChevronLeft className="h-4 w-4 text-white md:h-[18px] md:w-[18px]" strokeWidth={2.2} />
@@ -447,7 +447,7 @@ export default function Contact() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="kc-shine relative mt-1 flex items-center justify-center gap-2 overflow-hidden rounded-2xl py-3.5 text-[14px] font-extrabold text-[var(--paper)] shadow-lg transition active:scale-[0.98] sm:col-span-2"
+                  className="kc-shine relative mt-1 flex items-center justify-center gap-2 overflow-hidden rounded-full py-3.5 text-[14px] font-extrabold text-[var(--paper)] shadow-lg transition active:scale-[0.98] sm:col-span-2"
                   style={{
                     background:
                       "linear-gradient(135deg, var(--maroon-700), var(--maroon-900))",

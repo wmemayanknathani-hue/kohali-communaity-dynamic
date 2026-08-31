@@ -269,7 +269,7 @@ export default function Support() {
 
           <button
             type="button"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
             aria-label="Go back"
             className="mb-3.5 flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 active:scale-95 md:h-10 md:w-10"
           >
@@ -321,7 +321,7 @@ export default function Support() {
 
         <div
           ref={formRef}
-          className="mx-auto pb-20"
+          className="mx-auto"
         >
           {submitted ? (
             /* ------------------------------------------------------------ */
@@ -596,7 +596,7 @@ export default function Support() {
                       <label className="kc-file flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[var(--gold-500)] bg-[var(--cream)]/50 px-4 py-4 text-center transition-all duration-200 hover:border-[var(--maroon-700)]">
 
                         <Paperclip
-                          className="h-5 w-5 shrink-0 !text-[var(--maroon-700)]/65]"
+                          className="h-5 w-5 shrink-0 text-[var(--maroon-700)]/65"
                           strokeWidth={2.25}
                         />
 

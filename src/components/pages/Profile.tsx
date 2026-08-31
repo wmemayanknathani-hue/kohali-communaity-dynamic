@@ -151,7 +151,7 @@ export default function Profile({
        <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
           <SectionHeader eyebrow="Personal Info" title="My Profile"/>
 
-          <button onClick={() => navigate("/")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
+          <button onClick={() => navigate("/home")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
             <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
           </button>
         </div>
@@ -285,7 +285,7 @@ export default function Profile({
           {/* ===== Logout — native destructive row, stronger contrast ===== */}
           <button
             onClick={onLogout}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border-[1.5px] bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] py-3.5 text-[14px] font-bold text-[#fff] transition-transform duration-150 active:scale-[0.99] md:mt-8 md:rounded-3xl md:py-4 md:text-[15px] lg:mx-auto lg:max-w-[420px]"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border-[1.5px] bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] py-3.5 text-[14px] font-bold text-[#fff] transition-transform duration-150 active:scale-[0.99] md:mt-8 md:rounded-3xl md:py-4 md:text-[15px] lg:mx-auto lg:max-w-[420px]"
           >
             <LogOut className="h-4 w-4 md:h-[18px] md:w-[18px]" />
             Log Out

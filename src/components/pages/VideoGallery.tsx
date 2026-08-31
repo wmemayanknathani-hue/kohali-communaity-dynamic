@@ -171,7 +171,7 @@ export default function VideoGallery() {
           <SectionHeader eyebrow="Gallery" title="Video Gallery" />
 
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
             aria-label="Back"
             className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border border-[var(--gold-500,#D4AF37)]/30 bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-[0_6px_14px_-6px_rgba(58,10,18,0.5)] transition-transform duration-150 hover:brightness-110 active:scale-95 md:h-[40px] md:w-[40px]"
           >
@@ -230,15 +230,23 @@ export default function VideoGallery() {
         </div>
 
         {/* Section heading */}
-        <div className="mb-3 mt-1 flex items-baseline justify-between gap-3">
-          <div className="min-w-0">
-            <div className="mb-1 text-[11px] font-extrabold uppercase tracking-[0.1em] text-[var(--gold-500,#C99A3E)]">
-              सर्व चित्रफिती
+        <div className="mx-auto flex w-full items-center justify-between gap-3 pt-3 md:gap-4 md:pt-5">
+          <div className="mb-3.5 flex items-end justify-between">
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-1 rounded-full bg-[var(--gold-500)]" />
+
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--gold-600)]">
+                  सर्व चित्रफिती
+                </p>
+
+                <h3 className="mt-0.5 text-[18px] font-extrabold tracking-tight text-[var(--maroon-700)] md:text-[20px] lg:text-[22px] font-['Yatra_One',cursive]">
+                  {activeCat === "सर्व" ? "अलीकडील व्हिडिओ" : activeCat}
+                </h3>
+              </div>
             </div>
-            <h2 className="truncate text-[17px] font-extrabold text-[var(--maroon-950,#3A0A12)]">
-              {activeCat === "सर्व" ? "अलीकडील व्हिडिओ" : activeCat}
-            </h2>
           </div>
+
           <span className="flex-shrink-0 text-[11.5px] font-bold text-[var(--ink-soft,#8A7570)]">
             {list.length} व्हिडिओ
           </span>

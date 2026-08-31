@@ -335,7 +335,7 @@ export default function BusinessPromotion() {
 
           <button
             type="button"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
             aria-label="Go back"
             className="mb-3.5 flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 active:scale-95 md:h-10 md:w-10"
           >
@@ -655,7 +655,7 @@ export default function BusinessPromotion() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={!agreed}
-                  className="relative mt-4 flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-[linear-gradient(135deg,var(--maroon-700),var(--maroon-900))] py-3.5 text-[14px] font-extrabold text-[var(--paper)] shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 md:w-auto md:px-10"
+                  className="relative mt-4 flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-[linear-gradient(135deg,var(--maroon-700),var(--maroon-900))] py-3.5 text-[14px] font-extrabold text-[var(--paper)] shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 md:w-auto md:px-10"
                 >
                   {submitted ? (
                     <>

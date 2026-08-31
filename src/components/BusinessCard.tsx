@@ -95,7 +95,7 @@ export function BusinessCard({ business }: BusinessCardProps) {
         <a
           href={`/business/${id}`}
           aria-label={`${displayName}`}
-          className="flex h-9 flex-1 items-center justify-center gap-1 rounded-lg bg-[var(--maroon-800)] text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--maroon-900)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] active:scale-95"
+          className="flex h-9 flex-1 items-center justify-center gap-1 rounded-full bg-[var(--maroon-800)] text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--maroon-900)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] active:scale-95"
         >
           <Eye size={12} />
           <span className="text-[11px] font-bold">View Details</span>
