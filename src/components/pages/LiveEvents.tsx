@@ -330,7 +330,14 @@ export default function LiveEvents() {
         </div>
 
         <div className="px-4 pb-6 sm:px-6 md:px-8 lg:px-10">
-          {/* CURRENTLY LIVE */}
+          {/* CURRENTLY LIVE — the "main card" pattern, aligned with the
+              featured-event hero on the Events page: same content padding
+              rhythm (p-5 → sm:p-6 → md:p-8 → lg:p-10) and the same title
+              size step (md:text-[28px]) so the two featured-card designs
+              in the app read as one consistent pattern instead of two
+              slightly different ones. The video area keeps its own
+              aspect-ratio scaling (16:9 → 21:9 at md → 21:8 at lg) since
+              that's driven by the video content, not by text layout. */}
           {isLiveNow && (
             <section className="ei-enter group relative isolate mb-6 overflow-hidden rounded-3xl border border-[var(--gold-500,#D4AF37)]/30 shadow-[0_16px_38px_-16px_rgba(58,10,18,0.55)]">
 
@@ -396,8 +403,9 @@ export default function LiveEvents() {
               </button>
 
 
-              {/* CONTENT — SITS DIRECTLY ON GRADIENT */}
-              <div className="relative z-10 px-5 pb-5 pt-0 sm:px-6 md:px-8 md:pb-7 lg:px-10">
+              {/* CONTENT — SITS DIRECTLY ON GRADIENT. Padding scale now
+                  matches the Events hero card's p-5/sm:p-6/md:p-8. */}
+              <div className="relative z-10 p-5 pt-0 sm:p-6 sm:pt-0 md:p-8 md:pt-0 lg:p-10 lg:pt-0">
 
                 {/* ON AIR LABEL */}
                 <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--gold-300,#F3D98B)] md:text-xs">
@@ -405,12 +413,12 @@ export default function LiveEvents() {
                   प्रसारण चालू आहे
                 </div>
 
-                {/* TITLE */}
-                <h2 className="text-[17px] font-extrabold leading-snug text-white sm:text-2xl md:text-3xl">
+                {/* TITLE — same size step as the Events hero title (md:text-[28px]) */}
+                <h2 className="text-[17px] font-extrabold leading-snug text-white sm:text-2xl md:text-[28px]">
                   रक्षाबंधन स्नेहसंमेलन
                 </h2>
 
-                <p className="mt-1 text-sm text-[var(--gold-100)] md:text-base">
+                <p className="mt-1 text-sm text-[var(--gold-100)] md:text-[15px]">
                   Raksha Bandhan Get-together
                 </p>
 
@@ -471,9 +479,7 @@ export default function LiveEvents() {
             </section>
           )}
 
-          {/* UPCOMING / PREVIOUS toggle — sliding gold pill instead of a hard swap.
-              Capped at a sensible width from md up so a 2-option switch
-              doesn't stretch edge-to-edge on a wide iPad. */}
+          {/* UPCOMING / PREVIOUS toggle */}
           <div className="relative mt-5 grid grid-cols-2 rounded-xl border border-[var(--gold-300)] bg-white p-1 md:mx-auto md:max-w-sm">
             <span
               aria-hidden="true"
@@ -499,11 +505,13 @@ export default function LiveEvents() {
             </button>
           </div>
 
-          {/* Both tabs share the same card layout — stacked on phone,
-              a multi-column grid from iPad width up so the list doesn't
-              read as one long, mostly-empty column on a wide screen. */}
+          {/* Both tabs share the same card layout — stacked on phone, 2
+              columns from sm, 3 columns from lg (iPad landscape and up),
+              matching the breakpoint convention used for the Events grid
+              so landscape iPad gets a proper 3-column layout instead of
+              staying at 2 oversized columns until 1280px. */}
           {tab === "upcoming" ? (
-            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {UPCOMING.map((ev, i) => {
                 const days = daysFromCountdown(ev.countdown);
                 const soon = days !== null && days <= 7;
@@ -575,7 +583,7 @@ export default function LiveEvents() {
               })}
             </div>
           ) : (
-            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {PREVIOUS.map((item, i) => (
                 <button
                   key={item.titleEn}

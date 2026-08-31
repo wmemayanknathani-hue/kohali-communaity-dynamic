@@ -304,9 +304,9 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
       </div>
 
       <main className={`mx-auto w-full px-4 pb-14 ${CONTAINER}`}>
-        {/* Poster-style hero for the next upcoming event. */}
+       
         {featured ? (
-          <section className="ei-enter relative isolate mb-6 flex min-h-[19rem] flex-col justify-end overflow-hidden rounded-3xl border border-[var(--gold-500,#D4AF37)]/25 shadow-[0_16px_38px_-16px_rgba(58,10,18,0.55)] sm:min-h-[20rem]">
+          <section className="ei-enter relative isolate mb-6 flex min-h-[19rem] flex-col justify-end overflow-hidden rounded-3xl border border-[var(--gold-500,#D4AF37)]/25 shadow-[0_16px_38px_-16px_rgba(58,10,18,0.55)] sm:min-h-[20rem] md:min-h-[22rem] lg:min-h-[25rem]">
             <div className="absolute inset-0 -z-20 h-full w-full">
               <EventImage
                 src={featured.image}
@@ -339,7 +339,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
 
             {/* text sits in normal flow (not absolutely positioned), so the
                 section simply grows to fit it — nothing gets cut off */}
-            <div className="relative p-5 text-white sm:p-6 sm:pr-24">
+            <div className="relative p-5 text-white sm:p-6 md:p-8">
               <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--gold-300,#F3D98B)]">
                 <span className="ei-pulse h-2 w-2 shrink-0 rounded-full bg-[var(--gold-300,#F3D98B)]" />
                 Up next
@@ -350,13 +350,13 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
                 })}
                 {getCategory(featured.category).mr}
               </div>
-              <h2 className="text-[16px] font-extrabold leading-snug sm:text-2xl">
+              <h2 className="text-[16px] font-extrabold leading-snug sm:text-2xl md:text-[28px]">
                 {featured.titleEn}
               </h2>
-              <p className="mb-3 mt-2 line-clamp-2 max-w-lg text-sm leading-relaxed text-[rgba(247,241,230,0.85)]">
+              <p className="mb-3 mt-2 line-clamp-2 max-w-lg text-sm leading-relaxed text-[rgba(247,241,230,0.85)] md:max-w-xl md:text-[15px] lg:max-w-2xl">
                 {featured.descriptionMr}
               </p>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] font-medium">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] font-medium md:text-sm">
                 <span className="flex items-center gap-1.5">
                   <CalendarDays size={14} className="shrink-0 text-[var(--gold-300,#F3D98B)]" />
                   {fullDate(featured.date)}
@@ -378,7 +378,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
         )}
 
         {/* Segmented toggle */}
-        <div className="relative mb-4 mt-8 grid grid-cols-2 rounded-xl border border-[var(--gold-300)] bg-white p-1">
+        <div className="relative mb-4 mt-8 grid grid-cols-2 rounded-xl border border-[var(--gold-300)] bg-white p-1 md:max-w-sm md:mx-auto">
   <span
     aria-hidden="true"
     className={`absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-lg bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] shadow-sm transition-transform duration-300 ease-out ${
@@ -420,7 +420,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
         <div className="ei-scroll mb-6 flex gap-2 overflow-x-auto pb-1">
           <button
             onClick={() => setActiveCategory("all")}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition ${
+            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition md:px-4 md:py-2 md:text-sm ${
               activeCategory === "all"
                 ? "border-transparent bg-[linear-gradient(160deg,var(--gold-300,#F3D98B),var(--gold-500,#C99A3E))] text-[var(--maroon-900,#4A0F1A)] shadow-[0_6px_14px_-6px_rgba(58,10,18,0.4)]"
                 : "border-[rgba(243,217,139,0.5)] bg-[var(--paper,#FFFDF8)] text-[rgba(74,15,26,0.7)] hover:border-[var(--gold-500,#D4AF37)]/70"
@@ -435,7 +435,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition ${
+                className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition md:px-4 md:py-2 md:text-sm ${
                   active
                     ? "border-transparent bg-[linear-gradient(160deg,var(--gold-300,#F3D98B),var(--gold-500,#C99A3E))] text-[var(--maroon-900,#4A0F1A)] shadow-[0_6px_14px_-6px_rgba(58,10,18,0.4)]"
                     : "border-[rgba(243,217,139,0.5)] bg-[var(--paper,#FFFDF8)] text-[rgba(74,15,26,0.7)] hover:border-[var(--gold-500,#D4AF37)]/70"
@@ -473,8 +473,10 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
                   style={{ animationDelay: `${idx * 60}ms` }}
                 >
                   {/* Image — fixed height is fine here because badges sit
-                      inside it, not the variable-length title/description */}
-                  <div className="ei-card-img relative h-40 shrink-0 overflow-hidden">
+                      inside it, not the variable-length title/description.
+                      Height steps up slightly on tablet so it doesn't look
+                      squat once the card itself is wider. */}
+                  <div className="ei-card-img relative h-40 shrink-0 overflow-hidden md:h-44 lg:h-48">
                     <EventImage
                       src={event.image}
                       alt={event.titleEn}
@@ -525,8 +527,8 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
                   </div>
 
                   {/* Content — normal flow, grows with the text, never clipped */}
-                  <div className="flex flex-1 flex-col gap-1 px-3.5 pb-4 pt-3">
-                    <h3 className="text-[16px] font-bold text-[var(--ink)]">
+                  <div className="flex flex-1 flex-col gap-1 px-3.5 pb-4 pt-3 md:px-4">
+                    <h3 className="text-[16px] font-bold text-[var(--ink)] md:text-[17px]">
                       {event.titleEn}
                     </h3>
                     <p className="mt-1 text-[14px] text-[var(--text-muted)]">
