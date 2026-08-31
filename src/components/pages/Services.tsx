@@ -498,8 +498,16 @@ export default function ServicesPage() {
           />
         </Reveal>
 
-        {/* Coming-soon services sit side by side from iPad width up */}
-        <div className="grid gap-4 md:grid-cols-2 md:gap-5 lg:gap-6">
+        {/*
+          Coming-soon services: was `md:grid-cols-2`, which switches to a
+          side-by-side layout at exactly 768px — iPad portrait width. Each
+          card holds a title, description, an expandable feature list, and
+          a full-width button, so squeezing two of them into ~350px columns
+          at that width made the cards feel cramped and the accordion text
+          wrap awkwardly. Now it stays single-column through iPad portrait
+          and only goes side-by-side at `lg` (1024px, iPad landscape+).
+        */}
+        <div className="grid gap-4 md:gap-5 lg:grid-cols-2 lg:gap-6">
           <Reveal delay={90}>
             <ComingSoonService
               titleEn="Matrimonial services"

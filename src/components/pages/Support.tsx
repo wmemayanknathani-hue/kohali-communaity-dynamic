@@ -458,7 +458,15 @@ export default function Support() {
                   <section className="mb-5">
                     <SectionHeading title="Location" />
 
-                    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+                    {/*
+                      Was `sm:grid-cols-3` — jumping straight to three
+                      columns at 640px squeezed these in the 640–767px
+                      range (large phones in landscape, small tablets).
+                      Now it eases into two columns at `sm` and only goes
+                      to three right at `md` (768px, iPad portrait), where
+                      there's comfortably enough width for it.
+                    */}
+                    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3">
 
                       {/* Village */}
                       <div>
@@ -592,15 +600,16 @@ export default function Support() {
 
                     <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
 
-                      {/* Photo */}
-                      <label className="kc-file flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[var(--gold-500)] bg-[var(--cream)]/50 px-4 py-4 text-center transition-all duration-200 hover:border-[var(--maroon-700)]">
+                      {/* Photo — padding/icon bumped slightly at md for a
+                          more comfortable tablet touch target */}
+                      <label className="kc-file flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[var(--gold-500)] bg-[var(--cream)]/50 px-4 py-4 text-center transition-all duration-200 hover:border-[var(--maroon-700)] md:px-5 md:py-5">
 
                         <Paperclip
-                          className="h-5 w-5 shrink-0 text-[var(--maroon-700)]/65"
+                          className="h-5 w-5 shrink-0 text-[var(--maroon-700)]/65 md:h-6 md:w-6"
                           strokeWidth={2.25}
                         />
 
-                        <span className="truncate text-[12px] font-bold text-[var(--maroon-700)]">
+                        <span className="truncate text-[12px] font-bold text-[var(--maroon-700)] md:text-[13px]">
                           {fileName || "Upload photo"}
                         </span>
 
@@ -618,14 +627,14 @@ export default function Support() {
                       </label>
 
                       {/* Video */}
-                      <label className="kc-file flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[var(--gold-500)] bg-[var(--cream)]/50 px-4 py-4 text-center transition-all duration-200 hover:border-[var(--maroon-700)]">
+                      <label className="kc-file flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[var(--gold-500)] bg-[var(--cream)]/50 px-4 py-4 text-center transition-all duration-200 hover:border-[var(--maroon-700)] md:px-5 md:py-5">
 
                         <Video
-                          className="h-5 w-5 shrink-0 text-[var(--maroon-700)]/65"
+                          className="h-5 w-5 shrink-0 text-[var(--maroon-700)]/65 md:h-6 md:w-6"
                           strokeWidth={2.25}
                         />
 
-                        <span className="truncate text-[12px] font-bold text-[var(--maroon-700)]">
+                        <span className="truncate text-[12px] font-bold text-[var(--maroon-700)] md:text-[13px]">
                           {videoName || "Upload video (optional)"}
                         </span>
 
