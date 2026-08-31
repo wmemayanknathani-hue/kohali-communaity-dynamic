@@ -2,7 +2,7 @@ import { useState } from "react";
 import SectionHeader from "../SectionHeader";
 import { useNavigate } from "react-router-dom";
 import {
-  ChevronLeft,
+  ChevronLeft, User,
 } from "lucide-react";
 
 type Tab = "upcoming" | "previous";
@@ -505,11 +505,7 @@ export default function LiveEvents() {
             </button>
           </div>
 
-          {/* Both tabs share the same card layout — stacked on phone, 2
-              columns from sm, 3 columns from lg (iPad landscape and up),
-              matching the breakpoint convention used for the Events grid
-              so landscape iPad gets a proper 3-column layout instead of
-              staying at 2 oversized columns until 1280px. */}
+      
           {tab === "upcoming" ? (
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {UPCOMING.map((ev, i) => {
@@ -533,7 +529,7 @@ export default function LiveEvents() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
                         <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                          className={`rounded-full px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide ${
                             soon ? "bg-[var(--maroon-800)] text-[var(--gold-100)]" : "bg-[var(--gold-100)] text-[var(--gold-700)]"
                           }`}
                         >
@@ -546,7 +542,7 @@ export default function LiveEvents() {
                       <p className="mt-1 truncate text-[14px] font-bold text-[var(--maroon-950)] md:text-[15px]">{ev.titleEn}</p>
                       {/* <p className="truncate text-[12px] text-[var(--gold-700)]">{ev.titleMr}</p> */}
 
-                      <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-[var(--text-muted)]">
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[12px] text-[var(--text-muted)]">
                         <span className="flex items-center gap-1">
                           <CalendarIcon className="h-3 w-3" />
                           {ev.date}
@@ -600,7 +596,7 @@ export default function LiveEvents() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[14px] font-bold text-[var(--maroon-950)] md:text-[15px]">{item.titleEn}</p>
                     {/* <p className="truncate text-[12px] text-[var(--gold-700)]">{item.titleMr}</p> */}
-                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-[var(--text-muted)]">
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[12px] text-[var(--text-muted)]">
                       <span className="flex items-center gap-1">
                         <CalendarIcon className="h-3 w-3" />
                         {item.date}
@@ -610,7 +606,7 @@ export default function LiveEvents() {
                         {item.views} views
                       </span>
                     </div>
-                    <p className="truncate text-[11px] text-[var(--text-muted)]">{item.host}</p>
+                    <p className="truncate text-[12px] text-[var(--text-muted)] flex items-center gap-1 mt-1"> <User className="h-3 w-3" /> {item.host}</p>
                   </div>
                 </button>
               ))}

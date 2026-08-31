@@ -114,7 +114,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 }}
                 aria-label="Change language"
                 aria-expanded={langOpen}
-                className={`flex h-9 items-center gap-1 rounded-xl border px-2 transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 sm:px-2.5 md:h-11 md:px-3 ${
+                className={`flex h-9 items-center gap-1 rounded-full border px-2 transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 sm:px-2.5 md:h-11 md:px-3 ${
                   langOpen
                     ? "border-[var(--gold-500)]/60 bg-[var(--gold-300)]/55 text-[var(--maroon-900)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]"
                     : "border-[var(--gold-500)]/25 bg-[var(--gold-100)] text-[var(--maroon-800)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-[var(--gold-500)]/40 hover:bg-[var(--gold-300)]/45 hover:shadow-[0_2px_6px_-2px_rgba(90,15,20,0.18)]"
@@ -188,7 +188,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 }}
                 aria-label="Notifications"
                 aria-expanded={notifOpen}
-                className={`relative grid h-9 w-9 place-items-center rounded-xl border transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 xs:w-10 md:h-11 md:w-11 ${
+                className={`relative grid h-9 w-9 place-items-center rounded-full border transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 xs:w-10 md:h-11 md:w-11 ${
                   notifOpen
                     ? "border-[var(--gold-500)]/60 bg-[var(--gold-300)]/55 text-[var(--maroon-900)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]"
                     : "border-[var(--gold-500)]/25 bg-[var(--gold-100)] text-[var(--maroon-800)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-[var(--gold-500)]/40 hover:bg-[var(--gold-300)]/45 hover:shadow-[0_2px_6px_-2px_rgba(90,15,20,0.18)]"
@@ -215,7 +215,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
               type="button"
               onClick={onMenuClick}
               aria-label="Open account menu"
-              className="group relative ml-0.5 grid h-9 w-9 place-items-center overflow-hidden rounded-xl border border-[var(--gold-400)] bg-[linear-gradient(145deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-950)] shadow-[0_3px_8px_-2px_rgba(90,15,20,0.35),inset_0_1px_0_rgba(255,255,255,0.35)] transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] hover:-translate-y-0.5 hover:shadow-[0_6px_14px_-3px_rgba(90,15,20,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] active:translate-y-0 active:scale-[0.94] active:shadow-[0_1px_3px_-1px_rgba(90,15,20,0.3),inset_0_1px_2px_rgba(0,0,0,0.1)] active:duration-75 xs:h-10 xs:w-10 md:h-11 md:w-11"
+              className="group relative ml-0.5 grid h-9 w-9 place-items-center overflow-hidden rounded-full border border-[var(--gold-400)] bg-[linear-gradient(145deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-950)] shadow-[0_3px_8px_-2px_rgba(90,15,20,0.35),inset_0_1px_0_rgba(255,255,255,0.35)] transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] hover:-translate-y-0.5 hover:shadow-[0_6px_14px_-3px_rgba(90,15,20,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] active:translate-y-0 active:scale-[0.94] active:shadow-[0_1px_3px_-1px_rgba(90,15,20,0.3),inset_0_1px_2px_rgba(0,0,0,0.1)] active:duration-75 xs:h-10 xs:w-10 md:h-11 md:w-11"
             >
               <span className="absolute inset-x-0 top-0 h-1/2 bg-white/20" />
               <User
