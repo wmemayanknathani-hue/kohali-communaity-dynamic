@@ -142,7 +142,7 @@ function PdfViewer({ pdfUrl, title }: { pdfUrl: string; title: string }) {
         key={viewerSrc}
         src={viewerSrc}
         title={`${title} PDF`}
-        className="h-[65vh] min-h-[480px] md:min-h-[560px] lg:min-h-[640px] xl:min-h-[700px] w-full rounded-sm bg-white"
+        className="h-[65vh] min-h-[420px] sm:min-h-[480px] md:min-h-[560px] lg:min-h-[640px] xl:min-h-[700px] w-full rounded-sm bg-white"
         onError={() => setViewerFailed(true)}
       />
     </div>
@@ -286,6 +286,12 @@ onReadOnline,
         
       {/* =================================================
           MAROON HERO
+          NOTE: cover+info switches to a side-by-side row only
+          at `lg` (1024px). iPad portrait (768px) lands right on
+          the old `md` breakpoint, which made the row feel cramped
+          and inconsistent between portrait/landscape on the same
+          device. Now portrait iPad stays stacked/centered, and
+          landscape iPad (and up) gets the row layout.
       ================================================= */}
       <div className="mb-5 relative mt-0 overflow-hidden rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_38%,var(--maroon-700)_100%)] px-5 pb-6 pt-5 shadow-[var(--shadow-maroon)] md:rounded-[28px] md:px-8 md:pb-8 md:pt-7 lg:px-10">
        {/* diagonal cross-hatch texture */}
@@ -309,8 +315,8 @@ onReadOnline,
             </div> */}
           </div>
 
-          {/* cover + info: stacked/centered on mobile, side-by-side from md up */}
-          <div className="mt-0 flex flex-col items-center gap-6 text-center md:mt-8 md:flex-row md:items-center md:gap-8 md:text-left">
+          {/* cover + info: stacked/centered through iPad portrait, side-by-side from lg (iPad landscape) up */}
+          <div className="mt-0 flex flex-col items-center gap-6 text-center md:mt-8 lg:flex-row lg:items-center lg:gap-8 lg:text-left">
             <div className=" group relative h-56 w-[168px] shrink-0 md:h-64 md:w-[188px] lg:h-72 lg:w-[208px] overflow-hidden rounded-2xl shadow-[0_20px_44px_rgba(0,0,0,0.4)] ring-2 ring-[var(--gold-400)]/70 transition-transform duration-500 ease-out hover:-translate-y-1.5 hover:rotate-[-1deg] animate-[coverIn_0.6s_ease-out_backwards] " >
               <img
                 src={image}
@@ -321,7 +327,7 @@ onReadOnline,
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--gold-500)]" />
             </div>
 
-            <div className="flex flex-1 flex-col items-center md:items-start">
+            <div className="flex flex-1 flex-col items-center lg:items-start">
               <span className=" inline-block rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] px-3 py-1 font-['Noto_Sans_Devanagari'] text-[11px] font-bold uppercase tracking-[0.5px] text-[var(--maroon-900)] shadow-[0_3px_10px_rgba(0,0,0,0.2)] transition-transform duration-200 hover:scale-105 " >
                 {category}
               </span>
@@ -334,7 +340,7 @@ onReadOnline,
                 {author}
               </p>
 
-              <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
+              <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-start">
                 <span className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20">
                   <Calendar className="h-[13px] w-[13px] text-[var(--gold-300)]" strokeWidth={2} />
                   {date}
@@ -348,9 +354,18 @@ onReadOnline,
           </div>
         </div>
       </div>
-        {/* On tablet/desktop: description+details in a 2-col grid so width is used well */}
-        <div className="md:grid md:grid-cols-2 md:gap-5 lg:gap-8">
-          <div className="md:col-span-3">
+        {/*
+          Description + details grid.
+          Was `md:grid-cols-2` with the description div claiming
+          `md:col-span-3` — a 3-span item in a 2-column grid, which
+          never produced the intended 3:2 split and made iPad
+          portrait (768px) render inconsistently. Fixed to a proper
+          5-column grid (3:2 split) that only activates at `lg`
+          (iPad landscape+), so iPad portrait stays single-column
+          and readable.
+        */}
+        <div className="lg:grid lg:grid-cols-5 lg:gap-5 xl:gap-8">
+          <div className="lg:col-span-3">
             {/* DESCRIPTION */}
             <section>
               <SectionHeader eyebrow="Introduction" title="पुस्तकाबद्दल" />
@@ -363,7 +378,7 @@ onReadOnline,
             {highlights.length > 0 && (
               <section className="mt-6">
                 <SectionHeader eyebrow="Key Highlights" title="पुस्तकाची वैशिष्ट्ये" />
-                <div className="mt-3 grid gap-2.5">
+                <div className="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1">
                   {highlights.map((highlight, i) => (
                     <div
                       key={highlight}
@@ -386,7 +401,7 @@ onReadOnline,
             )}
           </div>
 
-          <div className="mt-6 md:col-span-2 md:mt-0">
+          <div className="mt-6 lg:col-span-2 lg:mt-0">
             {/* BOOK DETAILS */}
             <section>
               <SectionHeader eyebrow="Information" title="पुस्तक तपशील" />
