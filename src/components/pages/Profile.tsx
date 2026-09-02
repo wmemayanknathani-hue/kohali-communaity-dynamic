@@ -144,6 +144,16 @@ export default function Profile({
   const mobileDigits = profile.contact.mobile.replace(/\D/g, "");
    const navigate = useNavigate();
 
+   const handleLogout = () => {
+    // run any parent-provided cleanup (clear tokens, context, etc.)
+    onLogout?.();
+
+    // clear whatever you're using to persist auth
+    localStorage.removeItem("authToken"); // adjust to your actual key(s)
+
+    navigate("/login", { replace: true });
+  };
+
   return (
     <div>
 
