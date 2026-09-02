@@ -294,7 +294,7 @@ export default function Profile({
 
           {/* ===== Logout  ===== */}
           <button
-            onClick={onLogout}
+            onClick={handleLogout}
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border-[1.5px] bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] py-3.5 text-[14px] font-bold text-[#fff] transition-transform duration-150 active:scale-[0.99] md:mt-8 md:rounded-3xl md:py-4 md:text-[15px] lg:mx-auto lg:max-w-[420px]"
           >
             <LogOut className="h-4 w-4 md:h-[18px] md:w-[18px]" />
