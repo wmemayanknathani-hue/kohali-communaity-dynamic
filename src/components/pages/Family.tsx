@@ -196,9 +196,7 @@ export default function Family() {
             </button>
           </div>
 
-          {/* mb-8/md:mb-10 gives the floating edit button (which hangs
-              below the card's own bottom edge) room to breathe before the
-              Members Directory heading starts — previously it had none. */}
+        
           <Reveal>
             <div className="relative mt-3 mb-8 md:mb-10">
               <div className="relative rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_40%,var(--maroon-700)_100%)] p-4 shadow-[var(--shadow-maroon)] md:rounded-[26px] md:p-6 lg:p-7">
@@ -262,7 +260,7 @@ export default function Family() {
         {/* ---- Members Directory ---- */}
         <div className="px-4 pb-10 pt-2 sm:px-6 md:px-8 md:pt-3 lg:px-10">
           <Reveal delay={60}>
-            <SectionHeader eyebrow="Explore" title="Members directory" actionLabel="Add New" actionTo="/businesses" />
+            <SectionHeader eyebrow="Explore" title="Members directory"/>
           </Reveal>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -279,7 +277,6 @@ export default function Family() {
 }
 
 /* ============================= MEMBER CARD ============================= */
-
 function MemberCard({
   name,
   // nameMr,
@@ -299,11 +296,18 @@ function MemberCard({
   return (
     <div className="group relative h-full overflow-hidden rounded-3xl border border-[var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_8px_30px_-18px_rgba(74,11,26,0.45)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--gold-400)]/50 hover:shadow-[0_18px_40px_-20px_rgba(74,11,26,0.5)]">
 
+      {/* Per-member edit button */}
+      <button
+        aria-label={`Edit ${name}`}
+        className="absolute right-2.5 top-2.5 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)] shadow-[0_3px_10px_rgba(74,11,26,0.35)] transition-transform duration-150 hover:scale-110 active:scale-95 sm:h-7.5 sm:w-7.5 md:right-3 md:top-3 md:h-8 md:w-8"
+      >
+        <Pencil className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-[15px] md:w-[15px]" strokeWidth={2.4} />
+      </button>
 
       <div className="relative p-4 md:p-5">
 
         {/* Top section */}
-        <div className="flex items-center gap-3.5">
+        <div className="flex items-center gap-3.5 pr-8 md:pr-9">
 
           {/* Avatar */}
           <div className="relative shrink-0">

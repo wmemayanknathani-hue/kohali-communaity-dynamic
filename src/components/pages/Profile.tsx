@@ -190,8 +190,8 @@ export default function Profile({
 
               {/* photo + identity */}
               <div className="relative z-10 flex items-center gap-4 md:gap-6">
-                <div className="flex h-[62px] w-[62px] flex-shrink-0 items-center justify-center rounded-[16px] bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] p-[2.5px] shadow-[0_6px_16px_rgba(0,0,0,0.3)] ring-2 ring-[rgba(240,213,133,0.25)] md:h-[88px] md:w-[88px] md:rounded-[20px] md:p-[3px] lg:h-[100px] lg:w-[100px]">
-                  <div className="flex h-full w-full items-center justify-center rounded-[13px] bg-[var(--paper)] md:rounded-[17px]">
+                <div className="flex h-[62px] w-[62px] flex-shrink-0 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] p-[2.5px] shadow-[0_6px_16px_rgba(0,0,0,0.3)] ring-2 ring-[rgba(240,213,133,0.25)] md:h-[88px] md:w-[88px] md:rounded-[20px] md:p-[3px] lg:h-[100px] lg:w-[100px]">
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-[var(--paper)] md:rounded-[17px]">
                     <User
                       className="h-8 w-8 text-[var(--maroon-800)] md:h-11 md:w-11 lg:h-12 lg:w-12"
                       strokeWidth={1.8}
@@ -282,7 +282,7 @@ export default function Profile({
             </div>
           </div>
 
-          {/* ===== Logout — native destructive row, stronger contrast ===== */}
+          {/* ===== Logout  ===== */}
           <button
             onClick={onLogout}
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border-[1.5px] bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] py-3.5 text-[14px] font-bold text-[#fff] transition-transform duration-150 active:scale-[0.99] md:mt-8 md:rounded-3xl md:py-4 md:text-[15px] lg:mx-auto lg:max-w-[420px]"
