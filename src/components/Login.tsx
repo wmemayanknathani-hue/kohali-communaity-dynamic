@@ -201,7 +201,7 @@ export function LoginPage() {
       ) {
         authUrl = "http://192.168.1.62/webmedia/wme/kohli_community/auth-login.php";
       } else {
-        authUrl = "https://wmegroup.in/webmedia/wme/kohli_community/auth-login.php";
+        authUrl = "https://wmegroup.in/wmeclient/kohali_connect/auth-login.php";
       }
       window.location.href =authUrl +"?username=" + encodeURIComponent(username) +"&password=" + encodeURIComponent(password) +"&action=login_proc&is_mobile=1";
 
