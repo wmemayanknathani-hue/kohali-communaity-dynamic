@@ -1,4 +1,5 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
+// useEffect
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/kohali-logo.png";
 import {
@@ -99,6 +100,7 @@ export function LoginPage() {
         setMemberStep("otp");
         startResendTimer();
         otpInputRefs.current[0]?.focus();
+        localStorage.clear();
         localStorage.setItem("mobile_user", JSON.stringify(data.data));
         localStorage.setItem("is_device_login", '1');
         localStorage.setItem("otp_status", 'pending');
@@ -166,8 +168,7 @@ export function LoginPage() {
     localStorage.setItem("otp_status", 'done');
   }
 
-
-  const API_PATH = import.meta.env.VITE_LIVE_API_PATH;
+  const API_PATH =window.location.hostname === "localhost" ||window.location.hostname === "192.168.1.62"? import.meta.env.VITE_LOCAL_API_PATH: import.meta.env.VITE_LIVE_API_PATH;
   async function handleAdminLogin() {
     if (!adminValid || isLoading) return;
     setIsLoading(true);
@@ -202,7 +203,7 @@ export function LoginPage() {
         authUrl = "http://192.168.1.62/webmedia/wme/kohli_community/auth-login.php";
       } else {
         authUrl = "https://wmegroup.in/wmeclient/kohali_connect/auth-login.php";
-      }
+      } 
       window.location.href =authUrl +"?username=" + encodeURIComponent(username) +"&password=" + encodeURIComponent(password) +"&action=login_proc&is_mobile=1";
 
       } else {

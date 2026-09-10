@@ -18,7 +18,7 @@ import hero3 from "../../assets/hero3.jpg";
 const heroSlides = [
   { 
     id: "s1",
-    tag: "कार्यक्रम",
+    tag: "कार्यक्रम",  
     title: "वार्षिक स्नेहसंमेलन २०२४",
     subtitle: "१५ ऑक्टोबर · नागपूर",
     image: hero1,

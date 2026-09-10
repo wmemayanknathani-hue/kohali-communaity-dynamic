@@ -1,4 +1,5 @@
 import type { ReactNode, FC } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 import {
@@ -45,6 +46,8 @@ interface ProfileProps {
 }
 
 const defaultProfile: ProfileData = {
+
+
   name: "Sanjay Kohali",
   memberId: "4421",
   verified: true,
@@ -113,9 +116,8 @@ const ListRow: FC<ListRowProps> = ({ icon, label, value, first, href, external }
     </>
   );
 
-  const rowClasses = `group kc-row-shine flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 ${
-    first ? "" : "border-t border-[color:var(--gold-300)]/50"
-  } ${href ? "cursor-pointer transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99]" : ""}`;
+  const rowClasses = `group kc-row-shine flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 ${first ? "" : "border-t border-[color:var(--gold-300)]/50"
+    } ${href ? "cursor-pointer transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99]" : ""}`;
 
   if (href) {
     return (
@@ -136,15 +138,56 @@ const ListRow: FC<ListRowProps> = ({ icon, label, value, first, href, external }
 // ---------- Main component ----------
 
 export default function Profile({
-  profile = defaultProfile,
+  profile: initialProfile = defaultProfile,
   onEditProfile,
   onLogout,
 }: ProfileProps) {
+  const [profile, setProfile] = useState<ProfileData>(initialProfile);
   const waDigits = profile.contact.whatsapp.replace(/\D/g, "");
   const mobileDigits = profile.contact.mobile.replace(/\D/g, "");
-   const navigate = useNavigate();
+  const API_PATH =window.location.hostname === "localhost" ||window.location.hostname === "192.168.1.62"? import.meta.env.VITE_LOCAL_API_PATH: import.meta.env.VITE_LIVE_API_PATH;
+  const navigate = useNavigate();
+  useEffect(() => {
+    getProfile();
+  }, []);
+   const getProfile = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("mobile_user") || "{}");
+      const response = await fetch(`${API_PATH}/get_profile.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "get_profile",
+          user_id: user.id,
+        }),
+      });
+      const result = await response.json();
 
-   const handleLogout = () => {
+      if (result.status && result.data) {
+        const data = result.data;
+
+        setProfile({
+          name: data.name || "",
+          memberId: data.id || "",
+          verified: data.verified ?? true,
+          contact: {
+            mobile: data.phone_number || "",
+            whatsapp: data.whatsapp || data.phone_number || "",
+            email: data.email || "",
+          },
+          personal: {
+            village: data.village || "",
+            occupation: data.occupation || "",
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Profile API Error:", error);
+    }
+  };
+  const handleLogout = () => {
     // run any parent-provided cleanup (clear tokens, context, etc.)
     onLogout?.();
 
@@ -158,13 +201,13 @@ export default function Profile({
     <div>
 
       {/* Header */}
-       <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
-          <SectionHeader eyebrow="Personal Info" title="My Profile"/>
+      <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
+        <SectionHeader eyebrow="Personal Info" title="My Profile" />
 
-          <button onClick={() => navigate("/home")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
-            <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
-          </button>
-        </div>
+        <button onClick={() => navigate("/home")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
+          <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
+        </button>
+      </div>
 
       {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto bg-[var(--cream)] px-4 pb-6 pt-2 [scrollbar-width:none] sm:px-6 md:px-8 md:pb-10 md:pt-4 lg:px-10 [&::-webkit-scrollbar]:hidden">
