@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/kohali-logo.png";
 import {
@@ -34,6 +34,7 @@ export function LoginPage() {
   const [otpError, setOtpError] = useState("");
   const [resendIn, setResendIn] = useState(0);
   const [loginError, setLoginError] = useState("");
+  const [mobileloginError, setmobileLoginError] = useState("");
   const otpInputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const resendTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -47,6 +48,21 @@ export function LoginPage() {
   const mobileValid = /^\d{10}$/.test(mobile);
   const adminValid = username.trim().length > 0 && password.length > 0;
   const otpValid = otp.every((d) => d.length === 1);
+
+//   useEffect(() => {
+    
+//     const otpStatus = localStorage.getItem("otp_status");
+//     const isDeviceLogin = localStorage.getItem("is_device_login");
+//     // alert(otpStatus)
+//     if (
+//         otpStatus === "done" &&
+//         isDeviceLogin === "1"
+//     ) {
+//         navigate("/home", { replace: true });
+//     }
+// }, [navigate]);
+
+
 
   function startResendTimer() {
     if (resendTimerRef.current) clearInterval(resendTimerRef.current);
@@ -62,18 +78,38 @@ export function LoginPage() {
     }, 1000);
   }
 
-  function handleSendOtp() {
+  async function handleSendOtp() {
     if (!mobileValid || isLoading) return;
     setIsLoading(true);
-    // simulated OTP dispatch — swap for the real request
-    setTimeout(() => {
-      setIsLoading(false);
-      setOtp(Array(OTP_LENGTH).fill(""));
-      setOtpError("");
-      setMemberStep("otp");
-      startResendTimer();
-      setTimeout(() => otpInputRefs.current[0]?.focus(), 50);
-    }, 550);
+    try {
+      const res = await fetch(`${API_PATH}/auth.php`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "login_mobile",
+          mobile: mobile,
+        })
+      });
+      const data = await res.json();
+      if (data.status == true) {
+        setIsLoading(false);
+        setMemberStep("otp");
+        startResendTimer();
+        otpInputRefs.current[0]?.focus();
+        localStorage.setItem("mobile_user", JSON.stringify(data.data));
+        localStorage.setItem("is_device_login", '1');
+        localStorage.setItem("otp_status", 'pending');
+
+      } else {
+        setIsLoading(false);
+        setmobileLoginError(data.msg || "Invalid Mobile Number");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   function handleResendOtp() {
@@ -126,16 +162,12 @@ export function LoginPage() {
   function handleVerifyOtp() {
     if (!otpValid || isLoading) return;
     setIsLoading(true);
-    // simulated verification — swap for the real request
-    setTimeout(() => {
-      setIsLoading(false);
-      localStorage.setItem("authToken", "dummy-token");
-      navigate("/home", { replace: true });
-    }, 550);
+    navigate("/home", { replace: true });
+    localStorage.setItem("otp_status", 'done');
   }
 
 
-  const API_PATH = import.meta.env.VITE_API_PATH;
+  const API_PATH = import.meta.env.VITE_LOCAL_API_PATH;
   async function handleAdminLogin() {
     if (!adminValid || isLoading) return;
     setIsLoading(true);
@@ -149,6 +181,7 @@ export function LoginPage() {
         body: JSON.stringify({
           username: username,
           password: password,
+          action:"login_admin_surevy"
         })
       });
       const data = await res.json();
@@ -284,7 +317,7 @@ export function LoginPage() {
                     Enter a valid 10-digit mobile number
                   </p>
                 )}
-
+                <p className="mt-1.5 text-[11.5px] font-medium text-red-500">{mobileloginError}</p>
                 <button
                   onClick={handleSendOtp}
                   disabled={!mobileValid || isLoading}
@@ -355,10 +388,12 @@ export function LoginPage() {
                     />
                   ))}
                 </div>
+                
                 {otpError && (
                   <p className="mb-2 text-center text-[11.5px] font-medium text-red-500">{otpError}</p>
                 )}
-
+         
+                
                 <div className="flex items-center justify-center gap-1.5 mt-4 mb-6 text-[11.5px]">
                   <span className="text-[var(--muted-foreground)]">Didn't get the code?</span>
                   <button
@@ -464,11 +499,11 @@ export function LoginPage() {
                 </button>
               </div>
               <p className="mt-1.5 text-[11.5px] font-medium text-red-500">{loginError}</p>
-              <div className="flex justify-end mb-4">
+              {/* <div className="flex justify-end mb-4">
                 <button type="button" className="text-[11.5px] font-bold text-[var(--maroon-800)] underline-offset-2 hover:underline">
                   Forgot password?
                 </button>
-              </div>
+              </div> */}
 
               <button
                 onClick={handleAdminLogin}
