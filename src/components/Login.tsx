@@ -194,11 +194,16 @@ export function LoginPage() {
         // localStorage.setItem("user_type", data.data.user_type);
         // localStorage.setItem("user_id", data.data.id);
         // console.log(data);
-        window.location.href = "http://192.168.1.62/webmedia/wme/kohli_community/auth-login.php?username=" + username + "&password=" + password+"&action="+"login_proc&is_mobile=1";
-        // if (data.data.user_type == 5) {
-        // } else {
-        //   window.location.href = "http://192.168.1.62/webmedia/wme/kohli_community/index.php";
-        // }
+        let authUrl = "";
+      if (
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "192.168.1.62"
+      ) {
+        authUrl = "http://192.168.1.62/webmedia/wme/kohli_community/auth-login.php";
+      } else {
+        authUrl = "https://wmegroup.in/webmedia/wme/kohli_community/auth-login.php";
+      }
+      window.location.href =authUrl +"?username=" + encodeURIComponent(username) +"&password=" + encodeURIComponent(password) +"&action=login_proc&is_mobile=1";
 
       } else {
         setIsLoading(false);
