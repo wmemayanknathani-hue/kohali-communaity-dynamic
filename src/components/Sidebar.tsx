@@ -13,7 +13,7 @@ import {
   Globe,
   LogOut,
   Landmark,
-  ChevronDown,
+  // ChevronDown,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,19 +32,19 @@ const secondaryLinks = [
 ];
 
 // Kohali Samaj — About/heritage submenu.
-const kohaliSamajLinks = [
-  { to: "/kohali-samaj/about", label: "About Kohali Samaj" },
-  { to: "/kohali-samaj/history", label: "History & Origin" },
-  { to: "/kohali-samaj/vision-mission", label: "Vision & Mission" },
-  { to: "/kohali-samaj/education", label: "Education" },
-  { to: "/kohali-samaj/employment", label: "Employment" },
-  { to: "/kohali-samaj/social-justice", label: "Social Justice" },
-  { to: "/kohali-samaj/youth-development", label: "Youth Development" },
-  { to: "/kohali-samaj/women-empowerment", label: "Women Empowerment" },
-  { to: "/kohali-samaj/health-awareness", label: "Health Awareness" },
-  { to: "/kohali-samaj/community-welfare", label: "Community Welfare" },
-  { to: "/kohali-samaj/community-halls", label: "Community Halls" },
-];
+// const kohaliSamajLinks = [
+//   { to: "/kohali-samaj/about", label: "About Kohali Samaj" },
+//   { to: "/kohali-samaj/history", label: "History & Origin" },
+//   { to: "/kohali-samaj/vision-mission", label: "Vision & Mission" },
+//   { to: "/kohali-samaj/education", label: "Education" },
+//   { to: "/kohali-samaj/employment", label: "Employment" },
+//   { to: "/kohali-samaj/social-justice", label: "Social Justice" },
+//   { to: "/kohali-samaj/youth-development", label: "Youth Development" },
+//   { to: "/kohali-samaj/women-empowerment", label: "Women Empowerment" },
+//   { to: "/kohali-samaj/health-awareness", label: "Health Awareness" },
+//   { to: "/kohali-samaj/community-welfare", label: "Community Welfare" },
+//   { to: "/kohali-samaj/community-halls", label: "Community Halls" },
+// ];
 interface User { id?: number | string; name?: string; phone_number?: string; }
 
 // Small ornamental divider — flanking hairlines with a center diamond,
@@ -177,7 +177,8 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
             <li>
               <button
                 type="button"
-                onClick={() => setKohaliSamajOpen((v) => !v)}
+                onChange={()=>setKohaliSamajOpen(true)}
+                onClick={() => window.location.href="https://kohaliconnect.vercel.app/kohli-samaj"}
                 aria-expanded={kohaliSamajOpen}
                 className={`flex w-full cursor-pointer items-center gap-3 rounded-xl py-2 pl-3 pr-2.5 text-[14px] font-medium text-[var(--ink)] transition-colors duration-150 hover:bg-[var(--gold-100)] ${kohaliSamajOpen ? "bg-[var(--gold-100)]" : ""
                   }`}
@@ -186,15 +187,15 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
                   <Landmark size={15} className="text-[var(--maroon-800)]" />
                 </span>
                 <span className="flex-1 text-left">Kohali Samaj</span>
-                <ChevronDown
+                {/* <ChevronDown
                   size={16}
                   className={`shrink-0 text-[var(--gold-600)] transition-transform duration-200 ${kohaliSamajOpen ? "rotate-180" : ""
                     }`}
-                />
+                /> */}
               </button>
 
               {/* submenu panel */}
-              <div
+              {/* <div
                 className={`grid overflow-hidden transition-[grid-template-rows] duration-250 ease-out ${kohaliSamajOpen ? "grid-rows-[1fr] pt-0.5" : "grid-rows-[0fr]"
                   }`}
               >
@@ -226,7 +227,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
                     ))}
                   </ul>
                 </div>
-              </div>
+              </div> */}
             </li>
 
             {primaryLinks.slice(1).map(({ to, label, icon: Icon }) => (
@@ -295,7 +296,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
             ))}
             <li>
               <a
-                href="https://kohalisamaj.org"
+                href="https://kohaliconnect.vercel.app"
                 target="_blank"
                 rel="noreferrer"
                 className="relative flex items-center gap-3 rounded-xl py-2 pl-3 pr-2.5 text-[14px] font-medium text-[var(--ink)] no-underline transition-colors duration-150 hover:bg-[var(--gold-100)]"
