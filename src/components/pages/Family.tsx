@@ -112,7 +112,6 @@ function Reveal({
 
 type Member = {
   name: string;
-  eid:string;
   nameMr: string;
   relation: string;
   relationMr: string;
@@ -121,6 +120,7 @@ type Member = {
   education: string;
   occupation: string;
 };
+
 
 // const members: Member[] = [
 //   {
@@ -341,7 +341,6 @@ export default function Family() {
 /* ============================= MEMBER CARD ============================= */
 function MemberCard({
   name,
-  eid,
   // nameMr,
   relation,
   // relationMr,
@@ -355,8 +354,6 @@ function MemberCard({
     ? "text-[var(--maroon-800)] bg-[var(--gold-100)]"
     : "text-[var(--maroon-800)] bg-[var(--gold-100)]";
   const RelationIcon = relationIcon(relation);
-  const pathUrl = window.location.hostname === "localhost" ||
-  window.location.hostname === "192.168.1.62" ? "http://192.168.1.62/webmedia/wme/kohli_community/" : "https://wmegroup.in/wmeclient/kohali_connect/";
 
   return (
     <div className="group relative h-full overflow-hidden rounded-3xl border border-[var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_8px_30px_-18px_rgba(74,11,26,0.45)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--gold-400)]/50 hover:shadow-[0_18px_40px_-20px_rgba(74,11,26,0.5)]">

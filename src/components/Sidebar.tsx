@@ -45,7 +45,7 @@ const kohaliSamajLinks = [
   { to: "/kohali-samaj/community-welfare", label: "Community Welfare" },
   { to: "/kohali-samaj/community-halls", label: "Community Halls" },
 ];
-
+interface User { id?: number | string; name?: string; phone_number?: string; }
 
 // Small ornamental divider — flanking hairlines with a center diamond,
 // used instead of a plain uppercase section label on its own.
@@ -67,7 +67,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
   const navigate = useNavigate();
   const [kohaliSamajOpen, setKohaliSamajOpen] = useState(false);
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     const storedUser = localStorage.getItem("mobile_user");
 
