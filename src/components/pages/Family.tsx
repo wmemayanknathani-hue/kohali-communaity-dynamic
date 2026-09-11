@@ -121,47 +121,47 @@ type Member = {
   occupation: string;
 };
 
-const members: Member[] = [
-  {
-    name: "Ramesh V. Kohali",
-    nameMr: "रमेश व्ही. कोहली",
-    relation: "Head",
-    relationMr: "प्रमुख",
-    badgeVariant: "maroon",
-    photo: "https://i.pravatar.cc/100?img=13",
-    education: "M.B.A (Finance), B.Com",
-    occupation: "Business owner – Retail",
-  },
-  {
-    name: "Sunita R. Kohali",
-    nameMr: "सुनीता र. कोहली",
-    relation: "Wife",
-    relationMr: "पत्नी",
-    badgeVariant: "gold",
-    photo: "https://i.pravatar.cc/100?img=47",
-    education: "B.A (Sociology)",
-    occupation: "Homemaker",
-  },
-  {
-    name: "Rohan R. Kohali",
-    nameMr: "रोहन र. कोहली",
-    relation: "Son",
-    relationMr: "मुलगा",
-    badgeVariant: "maroon",
-    photo: "https://i.pravatar.cc/100?img=68",
-    education: "B.Tech (Computer Science)",
-    occupation: "Software engineer",
-  },
-  {
-    name: "Priya R. Kohali",
-    nameMr: "प्रिया र. कोहली",
-    relation: "Daughter",
-    relationMr: "मुलगी",
-    badgeVariant: "gold",
-    education: "Pursuing B.Arch (3rd year)",
-    occupation: "Student",
-  },
-];
+// const members: Member[] = [
+//   {
+//     name: "Ramesh V. Kohali",
+//     nameMr: "रमेश व्ही. कोहली",
+//     relation: "Head",
+//     relationMr: "प्रमुख",
+//     badgeVariant: "maroon",
+//     photo: "https://i.pravatar.cc/100?img=13",
+//     education: "M.B.A (Finance), B.Com",
+//     occupation: "Business owner – Retail",
+//   },
+//   {
+//     name: "Sunita R. Kohali",
+//     nameMr: "सुनीता र. कोहली",
+//     relation: "Wife",
+//     relationMr: "पत्नी",
+//     badgeVariant: "gold",
+//     photo: "https://i.pravatar.cc/100?img=47",
+//     education: "B.A (Sociology)",
+//     occupation: "Homemaker",
+//   },
+//   {
+//     name: "Rohan R. Kohali",
+//     nameMr: "रोहन र. कोहली",
+//     relation: "Son",
+//     relationMr: "मुलगा",
+//     badgeVariant: "maroon",
+//     photo: "https://i.pravatar.cc/100?img=68",
+//     education: "B.Tech (Computer Science)",
+//     occupation: "Software engineer",
+//   },
+//   {
+//     name: "Priya R. Kohali",
+//     nameMr: "प्रिया र. कोहली",
+//     relation: "Daughter",
+//     relationMr: "मुलगी",
+//     badgeVariant: "gold",
+//     education: "Pursuing B.Arch (3rd year)",
+//     occupation: "Student",
+//   },
+// ];
 
 /* ============================= HELPERS ============================= */
 
@@ -176,9 +176,61 @@ function relationIcon(relation: string) {
 
 export default function Family() {
   const navigate = useNavigate();
-  const totalMembers = members.length;
-  const earningCount = 2;
 
+  const [members, setMembers] = useState<Member[]>([]);
+  const [totalMembers, setTotalMembers] = useState(0);
+  const [earningCount, setEarningCount] = useState(0);
+  const [highestEducation, setHighestEducation] = useState("");
+  const [user, setUser] = useState<any>(null);
+
+  const API_PATH =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("mobile_user");
+
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user?.id) {
+      getFamilyDetails(user.id);
+    }
+  }, [user]);
+
+  const getFamilyDetails = async (userId: number) => {
+    try {
+      const res = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "get_family_details_head",
+          id: userId,
+        }),
+      });
+
+      const data = await res.json();
+
+      console.log("Family API Response:", data);
+
+      if (data.status == 1) {
+        setMembers(data.family_details || []);
+        setTotalMembers(data.total_family_count || 0);
+        setEarningCount(data.earning_count || 0);
+        setHighestEducation(data.highest_education || "");
+      }
+    } catch (error) {
+      console.error("Family API Error:", error);
+    }
+  };
   return (
     <div className="">
       <MotionStyles />
@@ -231,7 +283,7 @@ export default function Family() {
                       </span>
                       <p className="text-[10.5px] font-semibold text-[var(--gold-100)] md:text-[14px]">Highest Education</p>
                     </div>
-                    <p className="font-display mt-1 text-[14px] font-semibold text-white md:text-[15px]">Post Graduation</p>
+                    <p className="font-display mt-1 text-[14px] font-semibold text-white md:text-[15px]"> {highestEducation || "-"}</p>
                   </div>
                   <div className="rounded-xl border border-[var(--gold-300)]/25 bg-[var(--maroon-950)]/45 px-3 py-2.5 md:px-4 md:py-3">
                     <div className="flex items-center gap-1.5">

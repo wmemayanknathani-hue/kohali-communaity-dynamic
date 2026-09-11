@@ -83,7 +83,7 @@ export function LoginPage() {
     if (!mobileValid || isLoading) return;
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_PATH}/auth.php`, {
+      const res = await fetch(`${API_PATH}/action_layer.php`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -173,7 +173,7 @@ export function LoginPage() {
     if (!adminValid || isLoading) return;
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_PATH}/auth.php`, {
+      const res = await fetch(`${API_PATH}/action_layer.php`, {
         method: "POST",
         credentials: "include",
         headers: {

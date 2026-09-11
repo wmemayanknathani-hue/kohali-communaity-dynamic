@@ -153,7 +153,7 @@ export default function Profile({
    const getProfile = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("mobile_user") || "{}");
-      const response = await fetch(`${API_PATH}/get_profile.php`, {
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -164,10 +164,8 @@ export default function Profile({
         }),
       });
       const result = await response.json();
-
       if (result.status && result.data) {
         const data = result.data;
-
         setProfile({
           name: data.name || "",
           memberId: data.id || "",
@@ -188,11 +186,8 @@ export default function Profile({
     }
   };
   const handleLogout = () => {
-    // run any parent-provided cleanup (clear tokens, context, etc.)
     onLogout?.();
-
-    // clear whatever you're using to persist auth
-    localStorage.removeItem("authToken"); // adjust to your actual key(s)
+    localStorage.removeItem("authToken");
 
     navigate("/login", { replace: true });
   };
