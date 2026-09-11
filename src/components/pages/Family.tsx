@@ -112,6 +112,7 @@ function Reveal({
 
 type Member = {
   name: string;
+  eid:string;
   nameMr: string;
   relation: string;
   relationMr: string;
@@ -182,12 +183,18 @@ export default function Family() {
   const [earningCount, setEarningCount] = useState(0);
   const [highestEducation, setHighestEducation] = useState("");
   const [user, setUser] = useState<any>(null);
+  const [eid, setEid] = useState(0);
+  const [mobile_no, setMobileNo] = useState(0);
 
   const API_PATH =
     window.location.hostname === "localhost" ||
     window.location.hostname === "192.168.1.62"
       ? import.meta.env.VITE_LOCAL_API_PATH
       : import.meta.env.VITE_LIVE_API_PATH;
+
+  const pathUrlMain = window.location.hostname === "localhost" ||
+  window.location.hostname === "192.168.1.62" ? "http://192.168.1.62/webmedia/wme/kohli_community/" : "https://wmegroup.in/wmeclient/kohali_connect/";
+  
 
   useEffect(() => {
     const storedUser = localStorage.getItem("mobile_user");
@@ -226,6 +233,8 @@ export default function Family() {
         setTotalMembers(data.total_family_count || 0);
         setEarningCount(data.earning_count || 0);
         setHighestEducation(data.highest_education || "");
+        setEid(data.eid || 0);
+        setMobileNo(data.mobile_no || 0);
       }
     } catch (error) {
       console.error("Family API Error:", error);
@@ -301,6 +310,7 @@ export default function Family() {
                 <button
                   aria-label="Edit profile"
                   className="kc-edit-pulse absolute -bottom-5 -right-2 flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)] shadow-[var(--shadow-gold)] transition-transform duration-150 hover:scale-105 active:scale-95 md:-bottom-6 md:-right-3 md:h-14 md:w-14"
+                   onClick={() => { window.location.href = pathUrlMain+"step_survey_mobile.php?eid="+eid+"&callFrom=edit&is_mobile=1&mobile_no="+mobile_no }}
                 >
                   <Pencil className="h-4.5 w-4.5 md:h-5 md:w-5" />
                 </button>
@@ -331,6 +341,7 @@ export default function Family() {
 /* ============================= MEMBER CARD ============================= */
 function MemberCard({
   name,
+  eid,
   // nameMr,
   relation,
   // relationMr,
@@ -344,17 +355,20 @@ function MemberCard({
     ? "text-[var(--maroon-800)] bg-[var(--gold-100)]"
     : "text-[var(--maroon-800)] bg-[var(--gold-100)]";
   const RelationIcon = relationIcon(relation);
+  const pathUrl = window.location.hostname === "localhost" ||
+  window.location.hostname === "192.168.1.62" ? "http://192.168.1.62/webmedia/wme/kohli_community/" : "https://wmegroup.in/wmeclient/kohali_connect/";
 
   return (
     <div className="group relative h-full overflow-hidden rounded-3xl border border-[var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_8px_30px_-18px_rgba(74,11,26,0.45)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--gold-400)]/50 hover:shadow-[0_18px_40px_-20px_rgba(74,11,26,0.5)]">
 
       {/* Per-member edit button */}
-      <button
+      {/* <button
         aria-label={`Edit ${name}`}
         className="absolute right-2.5 top-2.5 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)] shadow-[0_3px_10px_rgba(74,11,26,0.35)] transition-transform duration-150 hover:scale-110 active:scale-95 sm:h-7.5 sm:w-7.5 md:right-3 md:top-3 md:h-8 md:w-8"
+        // onClick={() => { window.location.href = pathUrl+"step_survey_mobile.php?eid="+eid+"&callFrom=edit&is_mobile=1&mobile_no="+ }}
       >
         <Pencil className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-[15px] md:w-[15px]" strokeWidth={2.4} />
-      </button>
+      </button> */}
 
       <div className="relative p-4 md:p-5">
 
