@@ -185,20 +185,23 @@ export default function Family() {
   const [user, setUser] = useState<any>(null);
   const [eid, setEid] = useState(0);
   const [mobile_no, setMobileNo] = useState(0);
-
+  const [authSettings, setAuthSettings] = useState(0);
   const API_PATH =
     window.location.hostname === "localhost" ||
-    window.location.hostname === "192.168.1.62"
+      window.location.hostname === "192.168.1.62"
       ? import.meta.env.VITE_LOCAL_API_PATH
       : import.meta.env.VITE_LIVE_API_PATH;
 
+
+
+
+
   const pathUrlMain = window.location.hostname === "localhost" ||
-  window.location.hostname === "192.168.1.62" ? "http://192.168.1.62/webmedia/wme/kohli_community/" : "https://wmegroup.in/wmeclient/kohali_connect/";
-  
+    window.location.hostname === "192.168.1.62" ? "http://192.168.1.62/webmedia/wme/kohli_community/" : "https://wmegroup.in/wmeclient/kohali_connect/";
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem("mobile_user");
-
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
@@ -210,6 +213,24 @@ export default function Family() {
       getFamilyDetails(user.id);
     }
   }, [user]);
+
+
+  useEffect(() => {
+    const updateAuthSettings = () => {
+      const settings = localStorage.getItem("auth_settings");
+      setAuthSettings(Number(settings) || 0);
+    };
+
+    updateAuthSettings();
+
+    window.addEventListener("auth-settings-updated", updateAuthSettings);
+
+    return () => {
+      window.removeEventListener("auth-settings-updated", updateAuthSettings);
+    };
+  }, []);
+
+
 
   const getFamilyDetails = async (userId: number) => {
     try {
@@ -257,7 +278,7 @@ export default function Family() {
             </button>
           </div>
 
-        
+
           <Reveal>
             <div className="relative mt-3 mb-8 md:mb-10">
               <div className="relative rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_40%,var(--maroon-700)_100%)] p-4 shadow-[var(--shadow-maroon)] md:rounded-[26px] md:p-6 lg:p-7">
@@ -306,14 +327,17 @@ export default function Family() {
                     </p>
                   </div>
                 </div>
-                    <br />
-                <button
-                  aria-label="Edit profile"
-                  className="kc-edit-pulse absolute -bottom-5 -right-2 flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)] shadow-[var(--shadow-gold)] transition-transform duration-150 hover:scale-105 active:scale-95 md:-bottom-6 md:-right-3 md:h-14 md:w-14"
-                   onClick={() => { window.location.href = pathUrlMain+"step_survey_mobile.php?eid="+eid+"&callFrom=edit&is_mobile=1&mobile_no="+mobile_no }}
-                >
-                  <Pencil className="h-4.5 w-4.5 md:h-5 md:w-5" />
-                </button>
+                <br />
+
+                {authSettings === 1 ? (
+                  <button
+                    aria-label="Edit profile"
+                    className="kc-edit-pulse absolute -bottom-5 -right-2 flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)] shadow-[var(--shadow-gold)] transition-transform duration-150 hover:scale-105 active:scale-95 md:-bottom-6 md:-right-3 md:h-14 md:w-14"
+                    onClick={() => { window.location.href = pathUrlMain + "step_survey_mobile.php?eid=" + eid + "&callFrom=edit&is_mobile=1&mobile_no=" + mobile_no }}
+                  >
+                    <Pencil className="h-4.5 w-4.5 md:h-5 md:w-5" />
+                  </button>
+                ) : null}
               </div>
             </div>
           </Reveal>
@@ -322,7 +346,7 @@ export default function Family() {
         {/* ---- Members Directory ---- */}
         <div className="px-4 pb-10 pt-2 sm:px-6 md:px-8 md:pt-3 lg:px-10">
           <Reveal delay={60}>
-            <SectionHeader eyebrow="Explore" title="Members directory"/>
+            <SectionHeader eyebrow="Explore" title="Members directory" />
           </Reveal>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

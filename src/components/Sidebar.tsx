@@ -66,27 +66,57 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
 
   const navigate = useNavigate();
   const [kohaliSamajOpen, setKohaliSamajOpen] = useState(false);
-
+  const API_PATH =
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
   const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     const storedUser = localStorage.getItem("mobile_user");
 
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      getAuthSettings(parsedUser.id);
     }
   }, []);
 
+  const getAuthSettings = async (userId: number | string) => {
+    try {
+      const res = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "get_auth_settings",
+        }),
+      });
+      const data = await res.json();
+      console.log("Auth Settings Response:", data);
+      if (data.status == 1) {
+        localStorage.setItem(
+          "auth_settings",
+          String(data.data ?? 0)
+        );
+      window.dispatchEvent(new Event("auth-settings-updated"));
+      } else {
+        localStorage.setItem("auth_settings", "0");
+      }
+    } catch (error) {
+      console.error("Auth Settings API Error:", error);
+    }
+  };
   const fullName = user?.name || "";
   const mobile = user?.phone_number || "";
-
   const initials = fullName.trim().split(/\s+/).filter(Boolean).map(word => word[0]).join("").toUpperCase();
-  
   function handleLogout() {
     localStorage.clear();
     onClose();
     navigate("/login", { replace: true });
   }
-  
+
   return (
     <>
       {/* Backdrop */}
@@ -161,8 +191,8 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
                   <>
                     <span
                       className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-shadow duration-150 ${isActive
-                          ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] shadow-[var(--shadow-gold)]"
-                          : "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]"
+                        ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] shadow-[var(--shadow-gold)]"
+                        : "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]"
                         }`}
                     >
                       <Home size={15} className={isActive ? "text-[var(--gold-300)]" : "text-[var(--maroon-800)]"} />
@@ -177,8 +207,8 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
             <li>
               <button
                 type="button"
-                onChange={()=>setKohaliSamajOpen(true)}
-                onClick={() => window.location.href="https://kohaliconnect.vercel.app/kohli-samaj"}
+                onChange={() => setKohaliSamajOpen(false)}
+                onClick={() => window.location.href = "https://kohaliconnect.vercel.app/kohli-samaj"}
                 aria-expanded={kohaliSamajOpen}
                 className={`flex w-full cursor-pointer items-center gap-3 rounded-xl py-2 pl-3 pr-2.5 text-[14px] font-medium text-[var(--ink)] transition-colors duration-150 hover:bg-[var(--gold-100)] ${kohaliSamajOpen ? "bg-[var(--gold-100)]" : ""
                   }`}
@@ -246,8 +276,8 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
                     <>
                       <span
                         className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-shadow duration-150 ${isActive
-                            ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] shadow-[var(--shadow-gold)]"
-                            : "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]"
+                          ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] shadow-[var(--shadow-gold)]"
+                          : "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]"
                           }`}
                       >
                         <Icon size={15} className={isActive ? "text-[var(--gold-300)]" : "text-[var(--maroon-800)]"} />
@@ -282,8 +312,8 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
                       />
                       <span
                         className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-shadow duration-150 ${isActive
-                            ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] shadow-[var(--shadow-gold)]"
-                            : "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]"
+                          ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] shadow-[var(--shadow-gold)]"
+                          : "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]"
                           }`}
                       >
                         <Icon size={15} className={isActive ? "text-[var(--gold-300)]" : "text-[var(--maroon-800)]"} />
