@@ -78,11 +78,11 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
-      getAuthSettings(parsedUser.id);
+      getAuthSettings();
     }
   }, []);
 
-  const getAuthSettings = async (userId: number | string) => {
+  const getAuthSettings = async () => {
     try {
       const res = await fetch(`${API_PATH}/action_layer.php`, {
         method: "POST",
