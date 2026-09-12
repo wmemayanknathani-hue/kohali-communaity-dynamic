@@ -8,11 +8,9 @@ import {
   User,
   Phone,
   MessageCircle,
-  Mail,
   MapPin,
   Briefcase,
   BadgeCheck,
-  Pencil,
   LogOut,
   Gem,
 } from "lucide-react";
@@ -22,7 +20,6 @@ import {
 interface ContactInfo {
   mobile: string;
   whatsapp: string;
-  email: string;
 }
 
 interface PersonalDetails {
@@ -33,6 +30,7 @@ interface PersonalDetails {
 interface ProfileData {
   name: string;
   memberId: string;
+  imageUrl: string;
   verified: boolean;
   contact: ContactInfo;
   personal: PersonalDetails;
@@ -48,17 +46,17 @@ interface ProfileProps {
 const defaultProfile: ProfileData = {
 
 
-  name: "Sanjay Kohali",
-  memberId: "4421",
-  verified: true,
+  name: "-",
+  memberId: "-",
+  imageUrl: "",
+  verified: false,
   contact: {
-    mobile: "+91 98765 43210",
-    whatsapp: "+91 98765 43210",
-    email: "sanjay.kohali@email.com",
+    mobile: "-",
+    whatsapp: "-",
   },
   personal: {
-    village: "Nagpur",
-    occupation: "Business Owner",
+    village: "-",
+    occupation: "-",
   },
 };
 
@@ -139,7 +137,6 @@ const ListRow: FC<ListRowProps> = ({ icon, label, value, first, href, external }
 
 export default function Profile({
   profile: initialProfile = defaultProfile,
-  onEditProfile,
   onLogout,
 }: ProfileProps) {
   const [profile, setProfile] = useState<ProfileData>(initialProfile);
@@ -160,7 +157,7 @@ export default function Profile({
         },
         body: JSON.stringify({
           action: "get_profile",
-          user_id: user.id,
+          user_id: user.id, 
         }),
       });
       const result = await response.json();
@@ -168,16 +165,16 @@ export default function Profile({
         const data = result.data;
         setProfile({
           name: data.name || "",
-          memberId: data.id || "",
+          memberId: data.memberId || "",
+          imageUrl: data.imageUrl || "",
           verified: data.verified ?? true,
           contact: {
             mobile: data.phone_number || "",
             whatsapp: data.whatsapp || data.phone_number || "",
-            email: data.email || "",
           },
           personal: {
-            village: data.village || "",
-            occupation: data.occupation || "",
+            village: data.village_name || "",
+            occupation: data.job || "",
           },
         });
       }
@@ -187,8 +184,7 @@ export default function Profile({
   };
   const handleLogout = () => {
     onLogout?.();
-    localStorage.removeItem("authToken");
-
+    localStorage.clear();
     navigate("/login", { replace: true });
   };
 
@@ -240,10 +236,18 @@ export default function Profile({
               <div className="relative z-10 flex items-center gap-4 md:gap-6">
                 <div className="flex h-[62px] w-[62px] flex-shrink-0 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] p-[2.5px] shadow-[0_6px_16px_rgba(0,0,0,0.3)] ring-2 ring-[rgba(240,213,133,0.25)] md:h-[88px] md:w-[88px] md:rounded-[20px] md:p-[3px] lg:h-[100px] lg:w-[100px]">
                   <div className="flex h-full w-full items-center justify-center rounded-full bg-[var(--paper)] md:rounded-[17px]">
-                    <User
-                      className="h-8 w-8 text-[var(--maroon-800)] md:h-11 md:w-11 lg:h-12 lg:w-12"
-                      strokeWidth={1.8}
-                    />
+                    {profile.imageUrl ? (
+                      <img
+                        src={profile.imageUrl}
+                        alt={profile.name}
+                        className="h-full w-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <User
+                        className="h-8 w-8 text-[var(--maroon-800)] md:h-11 md:w-11 lg:h-12 lg:w-12"
+                        strokeWidth={1.8}
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="min-w-0">
@@ -273,13 +277,13 @@ export default function Profile({
             </div>
 
             {/* floating edit action, anchored to the card */}
-            <button
+            {/* <button
               onClick={onEditProfile}
               aria-label="Edit profile"
               className="kc-edit-pulse absolute -bottom-5 -right-2 flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)] shadow-[var(--shadow-gold)] transition-transform duration-150 active:scale-95 md:-bottom-6 md:-right-3 md:h-14 md:w-14"
             >
               <Pencil className="h-4.5 w-4.5 md:h-5 md:w-5" />
-            </button>
+            </button> */}
           </div>
 
           {/*  Info groups */}
@@ -302,12 +306,12 @@ export default function Profile({
                   label="WhatsApp Number"
                   value={profile.contact.whatsapp}
                 />
-                <ListRow
+                {/* <ListRow
                   href={`mailto:${profile.contact.email}`}
                   icon={<Mail className="h-4 w-4 md:h-[18px] md:w-[18px]" />}
                   label="Email ID"
                   value={profile.contact.email}
-                />
+                /> */}
               </div>
             </div>
 
