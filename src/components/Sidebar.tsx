@@ -82,6 +82,19 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
     }
   }, []);
 
+
+   useEffect(() => {
+
+      const otpStatus = localStorage.getItem("otp_status");
+      const isDeviceLogin = localStorage.getItem("is_device_login");
+      if (
+          otpStatus !== "done" &&
+          isDeviceLogin !== "1"
+      ) {
+          navigate("/login", { replace: true });
+      }
+  }, [navigate]);
+
   const getAuthSettings = async () => {
     try {
       const res = await fetch(`${API_PATH}/action_layer.php`, {
@@ -175,9 +188,9 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
         <nav className="flex-1 overflow-y-auto px-3 pt-3">
           <SectionLabel>Explore</SectionLabel>
           <ul className="m-0 list-none space-y-0.5 p-0">
-            <li key="/">
+            <li key="/home">
               <NavLink
-                to="/"
+                to="/home"
                 onClick={onClose}
                 end
                 className={({ isActive }) =>

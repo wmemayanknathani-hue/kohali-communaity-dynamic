@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 import {
   FileText,
@@ -117,18 +118,16 @@ function ServiceCard({
 }) {
   return (
     <section
-      className={`kc-card-glow flex h-full flex-col overflow-hidden rounded-[24px] border bg-[var(--paper)] transition-shadow duration-300 ${
-        active
-          ? "border-[var(--gold-500)]/60 shadow-[var(--shadow-gold)]"
-          : "border-[var(--gold-500)]/25 shadow-[var(--shadow-maroon)]"
-      }`}
+      className={`kc-card-glow flex h-full flex-col overflow-hidden rounded-[24px] border bg-[var(--paper)] transition-shadow duration-300 ${active
+        ? "border-[var(--gold-500)]/60 shadow-[var(--shadow-gold)]"
+        : "border-[var(--gold-500)]/25 shadow-[var(--shadow-maroon)]"
+        }`}
     >
       <div
-        className={`h-[4px] ${
-          active
-            ? "bg-[linear-gradient(90deg,var(--maroon-800),var(--gold-300),var(--gold-600),var(--maroon-800))]"
-            : "bg-[linear-gradient(90deg,var(--gold-700),var(--gold-400),var(--gold-700))]"
-        }`}
+        className={`h-[4px] ${active
+          ? "bg-[linear-gradient(90deg,var(--maroon-800),var(--gold-300),var(--gold-600),var(--maroon-800))]"
+          : "bg-[linear-gradient(90deg,var(--gold-700),var(--gold-400),var(--gold-700))]"
+          }`}
       />
 
       <div className="relative flex-1">{children}</div>
@@ -157,17 +156,15 @@ function CardTop({
     <div className="flex items-start gap-3 md:gap-4">
       <div className="relative shrink-0">
         <div
-          className={`absolute -inset-1 rounded-[18px] blur-md ${
-            isOpen ? "bg-[var(--gold-500)]/15" : "bg-[var(--maroon-900)]/8"
-          }`}
+          className={`absolute -inset-1 rounded-[18px] blur-md ${isOpen ? "bg-[var(--gold-500)]/15" : "bg-[var(--maroon-900)]/8"
+            }`}
         />
 
         <div
-          className={`relative flex h-12 w-12 items-center justify-center rounded-full shadow-sm md:h-14 md:w-14 ${
-            isOpen
-              ? "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-700)]"
-              : "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-700)]"
-          }`}
+          className={`relative flex h-12 w-12 items-center justify-center rounded-full shadow-sm md:h-14 md:w-14 ${isOpen
+            ? "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-700)]"
+            : "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-700)]"
+            }`}
         >
           {icon}
         </div>
@@ -179,16 +176,14 @@ function CardTop({
         </h2>
 
         <div
-          className={`flex shrink-0 mt-1.5 items-center gap-1.5 rounded-full px-2 py-1 ring-1 ${
-            isOpen
-              ? "bg-[var(--gold-300)] text-[var(--maroon-800)] ring-[var(--gold-300)] w-max"
-              : "bg-[var(--gold-300)] text-[var(--maroon-800)] ring-[var(--gold-300)] w-max"
-          }`}
+          className={`flex shrink-0 mt-1.5 items-center gap-1.5 rounded-full px-2 py-1 ring-1 ${isOpen
+            ? "bg-[var(--gold-300)] text-[var(--maroon-800)] ring-[var(--gold-300)] w-max"
+            : "bg-[var(--gold-300)] text-[var(--maroon-800)] ring-[var(--gold-300)] w-max"
+            }`}
         >
           <span
-            className={`h-1.5 w-1.5 rounded-full ${
-              isOpen ? "kc-live-dot bg-[var(--maroon-800)]" : "bg-[var(--maroon-800)]"
-            }`}
+            className={`h-1.5 w-1.5 rounded-full ${isOpen ? "kc-live-dot bg-[var(--maroon-800)]" : "bg-[var(--maroon-800)]"
+              }`}
           />
 
           <span className="whitespace-nowrap text-[10px] font-extrabold uppercase tracking-wide">
@@ -290,7 +285,7 @@ function Services({
                   <div className="flex shrink-0 gap-2">
                     <button
                       type="button"
-                      onClick={() => onView(form.id)}
+                      onClick={() => onView('/family')}
                       aria-label={`View ${form.memberName}`}
                       className={goldIconButtonClass}
                     >
@@ -310,11 +305,10 @@ function Services({
                           ? `Edit ${form.memberName}`
                           : "Edit unavailable — contact the administrator"
                       }
-                      className={`${goldIconButtonClass} ${
-                        !editPermissionGranted
-                          ? "cursor-not-allowed opacity-45"
-                          : ""
-                      }`}
+                      className={`${goldIconButtonClass} ${!editPermissionGranted
+                        ? "cursor-not-allowed opacity-45"
+                        : ""
+                        }`}
                     >
                       {editPermissionGranted ? (
                         <Pencil className="h-4 w-4" />
@@ -393,9 +387,8 @@ function ComingSoonService({
               </span>
 
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-300 ${
-                  expanded ? "rotate-180" : ""
-                }`}
+                className={`h-4 w-4 transition-transform duration-300 ${expanded ? "rotate-180" : ""
+                  }`}
               />
             </button>
 
@@ -429,20 +422,17 @@ function ComingSoonService({
           type="button"
           onClick={onNotifyMe}
           disabled={notified}
-          className={`${goldButtonClass} mt-3 md:mt-3 w-full  ${
-            notified ? "cursor-default opacity-70" : ""
-          }`}
+          className={`${goldButtonClass} mt-3 md:mt-3 w-full  ${notified ? "cursor-default opacity-70" : ""
+            }`}
         >
           <span className="relative flex h-4 w-4 items-center justify-center">
             <Bell
-              className={`absolute h-4 w-4 transition-all duration-300 ${
-                notified ? "scale-0 opacity-0" : "scale-100 opacity-100"
-              }`}
+              className={`absolute h-4 w-4 transition-all duration-300 ${notified ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                }`}
             />
             <Check
-              className={`absolute h-4 w-4 transition-all duration-300 ${
-                notified ? "scale-100 opacity-100" : "scale-0 opacity-0"
-              }`}
+              className={`absolute h-4 w-4 transition-all duration-300 ${notified ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                }`}
             />
           </span>
 
@@ -461,14 +451,65 @@ function ComingSoonService({
 
 export default function ServicesPage() {
   const [editPermissionGranted] = useState(false);
-
-  const [forms] = useState<SurveyForm[]>([
-    { id: "1", memberName: "Sharma Family", updatedAt: "12 Jul 2026" },
-    { id: "2", memberName: "Deshmukh Family", updatedAt: "3 Jun 2026" },
-  ]);
+  const [forms, setForms] = useState<SurveyForm[]>([]);
+  const [user, setUser] = useState<any>(null);
 
   const [notifiedMatrimonial, setNotifiedMatrimonial] = useState(false);
   const [notifiedJobs, setNotifiedJobs] = useState(false);
+  const API_PATH =
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("mobile_user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+    }
+  }, []);
+
+const navigate = useNavigate(); 
+useEffect(() => {
+  const getServicesUsers = async (id: number) => {
+    try {
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "services_users_data",
+          id: id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      console.log("Services API Response:", result);
+
+      if (result.status === true) {
+        setForms(result.data || []);
+      } else {
+        setForms([]);
+      }
+    } catch (error) {
+      console.error("Services users API error:", error);
+      setForms([]);
+    } finally {
+  
+    }
+  };
+
+  if (user?.id) {
+    getServicesUsers(user.id);
+  }
+}, [user, API_PATH]);
 
   return (
     <main className="min-h-screen w-full bg-[var(--cream)]">
@@ -493,7 +534,7 @@ export default function ServicesPage() {
           <Services
             forms={forms}
             editPermissionGranted={editPermissionGranted}
-            onView={(id) => console.log("view", id)}
+            onView={() => navigate("/family")}
             onEdit={(id) => console.log("edit", id)}
           />
         </Reveal>

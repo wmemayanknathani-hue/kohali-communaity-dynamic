@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-// useEffect
+import { useRef, useState,useEffect } from "react";
+// 
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/kohali-logo.png";
 import {
@@ -128,18 +128,18 @@ export function LoginPage() {
   const adminValid = username.trim().length > 0 && password.length > 0;
   const otpValid = otp.every((d) => d.length === 1);
 
-  //   useEffect(() => {
+    useEffect(() => {
 
-  //     const otpStatus = localStorage.getItem("otp_status");
-  //     const isDeviceLogin = localStorage.getItem("is_device_login");
-  //     // alert(otpStatus)
-  //     if (
-  //         otpStatus === "done" &&
-  //         isDeviceLogin === "1"
-  //     ) {
-  //         navigate("/home", { replace: true });
-  //     }
-  // }, [navigate]);
+      const otpStatus = localStorage.getItem("otp_status");
+      const isDeviceLogin = localStorage.getItem("is_device_login");
+      // alert(otpStatus)
+      if (
+          otpStatus === "done" &&
+          isDeviceLogin === "1"
+      ) {
+          navigate("/home", { replace: true });
+      }
+  }, [navigate]);
 
   function startResendTimer() {
     if (resendTimerRef.current) clearInterval(resendTimerRef.current);
