@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate  } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
-import { books as allBooks, type Book } from "../../data/books";
+import { type Book } from "../../data/books";
 
 import {
   ArrowLeft,
@@ -17,21 +17,10 @@ import {
 
 export interface BookDetailProps {
   id: string | number;
-  image: string;
-  category: string;
-  title: string;
-  author: string;
-  date: string;
-  pages: string;
-  description: string;
-  highlights?: string[];
-  pdfUrl?: string;
-
   onBack?: () => void;
   onReadOnline?: () => void;
   onBookmark?: () => void;
   onShare?: () => void;
-
   isBookmarked?: boolean;
 }
 
@@ -202,33 +191,83 @@ function RelatedBookRow({ book, index }: { book: Book; index: number }) {
 
 export default function BookDetail({
   id,
-  image,
-  category,
-  title,
-  author,
-  date,
-  pages,
-  description,
-  highlights = [],
-  pdfUrl = "",
-
   onBack,
-onReadOnline,
+  onReadOnline,
   // onBookmark = () => {},
   // onShare = () => {},
 
   // isBookmarked = false,
-}: BookDetailProps) {
-   const navigate = useNavigate();
+}:
 
-    const handleBack = () => {
-      if (onBack) {
-        onBack();
-        return;
+  BookDetailProps) {
+  const navigate = useNavigate();
+  const [book, setBook] = useState<Book | null>(null);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const API_PATH =
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+  useEffect(() => {
+    const fetchBookDetails = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(`${API_PATH}/action_layer.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "get_all_books",
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch books");
+        }
+
+        const result = await response.json();
+
+        if (result.status !== 1) {
+          throw new Error(result.message || "Books not found");
+        }
+
+        const books: Book[] = result.books || [];
+
+        setAllBooks(books);
+
+        const selectedBook = books.find(
+          (item) => String(item.id) === String(id)
+        );
+
+        if (!selectedBook) {
+          setError("पुस्तक सापडले नाही.");
+          return;
+        }
+
+        setBook(selectedBook);
+      } catch (err) {
+        console.error("Book Details API Error:", err);
+        setError("पुस्तकाची माहिती मिळवताना समस्या आली.");
+      } finally {
+        setLoading(false);
       }
-
-      navigate("/books");
     };
+
+    fetchBookDetails();
+  }, [id]);
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+      return;
+    }
+
+    navigate("/books");
+  };
   const handleReadOnline = () => {
     if (onReadOnline) {
       onReadOnline();
@@ -236,6 +275,50 @@ onReadOnline,
     }
     document.getElementById("book-reader")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+  const relatedBooks = React.useMemo(() => {
+  if (!book) return [];
+
+  const others = allBooks.filter(
+    (b) => String(b.id) !== String(id)
+  );
+
+  const sameCategory = others.filter(
+    (b) => b.category === book.category
+  );
+
+  const rest = others.filter(
+    (b) => b.category !== book.category
+  );
+
+  return [...sameCategory, ...rest].slice(0, 4);
+}, [id, book, allBooks]);
+
+  if (loading) {
+  return (
+    <div className="min-h-screen bg-[var(--cream)] flex items-center justify-center">
+      <p className="text-[var(--maroon-900)]">
+        पुस्तकाची माहिती लोड होत आहे...
+      </p>
+    </div>
+  );
+}
+if (error || !book) {
+  return (
+    <div className="min-h-screen bg-[var(--cream)] flex flex-col items-center justify-center gap-4 px-4 text-center">
+      <p className="text-[var(--maroon-900)] font-semibold">
+        {error || "पुस्तक सापडले नाही."}
+      </p>
+
+      <button
+        type="button"
+        onClick={handleBack}
+        className="rounded-full bg-[var(--maroon-900)] px-5 py-2.5 text-sm font-semibold text-[var(--gold-300)]"
+      >
+        मागे जा
+      </button>
+    </div>
+  );
+}
 
   // const handleShare = async () => {
   //   if (onShare) {
@@ -250,15 +333,17 @@ onReadOnline,
   //     }
   //   }
   // };
-
-  // real, non-repeating related books: prefer same category, exclude current book
-  const relatedBooks = React.useMemo(() => {
-    const others = allBooks.filter((b) => String(b.id) !== String(id));
-    const sameCategory = others.filter((b) => b.category === category);
-    const rest = others.filter((b) => b.category !== category);
-    return [...sameCategory, ...rest].slice(0, 4);
-  }, [id, category]);
-
+  const {
+  image,
+  category,
+  title,
+  author,
+  date,
+  pages,
+  description,
+  highlights = [],
+  pdfUrl = "",
+} = book || {};
   return (
     <div className="min-h-screen bg-[var(--cream)]">
       <style>{`
@@ -283,8 +368,8 @@ onReadOnline,
 
       {/* pb-24 leaves room for the sticky CTA bar so it never covers content */}
       <main className={`${CONTAINER} px-4 pb-6 pt-6 md:px-6 md:pt-9 lg:px-8 xl:px-0`}>
-        
-      {/* =================================================
+
+        {/* =================================================
           MAROON HERO
           NOTE: cover+info switches to a side-by-side row only
           at `lg` (1024px). iPad portrait (768px) lands right on
@@ -293,19 +378,19 @@ onReadOnline,
           device. Now portrait iPad stays stacked/centered, and
           landscape iPad (and up) gets the row layout.
       ================================================= */}
-      <div className="mb-5 relative mt-0 overflow-hidden rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_38%,var(--maroon-700)_100%)] px-5 pb-6 pt-5 shadow-[var(--shadow-maroon)] md:rounded-[28px] md:px-8 md:pb-8 md:pt-7 lg:px-10">
-       {/* diagonal cross-hatch texture */}
+        <div className="mb-5 relative mt-0 overflow-hidden rounded-[22px] border border-[rgba(212,175,55,0.35)] bg-[linear-gradient(150deg,var(--maroon-950)_0%,var(--maroon-900)_38%,var(--maroon-700)_100%)] px-5 pb-6 pt-5 shadow-[var(--shadow-maroon)] md:rounded-[28px] md:px-8 md:pb-8 md:pt-7 lg:px-10">
+          {/* diagonal cross-hatch texture */}
           <div
             className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px),repeating-linear-gradient(-60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px)]"
           />
 
-        <div className={`relative`}>
-          <div className="flex items-center justify-between">
-            <IconButton onClick={handleBack} ariaLabel="मागे जा">
-              <ArrowLeft className="h-4 w-4" strokeWidth={2.4} />
-            </IconButton>
+          <div className={`relative`}>
+            <div className="flex items-center justify-between">
+              <IconButton onClick={handleBack} ariaLabel="मागे जा">
+                <ArrowLeft className="h-4 w-4" strokeWidth={2.4} />
+              </IconButton>
 
-            {/* <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
               <IconButton onClick={handleShare} ariaLabel="पुस्तक शेअर करा">
                 <Share2 className="h-[15px] w-[15px]" strokeWidth={2} />
               </IconButton>
@@ -313,47 +398,47 @@ onReadOnline,
                 <Bookmark className="h-[15px] w-[15px]" strokeWidth={2} fill={isBookmarked ? "currentColor" : "none"} />
               </IconButton>
             </div> */}
-          </div>
-
-          {/* cover + info: stacked/centered through iPad portrait, side-by-side from lg (iPad landscape) up */}
-          <div className="mt-0 flex flex-col items-center gap-6 text-center md:mt-8 lg:flex-row lg:items-center lg:gap-8 lg:text-left">
-            <div className=" group relative h-56 w-[168px] shrink-0 md:h-64 md:w-[188px] lg:h-72 lg:w-[208px] overflow-hidden rounded-2xl shadow-[0_20px_44px_rgba(0,0,0,0.4)] ring-2 ring-[var(--gold-400)]/70 transition-transform duration-500 ease-out hover:-translate-y-1.5 hover:rotate-[-1deg] animate-[coverIn_0.6s_ease-out_backwards] " >
-              <img
-                src={image}
-                alt={title}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
-              />
-              <div className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent,rgba(255,255,255,0.28),transparent)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--gold-500)]" />
             </div>
 
-            <div className="flex flex-1 flex-col items-center lg:items-start">
-              <span className=" inline-block rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] px-3 py-1 font-['Noto_Sans_Devanagari'] text-[11px] font-bold uppercase tracking-[0.5px] text-[var(--maroon-900)] shadow-[0_3px_10px_rgba(0,0,0,0.2)] transition-transform duration-200 hover:scale-105 " >
-                {category}
-              </span>
+            {/* cover + info: stacked/centered through iPad portrait, side-by-side from lg (iPad landscape) up */}
+            <div className="mt-0 flex flex-col items-center gap-6 text-center md:mt-8 lg:flex-row lg:items-center lg:gap-8 lg:text-left">
+              <div className=" group relative h-56 w-[168px] shrink-0 md:h-64 md:w-[188px] lg:h-72 lg:w-[208px] overflow-hidden rounded-2xl shadow-[0_20px_44px_rgba(0,0,0,0.4)] ring-2 ring-[var(--gold-400)]/70 transition-transform duration-500 ease-out hover:-translate-y-1.5 hover:rotate-[-1deg] animate-[coverIn_0.6s_ease-out_backwards] " >
+                <img
+                  src={image}
+                  alt={title}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+                />
+                <div className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent,rgba(255,255,255,0.28),transparent)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--gold-500)]" />
+              </div>
 
-              <h1 className="mt-3 max-w-md lg:max-w-lg text-2xl md:text-3xl lg:text-[34px] xl:text-[38px] font-bold leading-snug text-white">
-                {title}
-              </h1>
-              <p className="mt-1 flex items-center gap-1.5 text-sm md:text-base text-[var(--gold-300)]">
-                <User className="h-[13px] w-[13px]" strokeWidth={2} />
-                {author}
-              </p>
+              <div className="flex flex-1 flex-col items-center lg:items-start">
+                <span className=" inline-block rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] px-3 py-1 font-['Noto_Sans_Devanagari'] text-[11px] font-bold uppercase tracking-[0.5px] text-[var(--maroon-900)] shadow-[0_3px_10px_rgba(0,0,0,0.2)] transition-transform duration-200 hover:scale-105 " >
+                  {category}
+                </span>
 
-              <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-start">
-                <span className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20">
-                  <Calendar className="h-[13px] w-[13px] text-[var(--gold-300)]" strokeWidth={2} />
-                  {date}
-                </span>
-                <span className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20">
-                  <BookOpen className="h-[13px] w-[13px] text-[var(--gold-300)]" strokeWidth={2} />
-                  {pages} पाने
-                </span>
+                <h1 className="mt-3 max-w-md lg:max-w-lg text-2xl md:text-3xl lg:text-[34px] xl:text-[38px] font-bold leading-snug text-white">
+                  {title}
+                </h1>
+                <p className="mt-1 flex items-center gap-1.5 text-sm md:text-base text-[var(--gold-300)]">
+                  <User className="h-[13px] w-[13px]" strokeWidth={2} />
+                  {author}
+                </p>
+
+                <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-start">
+                  <span className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20">
+                    <Calendar className="h-[13px] w-[13px] text-[var(--gold-300)]" strokeWidth={2} />
+                    {date}
+                  </span>
+                  <span className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20">
+                    <BookOpen className="h-[13px] w-[13px] text-[var(--gold-300)]" strokeWidth={2} />
+                    {pages} पाने
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
         {/*
           Description + details grid.
           Was `md:grid-cols-2` with the description div claiming
@@ -413,9 +498,8 @@ onReadOnline,
                 ].map((row, i, arr) => (
                   <div
                     key={row.label}
-                    className={`flex items-center gap-3 px-4 py-3 md:py-3.5 transition-colors duration-150 hover:bg-[var(--gold-300)]/10 ${
-                      i < arr.length - 1 ? "border-b border-[var(--gold-400)]/30" : ""
-                    }`}
+                    className={`flex items-center gap-3 px-4 py-3 md:py-3.5 transition-colors duration-150 hover:bg-[var(--gold-300)]/10 ${i < arr.length - 1 ? "border-b border-[var(--gold-400)]/30" : ""
+                      }`}
                   >
                     <span
                       className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]  shadow-sm"
@@ -480,11 +564,11 @@ onReadOnline,
             </div>
           </section>
         )}
-         <button type="button" onClick={handleReadOnline} className="mt-5 group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-[var(--maroon-900)] to-[var(--maroon-700)] py-3.5 md:py-4 text-sm md:text-base font-semibold text-[var(--gold-300)] shadow-[0_6px_18px_rgba(44,5,13,0.2)] transition-all duration-200 hover:shadow-[0_10px_26px_rgba(44,5,13,0.3)] active:scale-[0.98] " >
-            <span className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent,rgba(255,255,255,0.18),transparent)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
-            ऑनलाइन वाचा
-            <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.4} />
-          </button>
+        <button type="button" onClick={handleReadOnline} className="mt-5 group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-[var(--maroon-900)] to-[var(--maroon-700)] py-3.5 md:py-4 text-sm md:text-base font-semibold text-[var(--gold-300)] shadow-[0_6px_18px_rgba(44,5,13,0.2)] transition-all duration-200 hover:shadow-[0_10px_26px_rgba(44,5,13,0.3)] active:scale-[0.98] " >
+          <span className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent,rgba(255,255,255,0.18),transparent)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
+          ऑनलाइन वाचा
+          <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.4} />
+        </button>
 
       </main>
     </div>

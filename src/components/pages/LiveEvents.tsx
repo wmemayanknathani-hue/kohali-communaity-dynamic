@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SectionHeader from "../SectionHeader";
 import { useNavigate } from "react-router-dom";
 import {
-  ChevronLeft, User,
+  ChevronLeft,
 } from "lucide-react";
-
+// User
 type Tab = "upcoming" | "previous";
 
 interface PreviousItem {
   titleEn: string;
-  titleMr: string;
+  titleMr?: string;
   date: string;
   duration: string;
   views: string;
@@ -19,115 +19,115 @@ interface PreviousItem {
 
 interface UpcomingItem {
   titleEn: string;
-  titleMr: string;
+  titleMr?: string;
   date: string;
   time: string;
   location: string;
   countdown: string;
   host: string;
-  promoDuration?: string; 
+  promoDuration?: string;
   youtubeId?: string;
 }
 
-const YT = {
-  bigBuckBunny: "YE7VzlLtp-4", // Big Buck Bunny — official
-  sintel: "eRsGyueVLvQ", // Sintel — official
-  elephantsDream: "TLkA0RELQ1g", // Elephants Dream — official
-  tearsOfSteel: "R6MlUcmOul8", // Tears of Steel — official
-};
+// const YT = {
+//   bigBuckBunny: "YE7VzlLtp-4", // Big Buck Bunny — official
+//   sintel: "eRsGyueVLvQ", // Sintel — official
+//   elephantsDream: "TLkA0RELQ1g", // Elephants Dream — official
+//   tearsOfSteel: "R6MlUcmOul8", // Tears of Steel — official
+// };
 
-const PREVIOUS: PreviousItem[] = [
-  {
-    titleEn: "Annual Convention Meeting",
-    titleMr: "समाज वार्षिक अधिवेशन सभा",
-    date: "15 Jun 2026",
-    duration: "1:24:10",
-    views: "4.6K",
-    host: "अध्यक्ष श्री. प्रकाश बाळबुधे",
-    youtubeId: YT.bigBuckBunny,
-  },
-  {
-    titleEn: "Youth Guidance Camp",
-    titleMr: "युवक मार्गदर्शन शिबिर",
-    date: "31 May 2026",
-    duration: "54:18",
-    views: "1.4K",
-    host: "करिअर मार्गदर्शन समिती",
-    youtubeId: YT.sintel,
-  },
-  {
-    titleEn: "Women's Empowerment Meet",
-    titleMr: "महिला सक्षमीकरण परिषद",
-    date: "17 May 2026",
-    duration: "1:03:55",
-    views: "1.8K",
-    host: "महिला आघाडी, कोहळी समाज",
-    youtubeId: YT.elephantsDream,
-  },
-  {
-    titleEn: "Scholarship Distribution Ceremony",
-    titleMr: "शैक्षणिक शिष्यवृत्ती वितरण सोहळा",
-    date: "03 May 2026",
-    duration: "41:07",
-    views: "2.3K",
-    host: "शिक्षण समिती",
-    youtubeId: YT.tearsOfSteel,
-  },
-  {
-    titleEn: "Cultural Program",
-    titleMr: "समाज सांस्कृतिक कार्यक्रम",
-    date: "12 Apr 2026",
-    duration: "1:28:32",
-    views: "3.2K",
-    host: "युवा सांस्कृतिक मंडळ",
-    youtubeId: YT.bigBuckBunny,
-  },
-  {
-    titleEn: "Employment Guidance Workshop",
-    titleMr: "रोजगार मार्गदर्शन कार्यशाळा",
-    date: "22 Mar 2026",
-    duration: "37:50",
-    views: "760",
-    host: "रोजगार कक्ष",
-    youtubeId: YT.sintel,
-  },
-];
+// const PREVIOUS: PreviousItem[] = [
+//   {
+//     titleEn: "Annual Convention Meeting",
+//     titleMr: "समाज वार्षिक अधिवेशन सभा",
+//     date: "15 Jun 2026",
+//     duration: "1:24:10",
+//     views: "4.6K",
+//     host: "अध्यक्ष श्री. प्रकाश बाळबुधे",
+//     youtubeId: YT.bigBuckBunny,
+//   },
+//   {
+//     titleEn: "Youth Guidance Camp",
+//     titleMr: "युवक मार्गदर्शन शिबिर",
+//     date: "31 May 2026",
+//     duration: "54:18",
+//     views: "1.4K",
+//     host: "करिअर मार्गदर्शन समिती",
+//     youtubeId: YT.sintel,
+//   },
+//   {
+//     titleEn: "Women's Empowerment Meet",
+//     titleMr: "महिला सक्षमीकरण परिषद",
+//     date: "17 May 2026",
+//     duration: "1:03:55",
+//     views: "1.8K",
+//     host: "महिला आघाडी, कोहळी समाज",
+//     youtubeId: YT.elephantsDream,
+//   },
+//   {
+//     titleEn: "Scholarship Distribution Ceremony",
+//     titleMr: "शैक्षणिक शिष्यवृत्ती वितरण सोहळा",
+//     date: "03 May 2026",
+//     duration: "41:07",
+//     views: "2.3K",
+//     host: "शिक्षण समिती",
+//     youtubeId: YT.tearsOfSteel,
+//   },
+//   {
+//     titleEn: "Cultural Program",
+//     titleMr: "समाज सांस्कृतिक कार्यक्रम",
+//     date: "12 Apr 2026",
+//     duration: "1:28:32",
+//     views: "3.2K",
+//     host: "युवा सांस्कृतिक मंडळ",
+//     youtubeId: YT.bigBuckBunny,
+//   },
+//   {
+//     titleEn: "Employment Guidance Workshop",
+//     titleMr: "रोजगार मार्गदर्शन कार्यशाळा",
+//     date: "22 Mar 2026",
+//     duration: "37:50",
+//     views: "760",
+//     host: "रोजगार कक्ष",
+//     youtubeId: YT.sintel,
+//   },
+// ];
 
-const UPCOMING: UpcomingItem[] = [
-  {
-    titleEn: "Ganesh Utsav Community Celebration",
-    titleMr: "गणेशोत्सव सामाजिक कार्यक्रम",
-    date: "05 Sep 2026",
-    time: "6:00 PM",
-    location: "समाज भवन, नागपूर",
-    countdown: "in 7 days",
-    host: "उत्सव समिती",
-    promoDuration: "0:42",
-    youtubeId: YT.elephantsDream,
-  },
-  {
-    titleEn: "Monthly Committee Review",
-    titleMr: "मासिक कार्यकारिणी सभा",
-    date: "12 Sep 2026",
-    time: "5:00 PM",
-    location: "समाज भवन, नागपूर",
-    countdown: "in 14 days",
-    host: "कार्यकारिणी मंडळ",
-  },
-  {
-    titleEn: "Free Health Check-up Camp",
-    titleMr: "मोफत आरोग्य तपासणी शिबिर",
-    date: "20 Sep 2026",
-    time: "9:00 AM",
-    location: "समाज भवन, नागपूर",
-    countdown: "in 22 days",
-    host: "आरोग्य समिती",
-    promoDuration: "1:05",
-    youtubeId: YT.tearsOfSteel,
-  },
-];
+// const UPCOMING: UpcomingItem[] = [
+//   {
+//     titleEn: "Ganesh Utsav Community Celebration",
+//     titleMr: "गणेशोत्सव सामाजिक कार्यक्रम",
+//     date: "05 Sep 2026",
+//     time: "6:00 PM",
+//     location: "समाज भवन, नागपूर",
+//     countdown: "in 7 days",
+//     host: "उत्सव समिती",
+//     promoDuration: "0:42",
+//     youtubeId: YT.elephantsDream,
+//   },
+//   {
+//     titleEn: "Monthly Committee Review",
+//     titleMr: "मासिक कार्यकारिणी सभा",
+//     date: "12 Sep 2026",
+//     time: "5:00 PM",
+//     location: "समाज भवन, नागपूर",
+//     countdown: "in 14 days",
+//     host: "कार्यकारिणी मंडळ",
+//   },
+//   {
+//     titleEn: "Free Health Check-up Camp",
+//     titleMr: "मोफत आरोग्य तपासणी शिबिर",
+//     date: "20 Sep 2026",
+//     time: "9:00 AM",
+//     location: "समाज भवन, नागपूर",
+//     countdown: "in 22 days",
+//     host: "आरोग्य समिती",
+//     promoDuration: "1:05",
+//     youtubeId: YT.tearsOfSteel,
+//   },
+// ];
 
-const LIVE_YOUTUBE_ID = YT.bigBuckBunny;
+// const LIVE_YOUTUBE_ID = YT.bigBuckBunny;
 
 function ytThumb(id: string) {
   return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
@@ -174,14 +174,14 @@ function PinIcon({ className }: { className?: string }) {
   );
 }
 
-function EyeIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  );
-}
+// function EyeIcon({ className }: { className?: string }) {
+//   return (
+//     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+//       <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+//       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+//     </svg>
+//   );
+// }
 
 function CloseIcon({ className }: { className?: string }) {
   return (
@@ -257,9 +257,54 @@ function VideoLightbox({ youtubeId, title, onClose }: { youtubeId: string; title
 export default function LiveEvents() {
   const [tab, setTab] = useState<Tab>("upcoming");
   const [playing, setPlaying] = useState<{ youtubeId: string; title: string } | null>(null);
-  const isLiveNow = true;
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const [previous, setPrevious] = useState<PreviousItem[]>([]);
+  const [upcoming, setUpcoming] = useState<UpcomingItem[]>([]);
+  const [liveEvent, setLiveEvent] = useState<UpcomingItem | null>(null);
+  // const [loading, setLoading] = useState(true);
+  const isLiveNow = !!liveEvent;
+  // const [error, setError] = useState("");
+  const API_PATH =
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+
+  useEffect(() => {
+    const fetchLiveEvents = async () => {
+      try {
+        // setLoading(true);
+
+        const response = await fetch(`${API_PATH}/action_layer.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "get_live_events",
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.status === 1) {
+          setPrevious(data.previous || []);
+          setUpcoming(data.upcoming || []);
+          setLiveEvent(data.live_event || null);
+        } else {
+          // setError(data.message || "Unable to load events");
+        }
+      } catch (err) {
+        console.error("Live events API error:", err);
+        // setError("Something went wrong while loading events.");
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchLiveEvents();
+  }, []);
   return (
     <div className="min-h-screen bg-[var(--cream)] text-[var(--ink)]">
       <style>{`
@@ -344,7 +389,7 @@ export default function LiveEvents() {
               {/* FULL CARD IMAGE */}
               <div className="absolute inset-0 -z-30">
                 <img
-                  src={ytThumb(LIVE_YOUTUBE_ID)}
+                  src={ytThumb(liveEvent?.youtubeId || "")}
                   alt=""
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
@@ -371,9 +416,10 @@ export default function LiveEvents() {
               {/* VIDEO AREA */}
               <button
                 onClick={() =>
+                  liveEvent?.youtubeId &&
                   setPlaying({
-                    youtubeId: LIVE_YOUTUBE_ID,
-                    title: "रक्षाबंधन स्नेहसंमेलन",
+                    youtubeId: liveEvent.youtubeId,
+                    title: liveEvent.titleMr || liveEvent.titleEn,
                   })
                 }
                 className="relative flex aspect-video w-full items-center justify-center overflow-hidden md:aspect-[21/9] lg:aspect-[21/8]"
@@ -415,7 +461,7 @@ export default function LiveEvents() {
 
                 {/* TITLE — same size step as the Events hero title (md:text-[28px]) */}
                 <h2 className="text-[17px] font-extrabold leading-snug text-white sm:text-2xl md:text-[28px]">
-                  रक्षाबंधन स्नेहसंमेलन
+                  {liveEvent?.titleMr || liveEvent?.titleEn}
                 </h2>
 
                 <p className="mt-1 text-sm text-[var(--gold-100)] md:text-[15px]">
@@ -427,17 +473,17 @@ export default function LiveEvents() {
 
                   <span className="flex items-center gap-1.5">
                     <CalendarIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
-                    29 August 2026
+                  {liveEvent?.date}
                   </span>
 
                   <span className="flex items-center gap-1.5">
                     <ClockIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
-                    6:00 PM
+                  {liveEvent?.time}
                   </span>
 
                   <span className="flex items-center gap-1.5">
                     <PinIcon className="h-3.5 w-3.5 shrink-0 text-[var(--gold-300)]" />
-                    समाज भवन, नागपूर
+                  {liveEvent?.location}
                   </span>
 
                 </div>
@@ -449,9 +495,10 @@ export default function LiveEvents() {
                   {/* WATCH NOW */}
                   <button
                     onClick={() =>
+                      liveEvent?.youtubeId &&
                       setPlaying({
-                        youtubeId: LIVE_YOUTUBE_ID,
-                        title: "रक्षाबंधन स्नेहसंमेलन",
+                        youtubeId: liveEvent.youtubeId,
+                        title: liveEvent.titleMr || liveEvent.titleEn,
                       })
                     }
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] py-2.5 text-sm font-bold text-[var(--maroon-950)] shadow-[0_8px_22px_-8px_rgba(227,181,74,0.75)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_25px_-8px_rgba(227,181,74,0.9)] active:scale-[0.98] md:py-3 md:text-base"
@@ -483,32 +530,29 @@ export default function LiveEvents() {
           <div className="relative mt-5 grid grid-cols-2 rounded-xl border border-[var(--gold-300)] bg-white p-1 md:mx-auto md:max-w-sm">
             <span
               aria-hidden="true"
-              className={`absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-lg bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] shadow-sm transition-transform duration-300 ease-out ${
-                tab === "previous" ? "translate-x-[calc(100%+2px)]" : "translate-x-0"
-              }`}
+              className={`absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-lg bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] shadow-sm transition-transform duration-300 ease-out ${tab === "previous" ? "translate-x-[calc(100%+2px)]" : "translate-x-0"
+                }`}
             />
             <button
               onClick={() => setTab("upcoming")}
-              className={`relative z-10 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
-                tab === "upcoming" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
-              }`}
+              className={`relative z-10 rounded-lg py-2.5 text-sm font-semibold transition-colors ${tab === "upcoming" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
+                }`}
             >
-              Upcoming 
+              Upcoming
             </button>
             <button
               onClick={() => setTab("previous")}
-              className={`relative z-10 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
-                tab === "previous" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
-              }`}
+              className={`relative z-10 rounded-lg py-2.5 text-sm font-semibold transition-colors ${tab === "previous" ? "text-[var(--gold-100)]" : "text-[var(--maroon-800)]"
+                }`}
             >
-              Previous 
+              Previous
             </button>
           </div>
 
-      
+
           {tab === "upcoming" ? (
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {UPCOMING.map((ev, i) => {
+              {upcoming.map((ev, i) => {
                 const days = daysFromCountdown(ev.countdown);
                 const soon = days !== null && days <= 7;
                 return (
@@ -529,9 +573,8 @@ export default function LiveEvents() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
                         <span
-                          className={`rounded-full px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide ${
-                            soon ? "bg-[var(--maroon-800)] text-[var(--gold-100)]" : "bg-[var(--gold-100)] text-[var(--gold-700)]"
-                          }`}
+                          className={`rounded-full px-2 py-0.5 text-[12px] font-bold uppercase tracking-wide ${soon ? "bg-[var(--maroon-800)] text-[var(--gold-100)]" : "bg-[var(--gold-100)] text-[var(--gold-700)]"
+                            }`}
                         >
                           {soon ? "Soon" : "Scheduled"}
                         </span>
@@ -580,7 +623,7 @@ export default function LiveEvents() {
             </div>
           ) : (
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {PREVIOUS.map((item, i) => (
+              {previous.map((item, i) => (
                 <button
                   key={item.titleEn}
                   onClick={() => setPlaying({ youtubeId: item.youtubeId, title: item.titleEn })}
@@ -601,12 +644,12 @@ export default function LiveEvents() {
                         <CalendarIcon className="h-3 w-3" />
                         {item.date}
                       </span>
-                      <span className="flex items-center gap-1">
+                      {/* <span className="flex items-center gap-1">
                         <EyeIcon className="h-3 w-3" />
                         {item.views} views
-                      </span>
+                      </span> */}
                     </div>
-                    <p className="truncate text-[12px] text-[var(--text-muted)] flex items-center gap-1 mt-1"> <User className="h-3 w-3" /> {item.host}</p>
+                    {/* <p className="truncate text-[12px] text-[var(--text-muted)] flex items-center gap-1 mt-1"> <User className="h-3 w-3" /> {item.host}</p> */}
                   </div>
                 </button>
               ))}

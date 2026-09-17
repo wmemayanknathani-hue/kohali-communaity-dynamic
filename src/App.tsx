@@ -27,14 +27,12 @@ import PhotoGallery from "./components/pages/PhotoGallery";
 import VideoGallery from "./components/pages/VideoGallery";
 import Events from "./components/pages/Events";
 // import EventDetails from "./components/pages/EventDetails";
-import { getBookById } from "./data/books";
+// import { getBookById } from "./data/books";
 
 function BookDetailRoute() {
   const { bookId } = useParams<{ bookId: string }>();
 
-  const book = bookId ? getBookById(bookId) : undefined;
-
-  if (!book) {
+  if (!bookId) {
     return (
       <div className="flex min-h-screen items-center justify-center p-6">
         <div className="text-center">
@@ -50,7 +48,7 @@ function BookDetailRoute() {
     );
   }
 
-  return <BookDetail {...book} />;
+  return <BookDetail id={bookId} />;
 }
 
 export default function App() {

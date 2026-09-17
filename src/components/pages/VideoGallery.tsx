@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { ChevronLeft, Calendar, Video as VideoIcon, X, Play, Clock } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, Calendar, Video as VideoIcon, X, Play  } from "lucide-react";
+// Clock
 import SectionHeader from "../SectionHeader";
 import { useNavigate } from "react-router-dom";
 
@@ -13,119 +14,238 @@ interface VideoItem {
   thumb: string;
   src: string;
 }
+const getYoutubeVideoId = (url: string) => {
+  if (!url) return "";
 
-const videos: VideoItem[] = [
-  {
-    id: 1,
-    title: "वार्षिक स्नेहसंमेलन २०२५ — हायलाइट्स",
-    desc: "नागपूर येथे पार पडलेल्या वार्षिक स्नेहसंमेलनाचा संपूर्ण सारांश, सांस्कृतिक कार्यक्रमांसह.",
-    date: "१२ जाने २०२५",
-    cat: "स्नेहसंमेलन",
-    duration: "६:४२",
-    thumb: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-  },
-  {
-    id: 2,
-    title: "अध्यक्षांचे मनोगत",
-    desc: "मंडळाचे अध्यक्ष यांनी संमेलनात व्यक्त केलेले विचार व आगामी वर्षाचे नियोजन.",
-    date: "१२ जाने २०२५",
-    cat: "भाषण",
-    duration: "३:१५",
-    thumb: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-  },
-  {
-    id: 4,
-    title: "महिला मंडळ हस्तकला प्रात्यक्षिक",
-    desc: "महिला मंडळाच्या सदस्यांनी सादर केलेले हस्तकला प्रात्यक्षिक व मुलाखती.",
-    date: "१९ जून २०२५",
-    cat: "महिला मंडळ",
-    duration: "५:२८",
-    thumb: "https://images.unsplash.com/photo-1509909756405-be0199881695?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-  },
-  {
-    id: 5,
-    title: "युवा क्रीडा स्पर्धा — अंतिम सामना",
-    desc: "युवा क्रीडा स्पर्धेच्या अंतिम फेरीतील रोमहर्षक क्षण.",
-    date: "०५ मार्च २०२५",
-    cat: "क्रीडा",
-    duration: "१०:५०",
-    thumb: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-  },
-  {
-    id: 6,
-    title: "वृक्षारोपण उपक्रम — मुलाखती",
-    desc: "पर्यावरण संवर्धन उपक्रमात सहभागी सदस्यांच्या प्रतिक्रिया.",
-    date: "२२ मार्च २०२५",
-    cat: "सामाजिक कार्य",
-    duration: "४:३३",
-    thumb: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-  },
-  {
-    id: 8,
-    title: "रक्तदान शिबीर — अहवाल",
-    desc: "रक्तदान शिबिरातील सहभाग व आरोग्य विभागाच्या मुलाखतीसह अहवाल.",
-    date: "१० एप्रिल २०२५",
-    cat: "सामाजिक कार्य",
-    duration: "५:०७",
-    thumb: "https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-  },
-  {
-    id: 9,
-    title: "ज्येष्ठ नागरिक सन्मान सोहळा",
-    desc: "समाजातील ज्येष्ठ नागरिकांच्या सत्कार सोहळ्याचे चित्रीकरण.",
-    date: "२८ एप्रिल २०२५",
-    cat: "स्नेहसंमेलन",
-    duration: "७:२२",
-    thumb: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-  },
-  {
-    id: 10,
-    title: "बालसंस्कार वर्ग — सादरीकरण",
-    desc: "उन्हाळी बालसंस्कार वर्गाच्या समारोप सोहळ्यातील बालकांचे सादरीकरण.",
-    date: "२ जून २०२५",
-    cat: "शिक्षण",
-    duration: "६:१०",
-    thumb: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
-  },
-  {
-    id: 11,
-    title: "कारागीर मेळावा — फेरफटका",
-    desc: "स्थानिक कारागिरांच्या कलाकृती प्रदर्शन व विक्री मेळाव्याचा फेरफटका.",
-    date: "१५ मे २०२५",
-    cat: "सामाजिक कार्य",
-    duration: "४:४५",
-    thumb: "https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-  },
-  {
-    id: 12,
-    title: "क्रिकेट अजिंक्यपद स्पर्धा — अंतिम षटक",
-    desc: "आंतर-विभागीय क्रिकेट स्पर्धेच्या अंतिम सामन्यातील निर्णायक षटक.",
-    date: "७ जुलै २०२५",
-    cat: "क्रीडा",
-    duration: "९:३०",
-    thumb: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=600&q=80",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
-  },
-];
+  try {
+    const urlObj = new URL(url);
 
-const categories = ["सर्व", ...Array.from(new Set(videos.map((v) => v.cat)))];
+    if (urlObj.hostname.includes("youtu.be")) {
+      return urlObj.pathname.substring(1).split("/")[0];
+    }
 
+    if (urlObj.hostname.includes("youtube.com")) {
+      const watchId = urlObj.searchParams.get("v");
+
+      if (watchId) {
+        return watchId;
+      }
+
+      if (urlObj.pathname.includes("/shorts/")) {
+        return urlObj.pathname.split("/shorts/")[1]?.split("/")[0] || "";
+      }
+
+      if (urlObj.pathname.includes("/embed/")) {
+        return urlObj.pathname.split("/embed/")[1]?.split("/")[0] || "";
+      }
+    }
+  } catch (error) {
+    console.error("Invalid YouTube URL:", error);
+  }
+
+  return "";
+};
+const getYoutubeThumbnail = (url: string) => {
+  if (!url) return "";
+
+  let videoId = "";
+
+  try {
+    const urlObj = new URL(url);
+
+    if (urlObj.hostname.includes("youtu.be")) {
+      videoId = urlObj.pathname.substring(1);
+    } else if (urlObj.hostname.includes("youtube.com")) {
+      videoId = urlObj.searchParams.get("v") || "";
+
+      if (!videoId && urlObj.pathname.includes("/shorts/")) {
+        videoId = urlObj.pathname.split("/shorts/")[1]?.split("/")[0];
+      }
+
+      if (!videoId && urlObj.pathname.includes("/embed/")) {
+        videoId = urlObj.pathname.split("/embed/")[1]?.split("/")[0];
+      }
+    }
+  } catch (error) {
+    console.error("Invalid YouTube URL:", error);
+  }
+
+  return videoId
+    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+    : "";
+};
+// const videos: VideoItem[] = [
+//   {
+//     id: 1,
+//     title: "वार्षिक स्नेहसंमेलन २०२५ — हायलाइट्स",
+//     desc: "नागपूर येथे पार पडलेल्या वार्षिक स्नेहसंमेलनाचा संपूर्ण सारांश, सांस्कृतिक कार्यक्रमांसह.",
+//     date: "१२ जाने २०२५",
+//     cat: "स्नेहसंमेलन",
+//     duration: "६:४२",
+//     thumb: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+//   },
+//   {
+//     id: 2,
+//     title: "अध्यक्षांचे मनोगत",
+//     desc: "मंडळाचे अध्यक्ष यांनी संमेलनात व्यक्त केलेले विचार व आगामी वर्षाचे नियोजन.",
+//     date: "१२ जाने २०२५",
+//     cat: "भाषण",
+//     duration: "३:१५",
+//     thumb: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+//   },
+//   {
+//     id: 4,
+//     title: "महिला मंडळ हस्तकला प्रात्यक्षिक",
+//     desc: "महिला मंडळाच्या सदस्यांनी सादर केलेले हस्तकला प्रात्यक्षिक व मुलाखती.",
+//     date: "१९ जून २०२५",
+//     cat: "महिला मंडळ",
+//     duration: "५:२८",
+//     thumb: "https://images.unsplash.com/photo-1509909756405-be0199881695?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+//   },
+//   {
+//     id: 5,
+//     title: "युवा क्रीडा स्पर्धा — अंतिम सामना",
+//     desc: "युवा क्रीडा स्पर्धेच्या अंतिम फेरीतील रोमहर्षक क्षण.",
+//     date: "०५ मार्च २०२५",
+//     cat: "क्रीडा",
+//     duration: "१०:५०",
+//     thumb: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+//   },
+//   {
+//     id: 6,
+//     title: "वृक्षारोपण उपक्रम — मुलाखती",
+//     desc: "पर्यावरण संवर्धन उपक्रमात सहभागी सदस्यांच्या प्रतिक्रिया.",
+//     date: "२२ मार्च २०२५",
+//     cat: "सामाजिक कार्य",
+//     duration: "४:३३",
+//     thumb: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+//   },
+//   {
+//     id: 8,
+//     title: "रक्तदान शिबीर — अहवाल",
+//     desc: "रक्तदान शिबिरातील सहभाग व आरोग्य विभागाच्या मुलाखतीसह अहवाल.",
+//     date: "१० एप्रिल २०२५",
+//     cat: "सामाजिक कार्य",
+//     duration: "५:०७",
+//     thumb: "https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+//   },
+//   {
+//     id: 9,
+//     title: "ज्येष्ठ नागरिक सन्मान सोहळा",
+//     desc: "समाजातील ज्येष्ठ नागरिकांच्या सत्कार सोहळ्याचे चित्रीकरण.",
+//     date: "२८ एप्रिल २०२५",
+//     cat: "स्नेहसंमेलन",
+//     duration: "७:२२",
+//     thumb: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+//   },
+//   {
+//     id: 10,
+//     title: "बालसंस्कार वर्ग — सादरीकरण",
+//     desc: "उन्हाळी बालसंस्कार वर्गाच्या समारोप सोहळ्यातील बालकांचे सादरीकरण.",
+//     date: "२ जून २०२५",
+//     cat: "शिक्षण",
+//     duration: "६:१०",
+//     thumb: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+//   },
+//   {
+//     id: 11,
+//     title: "कारागीर मेळावा — फेरफटका",
+//     desc: "स्थानिक कारागिरांच्या कलाकृती प्रदर्शन व विक्री मेळाव्याचा फेरफटका.",
+//     date: "१५ मे २०२५",
+//     cat: "सामाजिक कार्य",
+//     duration: "४:४५",
+//     thumb: "https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+//   },
+//   {
+//     id: 12,
+//     title: "क्रिकेट अजिंक्यपद स्पर्धा — अंतिम षटक",
+//     desc: "आंतर-विभागीय क्रिकेट स्पर्धेच्या अंतिम सामन्यातील निर्णायक षटक.",
+//     date: "७ जुलै २०२५",
+//     cat: "क्रीडा",
+//     duration: "९:३०",
+//     thumb: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=600&q=80",
+//     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+//   },
+// ];
+
+// const categories = ["सर्व", ...Array.from(new Set(videos.map((v) => v.cat)))];
+const API_PATH =
+  window.location.hostname === "localhost" ||
+    window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH;
 export default function VideoGallery() {
   const navigate = useNavigate();
   const [activeCat, setActiveCat] = useState("सर्व");
   const [selected, setSelected] = useState<VideoItem | null>(null);
+  const [videos, setVideos] = useState<VideoItem[]>([]);
+  // const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getVideos();
+  }, []);
+  const getVideos = async () => {
+    try {
+      // setLoading(true);
 
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "get_videos",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 1) {
+        const formattedVideos: VideoItem[] = (result.videos || []).map(
+          (item: any) => ({
+            id: Number(item.id),
+            title: item.title || "",
+            desc: item.sub_title || "",
+            date: item.date || "",
+            cat: item.category || "",
+            duration: item.duration || "",
+            src: item.youtube_url || item.url || "",
+          })
+        );
+
+        setVideos(formattedVideos);
+      } else {
+        setVideos([]);
+      }
+    } catch (error) {
+      console.error("Video API Error:", error);
+      setVideos([]);
+    } finally {
+      // setLoading(false);
+    }
+  };
+  const categories = [
+    "सर्व",
+    ...Array.from(
+      new Set(
+        videos
+          .map((v) => v.cat)
+          .filter(Boolean)
+      )
+    ),
+  ];
   const list =
-    activeCat === "सर्व" ? videos : videos.filter((v) => v.cat === activeCat);
+    activeCat === "सर्व"
+      ? videos
+      : videos.filter((v) => v.cat === activeCat);
 
   return (
     <div className="min-h-screen bg-[var(--cream,#F7F1E6)] text-[var(--ink,#2A1416)] pb-12">
@@ -218,11 +338,10 @@ export default function VideoGallery() {
               key={cat}
               onClick={() => setActiveCat(cat)}
               aria-pressed={activeCat === cat}
-              className={`flex-shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-[12.5px] font-bold transition-all active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500,#C99A3E)] ${
-                activeCat === cat
-                  ? "bg-[linear-gradient(160deg,var(--maroon-800,#611626),var(--maroon-950,#3A0A12))] text-[var(--gold-300,#F3D98B)] shadow-[0_6px_16px_-6px_rgba(58,10,18,0.55)] ring-1 ring-[var(--gold-500,#D4AF37)]/40"
-                  : "border border-[var(--maroon-950,#3A0A12)]/10 bg-[var(--paper,#FFFDF8)] text-[var(--maroon-900,#4A0F1A)] hover:border-[var(--gold-500,#D4AF37)]/40"
-              }`}
+              className={`flex-shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-[12.5px] font-bold transition-all active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500,#C99A3E)] ${activeCat === cat
+                ? "bg-[linear-gradient(160deg,var(--maroon-800,#611626),var(--maroon-950,#3A0A12))] text-[var(--gold-300,#F3D98B)] shadow-[0_6px_16px_-6px_rgba(58,10,18,0.55)] ring-1 ring-[var(--gold-500,#D4AF37)]/40"
+                : "border border-[var(--maroon-950,#3A0A12)]/10 bg-[var(--paper,#FFFDF8)] text-[var(--maroon-900,#4A0F1A)] hover:border-[var(--gold-500,#D4AF37)]/40"
+                }`}
             >
               {cat}
             </button>
@@ -264,7 +383,7 @@ export default function VideoGallery() {
               >
                 <div className="relative aspect-video w-full overflow-hidden">
                   <img
-                    src={v.thumb}
+                    src={getYoutubeThumbnail(v.src)}
                     alt={v.title}
                     loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -284,10 +403,10 @@ export default function VideoGallery() {
                   </div>
 
                   {/* Duration badge */}
-                  <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-md bg-black/65 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                  {/* <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-md bg-black/65 px-1.5 py-0.5 text-[10px] font-bold text-white">
                     <Clock size={9.5} strokeWidth={2.4} />
                     {v.duration}
-                  </span>
+                  </span> */}
 
                   <span className="absolute left-2 top-2 max-w-[75%] truncate rounded-full bg-[linear-gradient(160deg,var(--maroon-800,#611626),var(--maroon-950,#3A0A12))] px-2.5 py-1 text-[9.5px] font-extrabold text-[var(--gold-300,#F3D98B)] shadow-sm">
                     {v.cat}
@@ -337,13 +456,12 @@ export default function VideoGallery() {
             {/* Player */}
             <div className="relative flex-shrink-0 px-4 pt-2 md:p-4 md:pb-0">
               <div className="relative aspect-video overflow-hidden rounded-2xl bg-black">
-                <video
-                  key={selected.id}
-                  src={selected.src}
-                  poster={selected.thumb}
-                  controls
-                  autoPlay
-                  className="h-full w-full object-cover"
+                <iframe
+                  src={`https://www.youtube.com/embed/${getYoutubeVideoId(selected.src)}?autoplay=1`}
+                  title={selected.title}
+                  className="h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
                 />
                 <button
                   onClick={() => setSelected(null)}
@@ -362,10 +480,10 @@ export default function VideoGallery() {
                   {selected.cat}
                 </span>
                 <div className="flex items-center gap-3 text-[11.5px] font-bold text-[var(--maroon-800,#611626)]">
-                  <span className="flex items-center gap-1">
+                  {/* <span className="flex items-center gap-1">
                     <Clock size={12} strokeWidth={2.2} />
                     {selected.duration}
-                  </span>
+                  </span> */}
                   <span className="flex items-center gap-1">
                     <Calendar size={12} strokeWidth={2.2} />
                     {selected.date}

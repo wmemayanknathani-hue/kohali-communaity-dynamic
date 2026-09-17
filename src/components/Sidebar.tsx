@@ -107,7 +107,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
         }),
       });
       const data = await res.json();
-      console.log("Auth Settings Response:", data);
+      // console.log("Auth Settings Response:", data);
       if (data.status == 1) {
         localStorage.setItem(
           "auth_settings",

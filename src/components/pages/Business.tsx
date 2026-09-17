@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, Store } from "lucide-react";
 import { BusinessCard } from "../BusinessCard";
-import { sampleBusinesses } from "../../data/business";
+import { getBusinesses } from "../../data/business";
+import type { Business } from "../../data/business";
 import SectionHeader from "../SectionHeader";
 import { useNavigate } from "react-router-dom";
 
@@ -58,6 +59,24 @@ function Reveal({
 }
 
 export default function BusinessPage() {
+  
+const [businesses, setBusinesses] = useState<Business[]>([]);
+// const [loadingBusinesses, setLoadingBusinesses] = useState(true);
+
+useEffect(() => {
+  const loadBusinesses = async () => {
+    try {
+      const data = await getBusinesses();
+      setBusinesses(data);
+    } catch (error) {
+      console.error("Business API error:", error);
+    } finally {
+      // setLoadingBusinesses(false);
+    }
+  };
+
+  loadBusinesses();
+}, []);
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[var(--cream)] pb-10">
@@ -74,7 +93,7 @@ export default function BusinessPage() {
             <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
           </button>
         </div>
-        {sampleBusinesses.length === 0 ? (
+        {businesses.length === 0 ? (
           <Reveal delay={80}>
             <div className="mt-5 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-[var(--gold-400)]/60 bg-[var(--paper)] px-4 py-10 text-center">
               <Store className="h-8 w-8 text-[var(--gold-500)]" strokeWidth={1.5} />
@@ -85,7 +104,7 @@ export default function BusinessPage() {
           </Reveal>
         ) : (
           <div className="mt-0 grid grid-cols-2 md:grid-cols-3 gap-3.5">
-            {sampleBusinesses.map((business, index) => (
+            {businesses.map((business, index) => (
               <Reveal key={business.id} delay={index * 60}>
                 <BusinessCard business={business} />
               </Reveal>

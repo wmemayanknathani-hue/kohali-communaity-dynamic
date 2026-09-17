@@ -8,7 +8,6 @@ import {
   ListChecks,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { MEMBERS } from "./ExecutiveCommittee";
 import SectionHeader from "../SectionHeader";
 
 /* ---------------------------------------------------------------------- */
@@ -129,10 +128,61 @@ function initials(displayName: string): string {
 export default function CommitteeDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const [member, setMember] = useState<CommitteeMemberWithResponsibilities | null>(null);
+  const [loading, setLoading] = useState(true);
+    const API_PATH =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+       useEffect(() => {
+    const fetchCommitteeMember = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_PATH}/action_layer.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "get_committee_members",
+            id: id,
+          }),
+        });
 
-  const member = MEMBERS.find(
-    (m) => String(m.id) === String(id)
-  ) as CommitteeMemberWithResponsibilities | undefined;
+        const result = await response.json();
+
+        if (result.status === 1 && result.members) {
+          setMember(result.members[0]);
+        } else {
+          setMember(null);
+        }
+      } catch (error) {
+        console.error("Committee member API error:", error);
+        setMember(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchCommitteeMember();
+    } else {
+      setLoading(false);
+    }
+  }, [id, API_PATH]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[var(--cream)] text-[var(--ink)]">
+        <div className="mx-auto max-w-2xl px-4 py-12 text-center">
+          <p className="text-sm text-[var(--text-muted)]">
+            Loading committee member...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!member) {
     return (

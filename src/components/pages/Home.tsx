@@ -2,42 +2,43 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 import { BusinessCard } from "../BusinessCard";
-import { sampleBusinesses } from "../../data/business";
+import { getBusinesses } from "../../data/business";
+import type { Business } from "../../data/business";
 import {
   User, Users, Radio, Megaphone, CalendarDays, Image as ImageIcon,
   PlayCircle, BookOpen, Store, ChevronRight,
   // MapPin, Phone, Globe, Play,
 } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
-import hero1 from "../../assets/hero1.jpg";
-import hero2 from "../../assets/hero2.jpg";
-import hero3 from "../../assets/hero3.jpg";
+// import hero1 from "../../assets/hero1.jpg";
+// import hero2 from "../../assets/hero2.jpg";
+// import hero3 from "../../assets/hero3.jpg";
 
 /* ============================= DATA ============================= */
 
-const heroSlides = [
-  { 
-    id: "s1",
-    tag: "कार्यक्रम",  
-    title: "वार्षिक स्नेहसंमेलन २०२४",
-    subtitle: "१५ ऑक्टोबर · नागपूर",
-    image: hero1,
-  },
-  {
-    id: "s2",
-    tag: "स्वागत",
-    title: "कोहळी कनेक्टवर आपले स्वागत",
-    subtitle: "एकत्र, एक समाज म्हणून",
-    image: hero2,
-  },
-  {
-    id: "s3",
-    tag: "सूचना",
-    title: "सदस्य नोंदणी सुरू",
-    subtitle: "आजच आपली नोंदणी करा",
-    image: hero3,
-  },
-];
+// const heroSlides = [
+//   { 
+//     id: "s1",
+//     tag: "कार्यक्रम",  
+//     title: "वार्षिक स्नेहसंमेलन २०२४",
+//     subtitle: "१५ ऑक्टोबर · नागपूर",
+//     image: hero1,
+//   },
+//   {
+//     id: "s2",
+//     tag: "स्वागत",
+//     title: "कोहळी कनेक्टवर आपले स्वागत",
+//     subtitle: "एकत्र, एक समाज म्हणून",
+//     image: hero2,
+//   },
+//   {
+//     id: "s3",
+//     tag: "सूचना",
+//     title: "सदस्य नोंदणी सुरू",
+//     subtitle: "आजच आपली नोंदणी करा",
+//     image: hero3,
+//   },
+// ];
 
 const quickAccess = [
   { to: "/profile", label: "Profile", icon: User },
@@ -58,7 +59,7 @@ const quickAccess = [
 function useRevealVisible() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-
+  
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
@@ -143,8 +144,36 @@ function HeroSlider() {
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const n = heroSlides.length;
+  const API_PATH =window.location.hostname === "localhost" ||window.location.hostname === "192.168.1.62"? import.meta.env.VITE_LOCAL_API_PATH: import.meta.env.VITE_LIVE_API_PATH;
+  useEffect(() => {
+    // Fetch hero slides from API
+    getHeroSlides();
+  }, []);
 
+  const getHeroSlides = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("mobile_user") || "{}");
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "get_hero_slides",
+          user_id: user.id, 
+        }),
+      });
+      const result = await response.json();
+      if (result.status && result.data) {
+        const data = result.data;
+        setHeroSlides(data);
+      }
+    } catch (error) {
+      console.error("Profile API Error:", error);
+    }
+  };
   const startTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => setActive((i) => (i + 1) % n), 4200);
@@ -230,6 +259,24 @@ function HeroSlider() {
 /* ============================= PAGE ============================= */
 
 export function Home() {
+
+const [businesses, setBusinesses] = useState<Business[]>([]);
+// const [loadingBusinesses, setLoadingBusinesses] = useState(true);
+
+useEffect(() => {
+  const loadBusinesses = async () => {
+    try {
+      const data = await getBusinesses();
+      setBusinesses(data);
+    } catch (error) {
+      console.error("Business API error:", error);
+    } finally {
+      // setLoadingBusinesses(false);
+    }
+  };
+
+  loadBusinesses();
+}, []);
   return (
     <div className="min-h-screen bg-[var(--cream)] pb-10">
 
@@ -270,7 +317,7 @@ export function Home() {
           </Reveal>
           {/* Mobile - 2 cards */}
           <div className="grid grid-cols-2 gap-3 sm:gap-3.5 md:hidden">
-            {sampleBusinesses.slice(0,2).map((business, index) => (
+            {businesses.slice(0,2).map((business, index) => (
               <Reveal key={business.id} delay={index * 70}>
                 <BusinessCard business={business} />
               </Reveal>
@@ -279,7 +326,7 @@ export function Home() {
 
           {/* iPad & Desktop - 3 cards */}
           <div className="hidden grid-cols-3 gap-3.5 md:grid md:gap-4">
-            {sampleBusinesses.slice(0, 3).map((business, index) => (
+            {businesses.slice(0, 3).map((business, index) => (
               <Reveal key={business.id} delay={index * 70}>
                 <BusinessCard business={business} />
               </Reveal>

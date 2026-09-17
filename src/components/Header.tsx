@@ -14,7 +14,7 @@ const notifications: Notification[] = [
     description:
       "Join us for the AGM to review yearly progress and vote on upcoming samaj initiatives.",
     date: "24 Oct, 10:00 AM",
-    category: "notice",
+    category: "सूचना",
     read: false,
   },
   {
@@ -23,7 +23,7 @@ const notifications: Notification[] = [
     description:
       "The community Diwali gathering has started. Tap to join the live stream.",
     date: "Today, 6:30 PM",
-    category: "live",
+    category: "लाइव्ह",
     read: false,
   },
   {
@@ -32,7 +32,7 @@ const notifications: Notification[] = [
     description:
       "Applications for the 2024–25 student scholarship program are now open for members.",
     date: "20 Oct, 9:00 AM",
-    category: "announcement",
+    category: "घोषणा",
     read: false,
   },
   {
@@ -41,7 +41,7 @@ const notifications: Notification[] = [
     description:
       "The samaj blood donation camp begins tomorrow morning at the community hall.",
     date: "Tomorrow, 8:00 AM",
-    category: "reminder",
+    category: "स्मरणपत्र",
     read: true,
   },
   {
@@ -50,7 +50,7 @@ const notifications: Notification[] = [
     description:
       "We've improved search speed and added filters to the business directory.",
     date: "18 Oct, 4:15 PM",
-    category: "update",
+    category: "अपडेट",
     read: true,
   },
 ];

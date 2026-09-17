@@ -16,6 +16,7 @@ export function BusinessCard({ business }: BusinessCardProps) {
     category,
     categoryMr,
     location,
+    addressLine,
     // mobile,
     // whatsapp,
     adType,
@@ -86,7 +87,7 @@ export function BusinessCard({ business }: BusinessCardProps) {
 
           <p className="mt-1 flex items-center gap-1 truncate text-[11px] font-medium text-[var(--text-muted)]">
             <MapPin size={11} className="shrink-0 text-[var(--gold-600)]" />
-            {location}
+            {addressLine},{location}
           </p>
         </div>
       </Link>

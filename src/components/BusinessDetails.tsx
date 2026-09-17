@@ -10,10 +10,12 @@ import {
   getBusinessById,
   getYouTubeId,
   toTelHref,
+  getBusinesses,
   toWhatsAppHref,
   toWebsiteHref,
   toMailHref,
   toDirectionsHref,
+  type Business,
 } from "../data/business";
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -86,8 +88,37 @@ function DetailRow({
 export default function BusinessDetailPage() {
   const navigate = useNavigate();
   const { businessId } = useParams<{ businessId: string }>();
-  const business = businessId ? getBusinessById(businessId) : undefined;
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const loadBusinesses = async () => {
+      try {
+        const data = await getBusinesses();
+        setBusinesses(data);
+      } catch (error) {
+        console.error("Business API error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBusinesses();
+  }, []);
+
+  const business = businessId
+    ? getBusinessById(businesses, businessId)
+    : undefined;
+
+    if (loading) {
+    return (
+      <div className="flex min-h-[70vh] items-center justify-center bg-[var(--cream)]">
+        <p className="text-sm text-[var(--text-muted)]">
+          Loading business...
+        </p>
+      </div>
+    );
+  }
   if (!business) {
     return (
       <div className="flex min-h-[70vh] flex-col items-center justify-center gap-3 bg-[var(--cream)] p-6 text-center">
@@ -142,11 +173,11 @@ export default function BusinessDetailPage() {
   return (
     <div className="min-h-screen bg-[var(--cream)] pb-10">
       {/* Header */}
-        <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
-          <SectionHeader eyebrow="Information" title="Business Details"/>
+      <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
+        <SectionHeader eyebrow="Information" title="Business Details" />
 
-          <div className="flex gap-2">
-            <button
+        <div className="flex gap-2">
+          <button
             onClick={handleShare}
             aria-label="Share"
             className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-[var(--paper)] text-[var(--maroon-800)] shadow-[var(--shadow-gold)] transition-all duration-200 hover:-translate-y-0.5 active:scale-90"
@@ -160,9 +191,9 @@ export default function BusinessDetailPage() {
           >
             <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
           </button>
-          </div>
         </div>
-      
+      </div>
+
 
       <div className="mx-auto w-full px-4 sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5xl">
         <div className="lg:grid lg:grid-cols-[1.3fr_1fr] lg:items-start lg:gap-6">
@@ -199,9 +230,8 @@ export default function BusinessDetailPage() {
                   </span>
                   {typeof isOpen === "boolean" && (
                     <span
-                      className={`pointer-events-auto flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-sm ${
-                        isOpen ? "bg-[#1a9c4d]" : "bg-[var(--maroon-950)]"
-                      }`}
+                      className={`pointer-events-auto flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-sm ${isOpen ? "bg-[#1a9c4d]" : "bg-[var(--maroon-950)]"
+                        }`}
                     >
                       <span className={`h-1.5 w-1.5 rounded-full bg-white ${isOpen ? "animate-pulse" : ""}`} />
                       {isOpen ? "Open Now" : "Closed"}
@@ -211,7 +241,7 @@ export default function BusinessDetailPage() {
               </div>
             </Reveal>
 
-            
+
             <Reveal delay={80} className="mt-5">
               <div className="mt-4 flex items-start gap-3">
                 <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] ring-2 ring-white shadow-sm">
@@ -244,7 +274,7 @@ export default function BusinessDetailPage() {
               </div>
             </Reveal>
 
-            
+
             <Reveal delay={120}>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <a
@@ -265,7 +295,7 @@ export default function BusinessDetailPage() {
             </Reveal>
 
             <Reveal delay={160} className="mt-5">
-              <SectionHeader eyebrow="More Info" title="About Us"/>
+              <SectionHeader eyebrow="More Info" title="About Us" />
               <p className="mt-1.5 text-[14px] leading-relaxed text-[var(--text-muted)]">{description}</p>
             </Reveal>
           </div>
@@ -273,7 +303,7 @@ export default function BusinessDetailPage() {
           {/* ================= RIGHT COLUMN ================= */}
           <div className="lg:sticky lg:top-4">
             <Reveal delay={200} className="mt-4 lg:mt-0">
-              <SectionHeader eyebrow="Get in Touch" title="Contact Info"/>
+              <SectionHeader eyebrow="Get in Touch" title="Contact Info" />
               <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
                 <DetailRow
                   icon={<MapPin size={16} className="text-[var(--maroon-800)]" />}
@@ -312,7 +342,7 @@ export default function BusinessDetailPage() {
                       rel="noopener noreferrer"
                       className="font-mr block text-[12px] text-[var(--text-muted)]"
                     >
-                      {website} 
+                      {website}
                     </a>
                   </DetailRow>
                 )}

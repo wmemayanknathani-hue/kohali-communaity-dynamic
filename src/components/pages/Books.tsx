@@ -1,7 +1,14 @@
+
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { books, type Book } from "../../data/books";
+import { type Book } from "../../data/books";
 import SectionHeader from "../SectionHeader";
 import { ChevronLeft, Calendar, BookOpen, ChevronRight } from "lucide-react";
+const API_PATH =
+  window.location.hostname === "localhost" ||
+    window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH;
 
 function BookRow({ book, index }: { book: Book; index: number }) {
   return (
@@ -23,7 +30,7 @@ function BookRow({ book, index }: { book: Book; index: number }) {
       {/* soft gold wash that sweeps in on hover */}
       <div className=" pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(90deg,transparent,rgba(212,175,55,0.08),transparent)] transition-transform duration-700 ease-out group-hover:translate-x-full " />
 
-     <div className=" relative h-20 w-16 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-[var(--maroon-850)] to-[var(--maroon-700)] shadow-[inset_0_0_0_1px_var(--gold-400)] transition-transform duration-300 ease-out group-hover:scale-[1.05] group-hover:rotate-[-1.5deg] " >
+      <div className=" relative h-20 w-16 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-[var(--maroon-850)] to-[var(--maroon-700)] shadow-[inset_0_0_0_1px_var(--gold-400)] transition-transform duration-300 ease-out group-hover:scale-[1.05] group-hover:rotate-[-1.5deg] " >
         <img
           src={book.image}
           alt={book.title}
@@ -34,13 +41,13 @@ function BookRow({ book, index }: { book: Book; index: number }) {
 
       <div className="min-w-0 flex-1">
         <span
-        className="
+          className="
           inline-block rounded-full bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] px-2 py-[1px]
           text-[10px] font-bold uppercase tracking-[0.5px] text-[var(--gold-300)]
         "
-      >
-        {book.category}
-      </span>
+        >
+          {book.category}
+        </span>
 
         <h3 className="m-0 mt-1 truncate text-[15px] font-bold leading-[1.3] text-[var(--maroon-950)]">
           {book.title}
@@ -63,13 +70,55 @@ function BookRow({ book, index }: { book: Book; index: number }) {
       </div>
 
       <div className=" relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-[0_2px_6px_rgba(180,140,20,0.35)] transition-transform duration-300 ease-out group-hover:translate-x-1 " >
-        <ChevronRight className="h-4 w-4"/>
+        <ChevronRight className="h-4 w-4" />
       </div>
     </Link>
   );
 }
 
 export default function Books() {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState("");
+   useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true);
+        // setError("");
+
+        const response = await fetch(`${API_PATH}/action_layer.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "get_all_books",
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch books");
+        }
+
+        const result = await response.json();
+
+        if (result.status === 1) {
+          setBooks(result.books || []);
+        } else {
+          setBooks([]);
+          // setError(result.message || "Books data not found.");
+        }
+      } catch (err) {
+        console.error("Books API Error:", err);
+        // setError("पुस्तकांची माहिती मिळवताना समस्या आली.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
   return (
     <div className="">
       <style>{`
@@ -90,7 +139,16 @@ export default function Books() {
             />
           </Link>
         </div>
+        <div className="mx-auto flex w-full flex-col gap-2.5 md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
 
+          {/* Loading */}
+          {loading && (
+            <div className="py-10 text-center text-sm text-[var(--text-muted)]">
+              पुस्तके लोड होत आहेत...
+            </div>
+          )}
+          </div>
+        
         <div className="mx-auto flex w-full flex-col gap-2.5 md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
           {books.map((book, i) => (
             <BookRow key={book.id} book={book} index={i} />

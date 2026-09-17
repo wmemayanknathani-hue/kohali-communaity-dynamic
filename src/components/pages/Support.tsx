@@ -78,6 +78,7 @@ function SectionHeading({ title }: { title: string }) {
 interface FieldLabelProps {
   label: string;
   required?: boolean;
+  name?: string;
 }
 
 function FieldLabel({ label, required }: FieldLabelProps) {
@@ -233,17 +234,46 @@ export default function Support() {
     useState<string>("");
 
   const formRef = useRef<HTMLDivElement>(null);
+  const API_PATH =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH;
+ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const form = e.currentTarget;
+  const formData = new FormData(form);
 
-    setSubmitted(true);
+  formData.append("action", "add_support_request");
+  formData.append("service_type", activeService);
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
+  try {
+    const response = await fetch(
+      `${API_PATH}/action_layer.php`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.status === 1) {
+      setSubmitted(true);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    } else {
+      alert(result.message || "Something went wrong.");
+    }
+  } catch (error) {
+    console.error("Support API Error:", error);
+    alert("Unable to submit request. Please try again.");
+  }
+};
 
   const handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -386,12 +416,14 @@ export default function Support() {
                     <div>
                       <FieldLabel
                         label="Name"
+                        name="name"
                         required
                       />
 
                       <TextInput
                         icon={User}
                         type="text"
+                        name="name"
                         placeholder="Full name"
                         required
                       />
@@ -401,12 +433,14 @@ export default function Support() {
                     <div>
                       <FieldLabel
                         label="Mobile Number"
+                        name="mobile"
                         required
                       />
 
                       <TextInput
                         icon={Smartphone}
                         type="tel"
+                        name="mobile"
                         placeholder="10-digit mobile number"
                         required
                       />
@@ -419,6 +453,7 @@ export default function Support() {
                       <TextInput
                         icon={AtSign}
                         type="email"
+                        name="email"
                         placeholder="you@example.com"
                       />
                     </div>
@@ -474,6 +509,7 @@ export default function Support() {
 
                         <TextInput
                           icon={MapPin}
+                          name="village"
                           type="text"
                           placeholder="Village"
                         />
@@ -485,6 +521,7 @@ export default function Support() {
 
                         <TextInput
                           icon={Navigation}
+                          name="taluka"
                           type="text"
                           placeholder="Taluka"
                         />
@@ -496,6 +533,7 @@ export default function Support() {
 
                         <TextInput
                           icon={Landmark}
+                          name="district"
                           type="text"
                           placeholder="District"
                         />
@@ -524,11 +562,13 @@ export default function Support() {
                       <div>
                         <FieldLabel
                           label="Problem Category"
+                          name="category"
                           required
                         />
 
                         <SelectField
                           icon={Tag}
+                          name="category"
                           required
                           defaultValue=""
                         >
@@ -564,6 +604,7 @@ export default function Support() {
 
                       <TextInput
                         icon={Type}
+                         name="subject"
                         type="text"
                         placeholder="Short summary"
                         required
@@ -583,6 +624,7 @@ export default function Support() {
 
                       <TextArea
                         icon={MessageSquare}
+                        name="description"
                         placeholder="Describe in detail..."
                         required
                       />
@@ -616,6 +658,7 @@ export default function Support() {
                         <input
                           type="file"
                           accept="image/*"
+                          name="photo"
                           className="hidden"
                           onChange={(e) =>
                             handleFileChange(
@@ -642,6 +685,7 @@ export default function Support() {
                           type="file"
                           accept="video/*"
                           className="hidden"
+                          name="video"
                           onChange={(e) =>
                             handleFileChange(
                               e,

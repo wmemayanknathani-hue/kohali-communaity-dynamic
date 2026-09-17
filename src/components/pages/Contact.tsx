@@ -25,7 +25,11 @@ import {
 import SectionHeader from "../SectionHeader";
 import { useNavigate } from "react-router-dom";
 import type { IconType } from "react-icons";
-
+const API_PATH =
+  window.location.hostname === "localhost" ||
+    window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH;
 const STYLES = `
   @keyframes kc-shine {
     0% {
@@ -138,6 +142,7 @@ function InfoRow({
 interface FieldProps {
   Icon: LucideIcon;
   label: string;
+  name: string;
   placeholder: string;
   type?: React.HTMLInputTypeAttribute;
   textarea?: boolean;
@@ -148,6 +153,7 @@ interface FieldProps {
 function Field({
   Icon,
   label,
+  name,
   placeholder,
   type = "text",
   textarea = false,
@@ -175,12 +181,14 @@ function Field({
         {textarea ? (
           <textarea
             rows={4}
+            name={name}
             placeholder={placeholder}
             required={required}
             className="w-full resize-none bg-transparent text-[14px] text-[var(--ink)] outline-none placeholder:text-[var(--ink)]/35"
           />
         ) : (
           <input
+            name={name}
             type={type}
             placeholder={placeholder}
             required={required}
@@ -201,15 +209,47 @@ export default function Contact() {
   const navigate = useNavigate();
   const [fileName, setFileName] = useState<string>("");
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  // const [error, setError] = useState<string>("");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setSubmitted(true);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-    window.setTimeout(() => {
-      setSubmitted(false);
-    }, 3000);
+    formData.append("action", "add_contact_inquiry");
+
+    try {
+      setSubmitting(true);
+      // setError("");
+
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      const result = await response.json();
+
+      if (result.status === 1) {
+        setSubmitted(true);
+
+        form.reset();
+        setFileName("");
+
+        window.setTimeout(() => {
+          setSubmitted(false);
+        }, 3000);
+      } else {
+        // setError(result.message || "Something went wrong.");
+      }
+    } catch (error) {
+      console.error("Contact submit error:", error);
+      // setError("Unable to submit message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const socials: SocialItem[] = [
@@ -240,42 +280,42 @@ export default function Contact() {
       >
         <div className="mx-auto max-w-md px-4 pt-5 sm:max-w-lg md:max-w-3xl md:px-8 lg:max-w-4xl">
           {/* Header */}
-            <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4 lg:max-w-4xl xl:max-w-5xl">
-              <SectionHeader eyebrow="Kohli Samaj Nagpur" title="Contact Us" />
-              <button
-                onClick={() => navigate("/home")}
-                className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]"
-              >
-                <ChevronLeft className="h-4 w-4 text-white md:h-[18px] md:w-[18px]" strokeWidth={2.2} />
-              </button>
+          <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4 lg:max-w-4xl xl:max-w-5xl">
+            <SectionHeader eyebrow="Kohli Samaj Nagpur" title="Contact Us" />
+            <button
+              onClick={() => navigate("/home")}
+              className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]"
+            >
+              <ChevronLeft className="h-4 w-4 text-white md:h-[18px] md:w-[18px]" strokeWidth={2.2} />
+            </button>
+          </div>
+
+          {/* HERO BANNER — same language as Home's hero card */}
+          <div className="relative mb-6 mt-2 overflow-hidden rounded-3xl bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] px-6 py-6 shadow-[var(--shadow-maroon)] sm:px-8">
+            {/* diagonal cross-hatch texture */}
+            <div
+              className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px),repeating-linear-gradient(-60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px)]"
+            />
+            <div
+              className="pointer-events-none absolute inset-0 opacity-40"
+              style={{ animation: "support-shine 3.5s ease-in-out 0.3s 1" }}
+            >
+              <div className="h-full w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent)]" />
             </div>
-    
-            {/* HERO BANNER — same language as Home's hero card */}
-            <div className="relative mb-6 mt-2 overflow-hidden rounded-3xl bg-[linear-gradient(155deg,var(--maroon-800),var(--maroon-950))] px-6 py-6 shadow-[var(--shadow-maroon)] sm:px-8">
-              {/* diagonal cross-hatch texture */}
-                <div
-                  className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px),repeating-linear-gradient(-60deg,rgba(212,175,55,0.05)_0_1.5px,transparent_1.5px_26px)]"
-                />
-              <div
-                className="pointer-events-none absolute inset-0 opacity-40"
-                style={{ animation: "support-shine 3.5s ease-in-out 0.3s 1" }}
-              >
-                <div className="h-full w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent)]" />
-              </div>
-              <span className="inline-flex items-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[var(--maroon-950)]">
-                संपर्क करा
-              </span>
-              <h2 className="mt-3 text-xl font-bold text-white sm:text-2xl">Contact Us</h2>
-              <p className="mt-1 text-sm text-[var(--gold-100)]">
-                Reach the central office directly, or send us a message and we'll get back to you.
-              </p>
-            </div>
-          
+            <span className="inline-flex items-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[var(--maroon-950)]">
+              संपर्क करा
+            </span>
+            <h2 className="mt-3 text-xl font-bold text-white sm:text-2xl">Contact Us</h2>
+            <p className="mt-1 text-sm text-[var(--gold-100)]">
+              Reach the central office directly, or send us a message and we'll get back to you.
+            </p>
+          </div>
+
 
           {/* Unified info panel */}
           <SectionHeader eyebrow="Contact Details" title="Get In Touch" />
           <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
-         
+
             <InfoRow
               Icon={MapPin}
               label="Central Office"
@@ -358,7 +398,7 @@ export default function Contact() {
           </div>
 
           {/* Contact form */}
-           <SectionHeader eyebrow="Send a Message" title="We'd love to hear from you"/>
+          <SectionHeader eyebrow="Send a Message" title="We'd love to hear from you" />
           <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
             <div className="px-4 py-3.5 md:px-5 md:py-4 ">
               <form
@@ -367,6 +407,7 @@ export default function Contact() {
               >
                 <Field
                   Icon={User}
+                  name="name"
                   label="Name"
                   placeholder="Your full name"
                   required
@@ -375,6 +416,7 @@ export default function Contact() {
 
                 <Field
                   Icon={Smartphone}
+                  name="mobile"
                   label="Mobile Number"
                   placeholder="+91 00000 00000"
                   type="tel"
@@ -383,6 +425,7 @@ export default function Contact() {
 
                 <Field
                   Icon={AtSign}
+                  name="email"
                   label="Email"
                   placeholder="you@example.com"
                   type="email"
@@ -391,6 +434,7 @@ export default function Contact() {
 
                 <Field
                   Icon={Type}
+                  name="subject"
                   label="Subject"
                   placeholder="What is this about?"
                   required
@@ -400,6 +444,7 @@ export default function Contact() {
                 <Field
                   Icon={MessageSquare}
                   label="Message"
+                  name="message"
                   placeholder="Write your message here..."
                   textarea
                   required
@@ -432,6 +477,7 @@ export default function Contact() {
 
                       <input
                         type="file"
+                        name="attachment"
                         accept=".pdf,.jpg,.jpeg,.png"
                         className="hidden"
                         onChange={(e) =>
@@ -447,13 +493,16 @@ export default function Contact() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="kc-shine relative mt-1 flex items-center justify-center gap-2 overflow-hidden rounded-full py-3.5 text-[14px] font-extrabold text-[var(--paper)] shadow-lg transition active:scale-[0.98] sm:col-span-2"
+                  disabled={submitting}
+                  className="kc-shine relative mt-1 flex items-center justify-center gap-2 overflow-hidden rounded-full py-3.5 text-[14px] font-extrabold text-[var(--paper)] shadow-lg transition active:scale-[0.98] disabled:opacity-60 sm:col-span-2"
                   style={{
                     background:
                       "linear-gradient(135deg, var(--maroon-700), var(--maroon-900))",
                   }}
                 >
-                  {submitted ? (
+                  {submitting ? (
+                    "Submitting..."
+                  ) : submitted ? (
                     <>
                       <CheckCircle2 className="h-4 w-4" />
                       Message Sent

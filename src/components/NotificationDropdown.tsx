@@ -1,13 +1,13 @@
 import { ChevronRight, X, BellOff, } from "lucide-react";
 import { Link } from "react-router-dom";
 export type NotificationCategory =
-  | "notice"        // Latest notices
-  | "event"         // Event notifications
-  | "reminder"      // Upcoming event reminders
-  | "live"          // Live event notifications
-  | "announcement"  // Community announcements
-  | "update"        // Important updates
-  | "service";      // Service-related notifications
+  | "सूचना"        // Latest notices
+  | "कार्यक्रम"         // Event notifications
+  | "स्मरणपत्र"      // Upcoming event reminders
+  | "लाइव्ह"          // Live event notifications
+  | "घोषणा"  // Community announcements
+  | "अपडेट"        // Important updates
+  | "सेवा";      // Service-related notifications
 
 export type Notification = {
   id: string;
@@ -19,24 +19,24 @@ export type Notification = {
 };
 
 const categoryLabel: Record<NotificationCategory, string> = {
-  notice: "सूचना",
-  event: "कार्यक्रम",
-  reminder: "स्मरणपत्र",
-  live: "लाइव्ह",
-  announcement: "घोषणा",
-  update: "अपडेट",
-  service: "सेवा",
+  सूचना: "सूचना",
+  कार्यक्रम: "कार्यक्रम",
+  स्मरणपत्र: "स्मरणपत्र",
+  लाइव्ह: "लाइव्ह",
+  घोषणा: "घोषणा",
+  अपडेट: "अपडेट",
+  सेवा: "सेवा",
 };
 
 // One accent color per category 
 const categoryAccent: Record<NotificationCategory, string> = {
-  notice: "var(--gold-500)",
-  event: "var(--maroon-700)",
-  reminder: "var(--gold-500)",
-  live: "var(--maroon-900)",
-  announcement: "var(--gold-500)",
-  update: "var(--maroon-500,var(--maroon-700))",
-  service: "var(--maroon-800)",
+  सूचना: "var(--gold-500)",
+  कार्यक्रम: "var(--maroon-700)",
+  स्मरणपत्र: "var(--gold-500)",
+  लाइव्ह: "var(--maroon-900)",
+  घोषणा: "var(--gold-500)",
+  अपडेट: "var(--maroon-500,var(--maroon-700))",
+  सेवा: "var(--maroon-800)",
 };
 
 function groupByDate(notifications: Notification[]) {

@@ -19,7 +19,7 @@ export default function Committe() {
         className="mt-6 w-full rounded-2xl bg-[var(--maroon-800)] px-5 py-4 text-left text-white shadow-lg"
       >
         <div className="text-lg font-bold">
-          Executive Committee
+          ExecutiveCommittee
         </div>
 
         <div className="mt-1 text-sm text-white/70">

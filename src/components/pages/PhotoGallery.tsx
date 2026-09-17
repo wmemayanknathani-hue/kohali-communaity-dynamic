@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, Calendar, Image as ImageIcon, X } from "lucide-react";
 import SectionHeader from "../SectionHeader";
 import { useNavigate } from "react-router-dom";
@@ -12,98 +12,149 @@ interface Photo {
   img: string;
 }
 
-const photos: Photo[] = [
-  {
-    id: 1,
-    title: "वार्षिक स्नेहसंमेलन २०२५",
-    desc: "नागपूर येथे पार पडलेल्या वार्षिक स्नेहसंमेलनातील एक क्षण, ज्यात मंडळाचे सर्व सदस्य कुटुंबासह सहभागी झाले होते.",
-    date: "१२ जाने २०२५",
-    cat: "स्नेहसंमेलन",
-    img: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500&q=80",
-  },
-  {
-    id: 3,
-    title: "महिला मंडळ बैठक",
-    desc: "महिला मंडळाची त्रैमासिक बैठक, आगामी उपक्रमांच्या नियोजनासाठी आयोजित करण्यात आली.",
-    date: "१८ फेब्रु २०२५",
-    cat: "महिला मंडळ",
-    img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?w=500&q=80",
-  },
-  {
-    id: 4,
-    title: "युवा क्रीडा स्पर्धा",
-    desc: "समाजातील युवकांसाठी आयोजित क्रीडा स्पर्धेतील विजेत्यांसह गटछायाचित्र.",
-    date: "०५ मार्च २०२५",
-    cat: "क्रीडा",
-    img: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=500&q=80",
-  },
-  {
-    id: 5,
-    title: "वृक्षारोपण उपक्रम",
-    desc: "पर्यावरण संवर्धनासाठी मंडळातर्फे राबविण्यात आलेला वृक्षारोपण कार्यक्रम.",
-    date: "२२ मार्च २०२५",
-    cat: "सामाजिक कार्य",
-    img: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=500&q=80",
-  },
-  {
-    id: 7,
-    title: "रक्तदान शिबीर",
-    desc: "आरोग्य विभागाच्या सहकार्याने आयोजित रक्तदान शिबिरातील स्वयंसेवक.",
-    date: "१० एप्रिल २०२५",
-    cat: "सामाजिक कार्य",
-    img: "https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=500&q=80",
-  },
-  {
-    id: 8,
-    title: "ज्येष्ठ नागरिक सन्मान",
-    desc: "समाजातील ज्येष्ठ नागरिकांचा विशेष सत्कार सोहळा.",
-    date: "२८ एप्रिल २०२५",
-    cat: "स्नेहसंमेलन",
-    img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=500&q=80",
-  },
-  {
-    id: 9,
-    title: "कारागीर मेळावा",
-    desc: "स्थानिक कारागिरांच्या कलाकृतींचे प्रदर्शन व विक्री मेळावा.",
-    date: "१५ मे २०२५",
-    cat: "सामाजिक कार्य",
-    img: "https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=500&q=80",
-  },
-  {
-    id: 10,
-    title: "बालसंस्कार वर्ग समारोप",
-    desc: "उन्हाळी बालसंस्कार वर्गाचा समारोप सोहळा, बालकांचे सादरीकरण.",
-    date: "२ जून २०२५",
-    cat: "शिक्षण",
-    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&q=80",
-  },
-  {
-    id: 11,
-    title: "महिला मंडळ हस्तकला प्रदर्शन",
-    desc: "महिला मंडळाच्या सदस्यांनी तयार केलेल्या हस्तकलांचे प्रदर्शन.",
-    date: "१९ जून २०२५",
-    cat: "महिला मंडळ",
-    img: "https://images.unsplash.com/photo-1509909756405-be0199881695?w=500&q=80",
-  },
-  {
-    id: 12,
-    title: "क्रिकेट अजिंक्यपद स्पर्धा",
-    desc: "आंतर-विभागीय क्रिकेट स्पर्धेच्या अंतिम सामन्यातील विजेता संघ.",
-    date: "७ जुलै २०२५",
-    cat: "क्रीडा",
-    img: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=500&q=80",
-  },
-];
+// const photos: Photo[] = [
+//   {
+//     id: 1,
+//     title: "वार्षिक स्नेहसंमेलन २०२५",
+//     desc: "नागपूर येथे पार पडलेल्या वार्षिक स्नेहसंमेलनातील एक क्षण, ज्यात मंडळाचे सर्व सदस्य कुटुंबासह सहभागी झाले होते.",
+//     date: "१२ जाने २०२५",
+//     cat: "स्नेहसंमेलन",
+//     img: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500&q=80",
+//   },
+//   {
+//     id: 3,
+//     title: "महिला मंडळ बैठक",
+//     desc: "महिला मंडळाची त्रैमासिक बैठक, आगामी उपक्रमांच्या नियोजनासाठी आयोजित करण्यात आली.",
+//     date: "१८ फेब्रु २०२५",
+//     cat: "महिला मंडळ",
+//     img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?w=500&q=80",
+//   },
+//   {
+//     id: 4,
+//     title: "युवा क्रीडा स्पर्धा",
+//     desc: "समाजातील युवकांसाठी आयोजित क्रीडा स्पर्धेतील विजेत्यांसह गटछायाचित्र.",
+//     date: "०५ मार्च २०२५",
+//     cat: "क्रीडा",
+//     img: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=500&q=80",
+//   },
+//   {
+//     id: 5,
+//     title: "वृक्षारोपण उपक्रम",
+//     desc: "पर्यावरण संवर्धनासाठी मंडळातर्फे राबविण्यात आलेला वृक्षारोपण कार्यक्रम.",
+//     date: "२२ मार्च २०२५",
+//     cat: "सामाजिक कार्य",
+//     img: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=500&q=80",
+//   },
+//   {
+//     id: 7,
+//     title: "रक्तदान शिबीर",
+//     desc: "आरोग्य विभागाच्या सहकार्याने आयोजित रक्तदान शिबिरातील स्वयंसेवक.",
+//     date: "१० एप्रिल २०२५",
+//     cat: "सामाजिक कार्य",
+//     img: "https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=500&q=80",
+//   },
+//   {
+//     id: 8,
+//     title: "ज्येष्ठ नागरिक सन्मान",
+//     desc: "समाजातील ज्येष्ठ नागरिकांचा विशेष सत्कार सोहळा.",
+//     date: "२८ एप्रिल २०२५",
+//     cat: "स्नेहसंमेलन",
+//     img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=500&q=80",
+//   },
+//   {
+//     id: 9,
+//     title: "कारागीर मेळावा",
+//     desc: "स्थानिक कारागिरांच्या कलाकृतींचे प्रदर्शन व विक्री मेळावा.",
+//     date: "१५ मे २०२५",
+//     cat: "सामाजिक कार्य",
+//     img: "https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=500&q=80",
+//   },
+//   {
+//     id: 10,
+//     title: "बालसंस्कार वर्ग समारोप",
+//     desc: "उन्हाळी बालसंस्कार वर्गाचा समारोप सोहळा, बालकांचे सादरीकरण.",
+//     date: "२ जून २०२५",
+//     cat: "शिक्षण",
+//     img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&q=80",
+//   },
+//   {
+//     id: 11,
+//     title: "महिला मंडळ हस्तकला प्रदर्शन",
+//     desc: "महिला मंडळाच्या सदस्यांनी तयार केलेल्या हस्तकलांचे प्रदर्शन.",
+//     date: "१९ जून २०२५",
+//     cat: "महिला मंडळ",
+//     img: "https://images.unsplash.com/photo-1509909756405-be0199881695?w=500&q=80",
+//   },
+//   {
+//     id: 12,
+//     title: "क्रिकेट अजिंक्यपद स्पर्धा",
+//     desc: "आंतर-विभागीय क्रिकेट स्पर्धेच्या अंतिम सामन्यातील विजेता संघ.",
+//     date: "७ जुलै २०२५",
+//     cat: "क्रीडा",
+//     img: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=500&q=80",
+//   },
+// ];
 
-const categories = ["सर्व", ...Array.from(new Set(photos.map((p) => p.cat)))];
-
+// const categories = ["सर्व", ...Array.from(new Set(photos.map((p) => p.cat)))];
+const API_PATH =
+  window.location.hostname === "localhost" ||
+    window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH;
 export default function Gallery() {
   const navigate = useNavigate();
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [activeCat, setActiveCat] = useState("सर्व");
   const [selected, setSelected] = useState<Photo | null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getGallery();
+  }, []);
 
+  const getGallery = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "get_photos",
+        }),
+      });
+
+      const result = await response.json();
+
+      // console.log("Gallery API Response:", result);
+
+      if (result.status === 1) {
+        setPhotos(result.photos || []);
+      } else {
+        setPhotos([]);
+      }
+    } catch (error) {
+      console.error("Gallery API Error:", error);
+      setPhotos([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const categories = [
+    "सर्व",
+    ...Array.from(
+      new Set(
+        photos
+          .map((p) => p.cat)
+          .filter(Boolean)
+      )
+    ),
+  ];
   const list =
-    activeCat === "सर्व" ? photos : photos.filter((p) => p.cat === activeCat);
+    activeCat === "सर्व"
+      ? photos
+      : photos.filter((p) => p.cat === activeCat);
 
   return (
     <div className="min-h-screen bg-[var(--cream,#F7F1E6)] text-[var(--ink,#2A1416)] pb-12">
@@ -190,11 +241,10 @@ export default function Gallery() {
               key={cat}
               onClick={() => setActiveCat(cat)}
               aria-pressed={activeCat === cat}
-              className={`flex-shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-[12.5px] font-bold transition-all active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500,#C99A3E)] ${
-                activeCat === cat
-                  ? "bg-[linear-gradient(160deg,var(--maroon-800,#611626),var(--maroon-950,#3A0A12))] text-[var(--gold-300,#F3D98B)] shadow-[0_6px_16px_-6px_rgba(58,10,18,0.55)] ring-1 ring-[var(--gold-500,#D4AF37)]/40"
-                  : "border border-[var(--maroon-950,#3A0A12)]/10 bg-[var(--paper,#FFFDF8)] text-[var(--maroon-900,#4A0F1A)] hover:border-[var(--gold-500,#D4AF37)]/40"
-              }`}
+              className={`flex-shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-[12.5px] font-bold transition-all active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500,#C99A3E)] ${activeCat === cat
+                ? "bg-[linear-gradient(160deg,var(--maroon-800,#611626),var(--maroon-950,#3A0A12))] text-[var(--gold-300,#F3D98B)] shadow-[0_6px_16px_-6px_rgba(58,10,18,0.55)] ring-1 ring-[var(--gold-500,#D4AF37)]/40"
+                : "border border-[var(--maroon-950,#3A0A12)]/10 bg-[var(--paper,#FFFDF8)] text-[var(--maroon-900,#4A0F1A)] hover:border-[var(--gold-500,#D4AF37)]/40"
+                }`}
             >
               {cat}
             </button>
@@ -224,10 +274,19 @@ export default function Gallery() {
           </span>
         </div>
 
-        
+
 
         {/* Grid */}
-        {list.length > 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4 xl:grid-cols-5">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div
+                key={i}
+                className="aspect-square animate-pulse rounded-[18px] bg-[var(--paper,#FFFDF8)]"
+              />
+            ))}
+          </div>
+        ) : list.length > 0 ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4 xl:grid-cols-5">
             {list.map((p, i) => (
               <button

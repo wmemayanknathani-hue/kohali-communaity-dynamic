@@ -1,17 +1,16 @@
 export type BusinessAdType = "poster" | "video";
-
 export interface Business {
   id: string;
   name: string;
   nameMr?: string;
-  ownerName: string;
+  ownerName?: string;
   ownerAvatarUrl?: string;
   memberId?: string;
   category: string;
   categoryMr?: string;
   description: string;
   location: string;
-  addressLine?: string; // full multi-line address for detail page
+  addressLine?: string;
   mobile: string;
   whatsapp?: string;
   email?: string;
@@ -22,6 +21,9 @@ export interface Business {
   rating?: number;
   reviewCount?: number;
   isOpen?: boolean;
+  adTitle?: string;
+  adDescription?: string;
+  declaration?: string;
 }
 
 export function getYouTubeId(url: string): string | null {
@@ -58,68 +60,144 @@ export function toDirectionsHref(query: string): string {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 
-export function getBusinessById(id: string): Business | undefined {
-  return sampleBusinesses.find((b) => b.id === id);
+
+/* =========================
+   API CALL
+========================= */
+
+const API_PATH =
+  window.location.hostname === "localhost" ||
+    window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH;
+
+
+export async function getBusinesses(): Promise<Business[]> {
+  try {
+    const response = await fetch(
+      `${API_PATH}/action_layer.php`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          action: "get_business_list",
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    console.log("Business API Response:", result);
+
+    if (!result.status) {
+      return [];
+    }
+
+    return (result.businesses || []).map((item: any): Business => ({
+      id: String(item.id),
+      name: item.name || "",
+      category: item.category || "",
+      description: item.description || "",
+
+      location: item.location || "",
+      ownerName:item.ownerName || "",
+      addressLine: item.addressLine || "",
+
+      mobile: item.mobile || "",
+      whatsapp: item.whatsapp || "",
+
+      website: item.website || "",
+
+      adType: item.adType === "video" ? "video" : "poster",
+
+      posterUrl: item.posterUrl || "",
+
+      adTitle: item.adTitle || "",
+      adDescription: item.adDescription || "",
+      declaration: item.declaration || "",
+    }));
+  } catch (error) {
+    console.error("Failed to fetch businesses:", error);
+    return [];
+  }
 }
 
-export const sampleBusinesses: Business[] = [
-  {
-    id: "b1",
-    name: "The Daily Mercantile",
-    nameMr: "श्री स्वीट्स अँड फरसाण",
-    ownerName: "Rajesh Kohali",
-    ownerAvatarUrl: "https://i.pravatar.cc/80?img=12",
-    memberId: "#4421",
-    category: "Retail & Grocery",
-    categoryMr: "मिठाई",
-    description:
-      "Kohali Supermart has been serving the community for over 15 years. We provide fresh groceries, daily essentials, and specialty cultural items. Committed to quality and community trust. Special discounts available for registered samaj members.",
-    location: "Kohali Enclave, Pune",
-    addressLine: "123 Heritage Marg, Kohali Enclave, Pune, Maharashtra 411038",
-    mobile: "+919876543210",
-    whatsapp: "+919876543210",
-    email: "contact@dailymercantile.example.com",
-    website: "shreesweets.example.com",
-    adType: "poster",
-    posterUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80",
-    rating: 4.8,
-    reviewCount: 120,
-    isOpen: true,
-  },
-  {
-    id: "b2",
-    name: "Patil Constructions",
-    ownerName: "Anil Patil",
-    memberId: "#3312",
-    category: "Construction",
-    categoryMr: "बांधकाम",
-    description: "Residential and commercial construction, from foundation to finishing.",
-    location: "Kohali Main Road",
-    addressLine: "Plot 42, Kohali Main Road, Kolhapur, Maharashtra 416003",
-    mobile: "+919812345678",
-    adType: "video",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    rating: 4.5,
-    reviewCount: 38,
-    isOpen: true,
-  },
-  {
-    id: "b3",
-    name: "Kohali Digital Studio",
-    ownerName: "Priya Deshmukh",
-    memberId: "#5108",
-    category: "Photography",
-    categoryMr: "फोटोग्राफी",
-    description: "Wedding, event and portrait photography with same-day highlight reels.",
-    location: "Near Gram Panchayat, Kohali",
-    addressLine: "Shop 6, Gram Panchayat Road, Kohali, Maharashtra 416004",
-    mobile: "+919900112233",
-    whatsapp: "+919900112233",
-    website: "instagram.com/kohalidigital",
-    adType: "poster",
-    posterUrl: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=600&q=80",
-    rating: 4.9,
-    reviewCount: 76,
-    isOpen: false,
-  },
-];
+
+export function getBusinessById(
+  businesses: Business[],
+  id: string
+): Business | undefined {
+  return businesses.find(
+    (b) => b.id === id
+  );
+}
+// export function getBusinessById(id: string): Business | undefined {
+//   return sampleBusinesses.find((b) => b.id === id);
+// }
+
+
+
+// export const sampleBusinesses: Business[] = [
+//   // {
+//   //   id: "b1",
+//   //   name: "The Daily Mercantile",
+//   //   nameMr: "श्री स्वीट्स अँड फरसाण",
+//   //   ownerName: "Rajesh Kohali",
+//   //   ownerAvatarUrl: "https://i.pravatar.cc/80?img=12",
+//   //   memberId: "#4421",
+//   //   category: "Retail & Grocery",
+//   //   categoryMr: "मिठाई",
+//   //   description:
+//   //     "Kohali Supermart has been serving the community for over 15 years. We provide fresh groceries, daily essentials, and specialty cultural items. Committed to quality and community trust. Special discounts available for registered samaj members.",
+//   //   location: "Kohali Enclave, Pune",
+//   //   addressLine: "123 Heritage Marg, Kohali Enclave, Pune, Maharashtra 411038",
+//   //   mobile: "+919876543210",
+//   //   whatsapp: "+919876543210",
+//   //   email: "contact@dailymercantile.example.com",
+//   //   website: "shreesweets.example.com",
+//   //   adType: "poster",
+//   //   posterUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80",
+//   //   rating: 4.8,
+//   //   reviewCount: 120,
+//   //   isOpen: true,
+//   // },
+//   // {
+//   //   id: "b2",
+//   //   name: "Patil Constructions",
+//   //   ownerName: "Anil Patil",
+//   //   memberId: "#3312",
+//   //   category: "Construction",
+//   //   categoryMr: "बांधकाम",
+//   //   description: "Residential and commercial construction, from foundation to finishing.",
+//   //   location: "Kohali Main Road",
+//   //   addressLine: "Plot 42, Kohali Main Road, Kolhapur, Maharashtra 416003",
+//   //   mobile: "+919812345678",
+//   //   adType: "video",
+//   //   youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+//   //   rating: 4.5,
+//   //   reviewCount: 38,
+//   //   isOpen: true,
+//   // },
+//   // {
+//   //   id: "b3",
+//   //   name: "Kohali Digital Studio",
+//   //   ownerName: "Priya Deshmukh",
+//   //   memberId: "#5108",
+//   //   category: "Photography",
+//   //   categoryMr: "फोटोग्राफी",
+//   //   description: "Wedding, event and portrait photography with same-day highlight reels.",
+//   //   location: "Near Gram Panchayat, Kohali",
+//   //   addressLine: "Shop 6, Gram Panchayat Road, Kohali, Maharashtra 416004",
+//   //   mobile: "+919900112233",
+//   //   whatsapp: "+919900112233",
+//   //   website: "instagram.com/kohalidigital",
+//   //   adType: "poster",
+//   //   posterUrl: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=600&q=80",
+//   //   rating: 4.9,
+//   //   reviewCount: 76,
+//   //   isOpen: false,
+//   // },
+// ];

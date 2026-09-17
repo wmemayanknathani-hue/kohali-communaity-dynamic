@@ -7,9 +7,7 @@ import {
   CalendarDays, Clock, Radio, Sparkles, RefreshCw, HeartHandshake, Paperclip,
 } from "lucide-react";
 import type { Notification, NotificationCategory } from "../NotificationDropdown";
-
 /* ============================= REVEAL ============================= */
-
 function useRevealVisible() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -63,13 +61,13 @@ function Reveal({
 /* ============================= DATA ============================= */
 
 const categoryLabel: Record<NotificationCategory, string> = {
-  notice: "सूचना",
-  event: "कार्यक्रम",
-  reminder: "स्मरणपत्र",
-  live: "लाइव्ह",
-  announcement: "घोषणा",
-  update: "अपडेट",
-  service: "सेवा",
+  सूचना: "सूचना",
+  कार्यक्रम: "कार्यक्रम",
+  स्मरणपत्र: "स्मरणपत्र",
+  लाइव्ह: "लाइव्ह",
+  घोषणा: "घोषणा",
+  अपडेट: "अपडेट",
+  सेवा: "सेवा",
 };
 
 // each category gets a real color pairing + icon, plus a solid accent hex used for the card's top band / wash
@@ -82,43 +80,43 @@ const categoryStyle: Record<
     accent: string;
   }
 > = {
-  notice: {
+  सूचना: {
     bg: "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]",
     text: "text-[var(--maroon-900)]",
     icon: Bell,
     accent: "#d4af37",
   },
-  event: {
+  कार्यक्रम: {
     bg: "bg-[linear-gradient(160deg,var(--maroon-600,#8a2237),var(--maroon-800))]",
     text: "text-white",
     icon: CalendarDays,
     accent: "#6f1327",
   },
-  reminder: {
+  स्मरणपत्र: {
     bg: "bg-[linear-gradient(160deg,#f4b942,#d6902a)]",
     text: "text-white",
     icon: Clock,
     accent: "#d6902a",
   },
-  live: {
+  लाइव्ह: {
     bg: "bg-[linear-gradient(160deg,#e0364f,#b3243a)]",
     text: "text-white",
     icon: Radio,
     accent: "#b3243a",
   },
-  announcement: {
+  घोषणा: {
     bg: "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]",
     text: "text-[var(--maroon-900)]",
     icon: Sparkles,
     accent: "#d4af37",
   },
-  update: {
+  अपडेट: {
     bg: "bg-[linear-gradient(160deg,#7c6fd1,#5a4bb8)]",
     text: "text-white",
     icon: RefreshCw,
     accent: "#5a4bb8",
   },
-  service: {
+  सेवा: {
     bg: "bg-[linear-gradient(160deg,#2fa87a,#1f8562)]",
     text: "text-white",
     icon: HeartHandshake,
@@ -128,77 +126,82 @@ const categoryStyle: Record<
 
 type NoticeItem = Notification & { attachment?: string; attachmentUrl?: string };
 
-const sampleNotices: NoticeItem[] = [
-  {
-    id: "n1",
-    title: "वार्षिक सर्वसाधारण सभा",
-    description: "सर्व सदस्यांनी वार्षिक सर्वसाधारण सभेस उपस्थित राहावे. सभेत महत्त्वाचे निर्णय घेतले जातील.",
-    date: "आज",
-    category: "notice",
-    read: false,
-    attachment: "सभा-अजेंडा.pdf",
-    attachmentUrl: "/files/sabha-agenda.pdf",
-  },
-  {
-    id: "n2",
-    title: "स्नेहसंमेलन नोंदणी सुरू",
-    description: "१५ ऑक्टोबर रोजी होणाऱ्या वार्षिक स्नेहसंमेलनासाठी नोंदणी सुरू झाली आहे. लवकर नोंदणी करा.",
-    date: "आज",
-    category: "event",
-    read: false,
-    attachment: "स्नेहसंमेलन-वेळापत्रक.pdf",
-    attachmentUrl: "/files/sneha-sammelan-schedule.pdf",
-  },
-  {
-    id: "n3",
-    title: "सदस्यत्व नूतनीकरण स्मरणपत्र",
-    description: "आपले वार्षिक सदस्यत्व येत्या ७ दिवसांत संपत आहे. कृपया वेळेत नूतनीकरण करा.",
-    date: "काल",
-    category: "reminder",
-    read: true,
-    attachment: "नूतनीकरण-फॉर्म.pdf",
-    attachmentUrl: "/files/renewal-form.pdf",
-  },
-  {
-    id: "n4",
-    title: "लाइव्ह प्रक्षेपण: पूजा विधी",
-    description: "आज सायंकाळी ६ वाजता मंदिरातील विशेष पूजा विधीचे थेट प्रक्षेपण होणार आहे.",
-    date: "काल",
-    category: "live",
-    read: true,
-    attachment: "प्रक्षेपण-सूचना.pdf",
-    attachmentUrl: "/files/broadcast-notice.pdf",
-  },
-  {
-    id: "n5",
-    title: "नवीन समिती सदस्यांची घोषणा",
-    description: "या वर्षासाठी नवीन कार्यकारिणी समितीची घोषणा करण्यात आली आहे.",
-    date: "१२ ऑग",
-    category: "announcement",
-    read: true,
-    attachment: "समिती-यादी.pdf",
-    attachmentUrl: "/files/committee-list.pdf",
-  },
-  {
-    id: "n6",
-    title: "संकेतस्थळ अद्यतन",
-    description: "कोहळी कनेक्ट अॅपमध्ये नवीन वैशिष्ट्ये आणि सुधारणा समाविष्ट करण्यात आल्या आहेत.",
-    date: "१२ ऑग",
-    category: "update",
-    read: true,
-  },
-  {
-    id: "n7",
-    title: "वैद्यकीय शिबिर आयोजन",
-    description: "समाजातील ज्येष्ठ नागरिकांसाठी मोफत वैद्यकीय तपासणी शिबिराचे आयोजन करण्यात आले आहे.",
-    date: "५ ऑग",
-    category: "service",
-    read: true,
-    attachment: "शिबिर-तपशील.pdf",
-    attachmentUrl: "https://www.orimi.com/pdf-test.pdf",
-  },
-];
+// const sampleNotices: NoticeItem[] = [
+//   {
+//     id: "n1",
+//     title: "वार्षिक सर्वसाधारण सभा",
+//     description: "सर्व सदस्यांनी वार्षिक सर्वसाधारण सभेस उपस्थित राहावे. सभेत महत्त्वाचे निर्णय घेतले जातील.",
+//     date: "आज",
+//     category: "notice",
+//     read: false,
+//     attachment: "सभा-अजेंडा.pdf",
+//     attachmentUrl: "/files/sabha-agenda.pdf",
+//   },
+//   {
+//     id: "n2",
+//     title: "स्नेहसंमेलन नोंदणी सुरू",
+//     description: "१५ ऑक्टोबर रोजी होणाऱ्या वार्षिक स्नेहसंमेलनासाठी नोंदणी सुरू झाली आहे. लवकर नोंदणी करा.",
+//     date: "आज",
+//     category: "event",
+//     read: false,
+//     attachment: "स्नेहसंमेलन-वेळापत्रक.pdf",
+//     attachmentUrl: "/files/sneha-sammelan-schedule.pdf",
+//   },
+//   {
+//     id: "n3",
+//     title: "सदस्यत्व नूतनीकरण स्मरणपत्र",
+//     description: "आपले वार्षिक सदस्यत्व येत्या ७ दिवसांत संपत आहे. कृपया वेळेत नूतनीकरण करा.",
+//     date: "काल",
+//     category: "reminder",
+//     read: true,
+//     attachment: "नूतनीकरण-फॉर्म.pdf",
+//     attachmentUrl: "/files/renewal-form.pdf",
+//   },
+//   {
+//     id: "n4",
+//     title: "लाइव्ह प्रक्षेपण: पूजा विधी",
+//     description: "आज सायंकाळी ६ वाजता मंदिरातील विशेष पूजा विधीचे थेट प्रक्षेपण होणार आहे.",
+//     date: "काल",
+//     category: "live",
+//     read: true,
+//     attachment: "प्रक्षेपण-सूचना.pdf",
+//     attachmentUrl: "/files/broadcast-notice.pdf",
+//   },
+//   {
+//     id: "n5",
+//     title: "नवीन समिती सदस्यांची घोषणा",
+//     description: "या वर्षासाठी नवीन कार्यकारिणी समितीची घोषणा करण्यात आली आहे.",
+//     date: "१२ ऑग",
+//     category: "announcement",
+//     read: true,
+//     attachment: "समिती-यादी.pdf",
+//     attachmentUrl: "/files/committee-list.pdf",
+//   },
+//   {
+//     id: "n6",
+//     title: "संकेतस्थळ अद्यतन",
+//     description: "कोहळी कनेक्ट अॅपमध्ये नवीन वैशिष्ट्ये आणि सुधारणा समाविष्ट करण्यात आल्या आहेत.",
+//     date: "१२ ऑग",
+//     category: "update",
+//     read: true,
+//   },
+//   {
+//     id: "n7",
+//     title: "वैद्यकीय शिबिर आयोजन",
+//     description: "समाजातील ज्येष्ठ नागरिकांसाठी मोफत वैद्यकीय तपासणी शिबिराचे आयोजन करण्यात आले आहे.",
+//     date: "५ ऑग",
+//     category: "service",
+//     read: true,
+//     attachment: "शिबिर-तपशील.pdf",
+//     attachmentUrl: "https://www.orimi.com/pdf-test.pdf",
+//   },
+// ];
 
+type NotificationsApiResponse = {
+  status: number;
+  message?: string;
+  notifications?: NoticeItem[];
+};
 function groupByDate(notifications: NoticeItem[]) {
   const groups: { date: string; items: NoticeItem[] }[] = [];
   for (const n of notifications) {
@@ -210,14 +213,54 @@ function groupByDate(notifications: NoticeItem[]) {
 }
 
 /* ============================= PAGE ============================= */
+const API_PATH =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH;
 
 export default function NoticesPage() {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState<NoticeItem[]>(sampleNotices);
-  const [activeFilter, setActiveFilter] = useState<NotificationCategory | "all">("all");
+const [notifications, setNotifications] = useState<NoticeItem[]>([]);
+const [activeFilter, setActiveFilter] =useState<NotificationCategory | "all">("all");
+// const [loading, setLoading] = useState(true);
+// const [error, setError] = useState("no error");
+useEffect(() => {
+  getNotifications();
+}, []);
+const getNotifications = async () => {
+  try {
+    // setLoading(true);
+    // setError("");
+
+    const response = await fetch(`${API_PATH}/action_layer.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "get_notices",
+      }),
+    });
+
+    const result: NotificationsApiResponse = await response.json();
+
+    if (result.status === 1) {
+      setNotifications(result.notifications ?? []);
+    } else {
+      setNotifications([]);
+      // setError(result.message || "सूचना मिळवता आली नाही.");
+    }
+  } catch (error) {
+    console.error("get_notifications error:", error);
+    // setError("सूचना मिळवताना काहीतरी चूक झाली.");
+  } finally {
+    // setLoading(false);
+  }
+};
 
   const unreadCount = notifications.filter((n) => !n.read).length;
-
   const filtered = useMemo(() => {
     if (activeFilter === "all") return notifications;
     return notifications.filter((n) => n.category === activeFilter);
@@ -226,7 +269,7 @@ export default function NoticesPage() {
   const groups = useMemo(() => groupByDate(filtered), [filtered]);
 
   const filterOptions: (NotificationCategory | "all")[] = [
-    "all", "notice", "event", "reminder", "live", "announcement", "update", "service",
+    "all", "सूचना", "कार्यक्रम", "स्मरणपत्र", "लाइव्ह", "घोषणा", "अपडेट", "सेवा",
   ];
 
   const markRead = (id: string) => {

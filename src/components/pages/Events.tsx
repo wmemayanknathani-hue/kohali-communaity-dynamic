@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState,useEffect } from "react";
 import SectionHeader from "../SectionHeader";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,12 +15,12 @@ import {
   Search,
   ImageOff,
 } from "lucide-react";
-import event1 from "../../assets/event-adhiveshan.jpg";
-import event2 from "../../assets/event-mahila-parishad.jpg";
-import event3 from "../../assets/event-yuvak-shibir.jpg";
-import event4 from "../../assets/live-featured.jpg";
-import event5 from "../../assets/live-v1.jpg";
-import event6 from "../../assets/live-v3.jpg";
+// import event1 from "../../assets/event-adhiveshan.jpg";
+// import event2 from "../../assets/event-mahila-parishad.jpg";
+// import event3 from "../../assets/event-yuvak-shibir.jpg";
+// import event4 from "../../assets/live-featured.jpg";
+// import event5 from "../../assets/live-v1.jpg";
+// import event6 from "../../assets/live-v3.jpg";
 
 /* ------------------------------------------------------------------ */
 /*  Image with graceful fallback                                       */
@@ -60,12 +60,12 @@ function EventImage({
 /* ------------------------------------------------------------------ */
 
 type CategoryId =
-  | "cultural"
-  | "social"
-  | "education"
-  | "health"
-  | "sports"
-  | "religious";
+  | "सांस्कृतिक"
+  | "सामाजिक"
+  | "शैक्षणिक"
+  | "आरोग्य"
+  | "क्रीड़ा"
+  | "इतर";
 
 interface Category {
   id: CategoryId;
@@ -86,114 +86,114 @@ interface EventItem {
 }
 
 const CATEGORIES: Category[] = [
-  { id: "cultural", mr: "सांस्कृतिक", en: "Cultural", icon: Music2 },
-  { id: "social", mr: "सामाजिक", en: "Social welfare", icon: HeartHandshake },
-  { id: "education", mr: "शैक्षणिक", en: "Educational", icon: GraduationCap },
-  { id: "health", mr: "आरोग्य", en: "Health", icon: HeartPulse },
-  { id: "sports", mr: "क्रीडा", en: "Sports", icon: Trophy },
-  { id: "religious", mr: "धार्मिक", en: "Religious", icon: Flame },
+  { id: "सांस्कृतिक", mr: "सांस्कृतिक", en: "Cultural", icon: Music2 },
+  { id: "सामाजिक", mr: "सामाजिक", en: "Social welfare", icon: HeartHandshake },
+  { id: "शैक्षणिक", mr: "शैक्षणिक", en: "Educational", icon: GraduationCap },
+  { id: "आरोग्य", mr: "आरोग्य", en: "Health", icon: HeartPulse },
+  { id: "क्रीड़ा", mr: "क्रीड़ा", en: "Sports", icon: Trophy },
+  { id: "इतर", mr: "इतर", en: "Other", icon: Flame },
 ];
 
-const EVENTS: EventItem[] = [
-  {
-    id: "e1",
-    titleMr: "कोहळी समाज वार्षिक अधिवेशन",
-    titleEn: "Kohali Samaj Annual Convention",
-    category: "social",
-    descriptionMr:
-      "वार्षिक सर्वसाधारण सभा — समाज विकासाचा आढावा व नवीन योजनांची घोषणा.",
-    location: "समाज भवन, नागपूर",
-    date: "2027-06-15",
-    image: event1,
-  },
-  {
-    id: "e2",
-    titleMr: "युवक मार्गदर्शन शिबिर",
-    titleEn: "Youth Guidance Camp",
-    category: "education",
-    descriptionMr:
-      "करिअर मार्गदर्शन, स्पर्धा परीक्षा तयारी व व्यक्तिमत्व विकास शिबिर.",
-    location: "सांस्कृतिक सभागृह, नागपूर",
-    date: "2027-06-22",
-    image: event3,
-  },
-  {
-    id: "e3",
-    titleMr: "महिला सक्षमीकरण परिषद",
-    titleEn: "Women Empowerment Conference",
-    category: "social",
-    descriptionMr:
-      "महिलांच्या आर्थिक स्वावलंबन व उद्योजकता विकासावर विशेष परिषद.",
-    location: "महिला मंडळ हॉल, नागपूर",
-    date: "2027-07-05",
-    image: event2,
-  },
-  {
-    id: "e4",
-    titleMr: "समाज स्नेह मेळावा २०२५",
-    titleEn: "Samaj Sneh Melava 2025",
-    category: "cultural",
-    descriptionMr:
-      "समाज बांधवांचा वार्षिक स्नेह मेळावा — सांस्कृतिक कार्यक्रम व सन्मान सोहळा.",
-    location: "समाज भवन, नागपूर",
-    date: "2025-12-20",
-    image: event4,
-  },
-  {
-    id: "e5",
-    titleMr: "रक्तदान शिबिर",
-    titleEn: "Blood Donation Camp",
-    category: "health",
-    descriptionMr:
-      "समाजाच्या वतीने आयोजित मोफत रक्तदान शिबिर — १५० हून अधिक दात्यांचा सहभाग.",
-    location: "समाज भवन, नागपूर",
-    date: "2025-11-10",
-    image: event5,
-  },
-  {
-    id: "e6",
-    titleMr: "शैक्षणिक सन्मान सोहळा",
-    titleEn: "Educational Honour Ceremony",
-    category: "education",
-    descriptionMr:
-      "गुणवंत विद्यार्थ्यांचा शैक्षणिक सन्मान व शिष्यवृत्ती वितरण सोहळा.",
-    location: "सांस्कृतिक सभागृह, नागपूर",
-    date: "2025-08-15",
-    image: event6,
-  },
-];
+// const EVENTS: EventItem[] = [
+//   {
+//     id: "e1",
+//     titleMr: "कोहळी समाज वार्षिक अधिवेशन",
+//     titleEn: "Kohali Samaj Annual Convention",
+//     category: "social",
+//     descriptionMr:
+//       "वार्षिक सर्वसाधारण सभा — समाज विकासाचा आढावा व नवीन योजनांची घोषणा.",
+//     location: "समाज भवन, नागपूर",
+//     date: "2027-06-15",
+//     image: event1,
+//   },
+//   {
+//     id: "e2",
+//     titleMr: "युवक मार्गदर्शन शिबिर",
+//     titleEn: "Youth Guidance Camp",
+//     category: "education",
+//     descriptionMr:
+//       "करिअर मार्गदर्शन, स्पर्धा परीक्षा तयारी व व्यक्तिमत्व विकास शिबिर.",
+//     location: "सांस्कृतिक सभागृह, नागपूर",
+//     date: "2027-06-22",
+//     image: event3,
+//   },
+//   {
+//     id: "e3",
+//     titleMr: "महिला सक्षमीकरण परिषद",
+//     titleEn: "Women Empowerment Conference",
+//     category: "social",
+//     descriptionMr:
+//       "महिलांच्या आर्थिक स्वावलंबन व उद्योजकता विकासावर विशेष परिषद.",
+//     location: "महिला मंडळ हॉल, नागपूर",
+//     date: "2027-07-05",
+//     image: event2,
+//   },
+//   {
+//     id: "e4",
+//     titleMr: "समाज स्नेह मेळावा २०२५",
+//     titleEn: "Samaj Sneh Melava 2025",
+//     category: "cultural",
+//     descriptionMr:
+//       "समाज बांधवांचा वार्षिक स्नेह मेळावा — सांस्कृतिक कार्यक्रम व सन्मान सोहळा.",
+//     location: "समाज भवन, नागपूर",
+//     date: "2025-12-20",
+//     image: event4,
+//   },
+//   {
+//     id: "e5",
+//     titleMr: "रक्तदान शिबिर",
+//     titleEn: "Blood Donation Camp",
+//     category: "health",
+//     descriptionMr:
+//       "समाजाच्या वतीने आयोजित मोफत रक्तदान शिबिर — १५० हून अधिक दात्यांचा सहभाग.",
+//     location: "समाज भवन, नागपूर",
+//     date: "2025-11-10",
+//     image: event5,
+//   },
+//   {
+//     id: "e6",
+//     titleMr: "शैक्षणिक सन्मान सोहळा",
+//     titleEn: "Educational Honour Ceremony",
+//     category: "education",
+//     descriptionMr:
+//       "गुणवंत विद्यार्थ्यांचा शैक्षणिक सन्मान व शिष्यवृत्ती वितरण सोहळा.",
+//     location: "सांस्कृतिक सभागृह, नागपूर",
+//     date: "2025-08-15",
+//     image: event6,
+//   },
+// ];
 
 /* ------------------------------------------------------------------ */
 /*  Per-category accent                                                 */
 /* ------------------------------------------------------------------ */
 
 const CATEGORY_ACCENT: Record<CategoryId, { solid: string; soft: string }> = {
-  cultural: {
+  "सांस्कृतिक": {
     solid: "#C2415D",
     soft: "#FCE4E9",
   },
 
-  social: {
+  "सामाजिक": {
     solid: "#8B5CF6",
     soft: "#EEE8FF",
   },
 
-  education: {
+  "शैक्षणिक": {
     solid: "#2563EB",
     soft: "#E3EEFF",
   },
 
-  health: {
+  "आरोग्य": {
     solid: "#0F9F8F",
     soft: "#DDF7F3",
   },
 
-  sports: {
+  "क्रीड़ा": {
     solid: "#E58A24",
     soft: "#FFF0D9",
   },
 
-  religious: {
+  "इतर": {
     solid: "#D16B2F",
     soft: "#FBE8DC",
   },
@@ -208,22 +208,22 @@ const CONTAINER = "sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5
 /*  Helpers                                                             */
 /* ------------------------------------------------------------------ */
 
-const getCategory = (id: CategoryId) =>
-  CATEGORIES.find((c) => c.id === id) ?? CATEGORIES[0];
+// const getCategory = (id: CategoryId) =>
+//   CATEGORIES.find((c) => c.id === id) ?? CATEGORIES[0];
 
-const now = new Date();
-const isUpcoming = (iso: string) => new Date(`${iso}T23:59:59`) >= now;
+// const now = new Date();
+// const isUpcoming = (iso: string) => new Date(`${iso}T23:59:59`) >= now;
 
-const fullDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+// const fullDate = (iso: string) =>
+//   new Date(iso).toLocaleDateString("en-IN", {
+//     day: "numeric",
+//     month: "long",
+//     year: "numeric",
+//   });
 
-const dayOf = (iso: string) => new Date(iso).getDate();
-const monthOf = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-IN", { month: "short" });
+// const dayOf = (iso: string) => new Date(iso).getDate();
+// const monthOf = (iso: string) =>
+//   new Date(iso).toLocaleDateString("en-IN", { month: "short" });
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                           */
@@ -232,27 +232,100 @@ const monthOf = (iso: string) =>
 interface EventsInitiativesProps {
   onBack?: () => void;
 }
-
+const API_PATH =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH; 
 export default function EventsInitiatives({ }: EventsInitiativesProps) {
   const navigate = useNavigate();
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
   const [activeCategory, setActiveCategory] = useState<CategoryId | "all">(
     "all"
   );
+  const [events, setEvents] = useState<EventItem[]>([]);
+
+  // const [loading, setLoading] = useState(true);
+ // API call
+  useEffect(() => {
+    getEvents();
+  }, []);
+
+ const getEvents = async () => {
+    try {
+      // setLoading(true);
+
+      const response = await fetch(
+        `${API_PATH}/action_layer.php`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "get_events",
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      console.log("Events API Response:", result);
+
+      if (result.status === 1) {
+        setEvents(result.events || []);
+      } else {
+        setEvents([]);
+      }
+    } catch (error) {
+      console.error("Events API Error:", error);
+      setEvents([]);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  const getCategory = (id: CategoryId) =>
+    CATEGORIES.find((c) => c.id === id) ?? {
+      id,
+      mr: id,
+      en: id,
+      icon: Sparkles,
+    };
+
+  const now = new Date();
+
+  const isUpcoming = (iso: string) =>
+    new Date(`${iso}T23:59:59`) >= now;
+
+  const fullDate = (iso: string) =>
+    new Date(iso).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+  const dayOf = (iso: string) =>
+    new Date(iso).getDate();
+
+  const monthOf = (iso: string) =>
+    new Date(iso).toLocaleDateString("en-IN", {
+      month: "short",
+    });
 
   const upcomingEvents = useMemo(
     () =>
-      EVENTS.filter((e) => isUpcoming(e.date)).sort(
+      events.filter((e) => isUpcoming(e.date)).sort(
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
       ),
-    []
+    [events]
   );
   const pastEvents = useMemo(
     () =>
-      EVENTS.filter((e) => !isUpcoming(e.date)).sort(
+      events.filter((e) => !isUpcoming(e.date)).sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       ),
-    []
+    [events]
   );
 
   const featured = upcomingEvents[0];

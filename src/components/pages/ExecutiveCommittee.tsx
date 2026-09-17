@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
-import Prakash from "../../assets/member-president.png";
+// import Prakash from "../../assets/member-president.png";
 
 
 /* ---------------------------------------------------------------------- */
@@ -27,179 +27,179 @@ export interface CommitteeMember {
 /* ---------------------------------------------------------------------- */
 /* Committee Members                                                      */
 /* ---------------------------------------------------------------------- */
-export const MEMBERS: CommitteeMember[] = [
-  {
-    id: "m1",
-    name: "मा. श्री. प्रकाश ह. बाळबुधे",
-    nameEn: "Prakash H. Balbudhe",
-    position: "अध्यक्ष",
-    positionEn: "President",
-    rank: 1,
-    photoUrl: Prakash,
-    shortIntro:
-      "President of the Kohali community, responsible for providing leadership and guiding the community towards its goals.",
-    responsibilities: [
-      "Lead the community and executive committee.",
-      "Guide major community initiatives and activities.",
-      "Represent the community at important meetings and events.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "president@kohlisamaj.org",
-  },
+// export const MEMBERS: CommitteeMember[] = [
+//   {
+//     id: "m1",
+//     name: "मा. श्री. प्रकाश ह. बाळबुधे",
+//     nameEn: "Prakash H. Balbudhe",
+//     position: "अध्यक्ष",
+//     positionEn: "President",
+//     rank: 1,
+//     photoUrl: Prakash,
+//     shortIntro:
+//       "President of the Kohali community, responsible for providing leadership and guiding the community towards its goals.",
+//     responsibilities: [
+//       "Lead the community and executive committee.",
+//       "Guide major community initiatives and activities.",
+//       "Represent the community at important meetings and events.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "president@kohlisamaj.org",
+//   },
 
-  {
-    id: "m2",
-    name: "मा. श्री. अमोल श्री. मुंगमोडे",
-    nameEn: "Amol S. Mungmode",
-    position: "उपाध्यक्ष",
-    positionEn: "Vice President",
-    rank: 2,
-    shortIntro:
-      "Supports the President in managing community activities and organizational responsibilities.",
-    responsibilities: [
-      "Support the President in community activities.",
-      "Assist in planning and coordinating programs.",
-      "Help manage important committee responsibilities.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "vicepresident@kohlisamaj.org",
-  },
+//   {
+//     id: "m2",
+//     name: "मा. श्री. अमोल श्री. मुंगमोडे",
+//     nameEn: "Amol S. Mungmode",
+//     position: "उपाध्यक्ष",
+//     positionEn: "Vice President",
+//     rank: 2,
+//     shortIntro:
+//       "Supports the President in managing community activities and organizational responsibilities.",
+//     responsibilities: [
+//       "Support the President in community activities.",
+//       "Assist in planning and coordinating programs.",
+//       "Help manage important committee responsibilities.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "vicepresident@kohlisamaj.org",
+//   },
 
-  {
-    id: "m3",
-    name: "मा. श्री. माणिकराव कि. लोथे",
-    nameEn: "Manikrao K. Lothe",
-    position: "सचिव",
-    positionEn: "Secretary",
-    rank: 3,
-    shortIntro:
-      "Responsible for committee communication, documentation and coordination.",
-    responsibilities: [
-      "Maintain committee records and documentation.",
-      "Coordinate meetings and official communications.",
-      "Maintain important organizational information.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "secretary@kohlisamaj.org",
-  },
+//   {
+//     id: "m3",
+//     name: "मा. श्री. माणिकराव कि. लोथे",
+//     nameEn: "Manikrao K. Lothe",
+//     position: "सचिव",
+//     positionEn: "Secretary",
+//     rank: 3,
+//     shortIntro:
+//       "Responsible for committee communication, documentation and coordination.",
+//     responsibilities: [
+//       "Maintain committee records and documentation.",
+//       "Coordinate meetings and official communications.",
+//       "Maintain important organizational information.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "secretary@kohlisamaj.org",
+//   },
 
-  {
-    id: "m4",
-    name: "मा. श्री. सुरेश ना. पाटील",
-    nameEn: "Suresh N. Patil",
-    position: "कोषाध्यक्ष",
-    positionEn: "Treasurer",
-    rank: 4,
-    shortIntro:
-      "Responsible for supporting the financial administration of the community.",
-    responsibilities: [
-      "Maintain financial records.",
-      "Support budgeting and financial planning.",
-      "Assist with transparent management of community funds.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "treasurer@kohlisamaj.org",
-  },
+//   {
+//     id: "m4",
+//     name: "मा. श्री. सुरेश ना. पाटील",
+//     nameEn: "Suresh N. Patil",
+//     position: "कोषाध्यक्ष",
+//     positionEn: "Treasurer",
+//     rank: 4,
+//     shortIntro:
+//       "Responsible for supporting the financial administration of the community.",
+//     responsibilities: [
+//       "Maintain financial records.",
+//       "Support budgeting and financial planning.",
+//       "Assist with transparent management of community funds.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "treasurer@kohlisamaj.org",
+//   },
 
-  {
-    id: "m5",
-    name: "मा. श्री. दिनेश रा. कोहळे",
-    nameEn: "Dinesh R. Kohale",
-    position: "सहसचिव",
-    positionEn: "Joint Secretary",
-    rank: 5,
-    shortIntro:
-      "Assists the Secretary with administrative and organizational activities.",
-    responsibilities: [
-      "Assist with committee documentation.",
-      "Support meeting coordination.",
-      "Help with community communications and activities.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "jointsecretary@kohlisamaj.org",
-  },
+//   {
+//     id: "m5",
+//     name: "मा. श्री. दिनेश रा. कोहळे",
+//     nameEn: "Dinesh R. Kohale",
+//     position: "सहसचिव",
+//     positionEn: "Joint Secretary",
+//     rank: 5,
+//     shortIntro:
+//       "Assists the Secretary with administrative and organizational activities.",
+//     responsibilities: [
+//       "Assist with committee documentation.",
+//       "Support meeting coordination.",
+//       "Help with community communications and activities.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "jointsecretary@kohlisamaj.org",
+//   },
 
-  {
-    id: "m6",
-    name: "मा. सौ. सुनीता वि. बाळबुधे",
-    nameEn: "Sunita V. Balbudhe",
-    position: "महिला अध्यक्ष",
-    positionEn: "Women's President",
-    rank: 6,
-    shortIntro:
-      "Works towards encouraging women's participation and community development.",
-    responsibilities: [
-      "Coordinate women's community activities.",
-      "Encourage participation in community programs.",
-      "Support initiatives focused on women and families.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "women@kohlisamaj.org",
-  },
+//   {
+//     id: "m6",
+//     name: "मा. सौ. सुनीता वि. बाळबुधे",
+//     nameEn: "Sunita V. Balbudhe",
+//     position: "महिला अध्यक्ष",
+//     positionEn: "Women's President",
+//     rank: 6,
+//     shortIntro:
+//       "Works towards encouraging women's participation and community development.",
+//     responsibilities: [
+//       "Coordinate women's community activities.",
+//       "Encourage participation in community programs.",
+//       "Support initiatives focused on women and families.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "women@kohlisamaj.org",
+//   },
 
-  {
-    id: "m7",
-    name: "मा. श्री. रोहित प्र. पाटील",
-    nameEn: "Rohit P. Patil",
-    position: "युवक अध्यक्ष",
-    positionEn: "Youth President",
-    rank: 7,
-    shortIntro:
-      "Works with young members and supports youth-focused community initiatives.",
-    responsibilities: [
-      "Coordinate youth activities.",
-      "Encourage youth participation in community programs.",
-      "Support sports, cultural and educational initiatives.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "youth@kohlisamaj.org",
-  },
+//   {
+//     id: "m7",
+//     name: "मा. श्री. रोहित प्र. पाटील",
+//     nameEn: "Rohit P. Patil",
+//     position: "युवक अध्यक्ष",
+//     positionEn: "Youth President",
+//     rank: 7,
+//     shortIntro:
+//       "Works with young members and supports youth-focused community initiatives.",
+//     responsibilities: [
+//       "Coordinate youth activities.",
+//       "Encourage youth participation in community programs.",
+//       "Support sports, cultural and educational initiatives.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "youth@kohlisamaj.org",
+//   },
 
-  {
-    id: "m8",
-    name: "मा. श्री. विनोद ह. मुंगमोडे",
-    nameEn: "Vinod H. Mungmode",
-    position: "सांस्कृतिक प्रमुख",
-    positionEn: "Cultural Head",
-    rank: 8,
-    shortIntro:
-      "Responsible for supporting cultural activities and preserving community traditions.",
-    responsibilities: [
-      "Coordinate cultural programs.",
-      "Promote community traditions and heritage.",
-      "Support festivals and cultural events.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "culture@kohlisamaj.org",
-  },
+//   {
+//     id: "m8",
+//     name: "मा. श्री. विनोद ह. मुंगमोडे",
+//     nameEn: "Vinod H. Mungmode",
+//     position: "सांस्कृतिक प्रमुख",
+//     positionEn: "Cultural Head",
+//     rank: 8,
+//     shortIntro:
+//       "Responsible for supporting cultural activities and preserving community traditions.",
+//     responsibilities: [
+//       "Coordinate cultural programs.",
+//       "Promote community traditions and heritage.",
+//       "Support festivals and cultural events.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "culture@kohlisamaj.org",
+//   },
 
-  {
-    id: "m9",
-    name: "मा. श्री. अनिल के. लोथे",
-    nameEn: "Anil K. Lothe",
-    position: "शिक्षण प्रमुख",
-    positionEn: "Education Head",
-    rank: 9,
-    shortIntro:
-      "Works to encourage education and support educational initiatives within the community.",
-    responsibilities: [
-      "Promote educational activities.",
-      "Support students and educational initiatives.",
-      "Encourage educational awareness within the community.",
-    ],
-    contactPublic: true,
-    phone: "+91 98XXXXXXXX",
-    email: "education@kohlisamaj.org",
-  },
-];
+//   {
+//     id: "m9",
+//     name: "मा. श्री. अनिल के. लोथे",
+//     nameEn: "Anil K. Lothe",
+//     position: "शिक्षण प्रमुख",
+//     positionEn: "Education Head",
+//     rank: 9,
+//     shortIntro:
+//       "Works to encourage education and support educational initiatives within the community.",
+//     responsibilities: [
+//       "Promote educational activities.",
+//       "Support students and educational initiatives.",
+//       "Encourage educational awareness within the community.",
+//     ],
+//     contactPublic: true,
+//     phone: "+91 98XXXXXXXX",
+//     email: "education@kohlisamaj.org",
+//   },
+// ];
 /* ---------------------------------------------------------------------- */
 /* Scroll reveal                           */
 /* ---------------------------------------------------------------------- */
@@ -433,9 +433,69 @@ function CommitteeCard({ member, index, onView }: CommitteeCardProps) {
 
 export default function ExecutiveCommittee() {
   const navigate = useNavigate();
-  const sorted = [...MEMBERS].sort((a, b) => a.rank - b.rank);
+  const [members, setMembers] = useState<CommitteeMember[]>([]);
+   const API_PATH =
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+    useEffect(() => {
+    const fetchCommitteeMembers = async () => {
+      try {
+        const response = await fetch(`${API_PATH}/action_layer.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "get_committee_members",
+          }),
+        });
+
+        const result = await response.json();
+
+        if (result.status === 1) {
+          const apiMembers: CommitteeMember[] = (result.members || []).map(
+            (member: any) => ({
+              id: String(member.id),
+              name: member.name || "",
+              nameEn: member.nameEn || member.name_en || "",
+              position: member.position || "",
+              positionEn:
+                member.positionEn || member.position_en || "",
+              rank: Number(member.rank || 0),
+              photoUrl: member.photoUrl || member.photo_url || "",
+              shortIntro:
+                member.shortIntro || member.short_intro || "",
+              responsibilities:
+                Array.isArray(member.responsibilities)
+                  ? member.responsibilities
+                  : [],
+              phone: member.phone || "",
+              email: member.email || "",
+              contactPublic:
+                Number(member.contactPublic ?? member.contact_public ?? 0) ===
+                1,
+            })
+          );
+
+          setMembers(apiMembers);
+        } else {
+          setMembers([]);
+        }
+      } catch (err) {
+        console.error("Committee API Error:", err);
+      }
+    };
+
+    fetchCommitteeMembers();
+  }, [API_PATH]);
+
+  const sorted = [...members].sort((a, b) => a.rank - b.rank);
   const leader = sorted[0];
   const rest = sorted.slice(1);
+ 
+
 
   return (
     <div className="min-h-screen bg-[var(--cream)] text-[var(--ink)]">
@@ -450,14 +510,14 @@ export default function ExecutiveCommittee() {
       `}</style>
 
       <div className="mx-auto max-w-md px-4 py-6 md:max-w-3xl md:px-8 md:py-10 lg:max-w-5xl xl:max-w-6xl">
-         {/* ---- Header ---- */}
-          <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl">
-            <SectionHeader eyebrow="Our team" title="Executive Committee"/>
+        {/* ---- Header ---- */}
+        <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl">
+          <SectionHeader eyebrow="Our team" title="Executive Committee" />
 
-            <button onClick={() => navigate("/home")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
-              <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
-            </button>
-          </div>
+          <button onClick={() => navigate("/home")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
+            <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
+          </button>
+        </div>
         {/* Featured leader */}
         {leader && (
           <div className="mb-6 md:mb-8 mt-2">
