@@ -86,11 +86,10 @@ function Reveal({
   return (
     <div
       ref={ref}
-      className={`${className} transform transition-all duration-500 ease-out ${delayClass} ${
-        visible
-          ? "translate-y-0 opacity-100"
-          : "translate-y-5 opacity-0"
-      }`}
+      className={`${className} transform transition-all duration-500 ease-out ${delayClass} ${visible
+        ? "translate-y-0 opacity-100"
+        : "translate-y-5 opacity-0"
+        }`}
     >
       {children}
     </div>
@@ -121,6 +120,8 @@ interface FieldProps {
   required?: boolean;
   colSpan?: boolean;
   action?: React.ReactNode;
+  name?: string;
+  error?: string;
 }
 
 interface AdType {
@@ -213,11 +214,10 @@ function InfoRow({
 }: InfoRowProps) {
   return (
     <div
-      className={`group flex cursor-pointer items-center gap-3 px-4 py-3.5 transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99] md:gap-4 md:px-5 md:py-4 ${
-        last
-          ? ""
-          : "border-b border-[var(--gold-300)]/50"
-      }`}
+      className={`group flex cursor-pointer items-center gap-3 px-4 py-3.5 transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99] md:gap-4 md:px-5 md:py-4 ${last
+        ? ""
+        : "border-b border-[var(--gold-300)]/50"
+        }`}
     >
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm">
         <Icon
@@ -252,6 +252,8 @@ function Field({
   required = false,
   colSpan = false,
   action,
+  name,
+  error,
 }: FieldProps) {
   return (
     <label
@@ -262,7 +264,7 @@ function Field({
       }
     >
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-[11.5px] font-bold text-[var(--maroon-700)]">
+        <span className={`text-[11.5px] font-bold ${error ? "text-red-600" : "text-[var(--maroon-700)]"}`}>
           {label}
 
           {required && (
@@ -273,14 +275,23 @@ function Field({
         {action}
       </div>
 
-      <div className="flex items-start gap-2.5 rounded-2xl border-[1.5px] border-[var(--gold-500)] bg-[var(--cream)]/50 px-3.5 py-2.5 transition-all duration-200 focus-within:border-[var(--maroon-700)] focus-within:ring-4 focus-within:ring-[rgba(122,31,43,0.12)]">
-        <Icon className="mt-[3px] h-4 w-4 shrink-0 text-[var(--ink)]/35 transition-colors duration-200 peer-focus:text-[var(--maroon-700)]" />
+      <div className={`flex items-start gap-2.5 rounded-2xl border-[1.5px] bg-[var(--cream)]/50 px-3.5 py-2.5 transition-all duration-200 ${
+        error
+          ? "border-red-500 focus-within:border-red-600 focus-within:ring-4 focus-within:ring-red-200"
+          : "border-[var(--gold-500)] focus-within:border-[var(--maroon-700)] focus-within:ring-4 focus-within:ring-[rgba(122,31,43,0.12)]"
+      }`}>
+        <Icon className={`mt-[3px] h-4 w-4 shrink-0 transition-colors duration-200 ${
+          error
+            ? "text-red-400"
+            : "text-[var(--ink)]/35 peer-focus:text-[var(--maroon-700)]"
+        }`} />
 
         {textarea ? (
           <textarea
             rows={3}
             placeholder={placeholder}
             required={required}
+            name={name}
             className="w-full resize-none bg-transparent text-[14px] text-[var(--ink)] outline-none placeholder:text-[var(--ink)]/35"
           />
         ) : (
@@ -288,10 +299,17 @@ function Field({
             type={type}
             placeholder={placeholder}
             required={required}
+            name={name}
             className="w-full bg-transparent text-[14px] text-[var(--ink)] outline-none placeholder:text-[var(--ink)]/35"
           />
         )}
       </div>
+
+      {error && (
+        <p className="mt-1.5 text-[11px] font-medium text-red-600 flex items-center gap-1">
+          <span>⚠</span> {error}
+        </p>
+      )}
     </label>
   );
 }
@@ -302,25 +320,165 @@ function Field({
 
 export default function BusinessPromotion() {
   const navigate = useNavigate();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [adType, setAdType] = useState<string>("poster");
   const [agreed, setAgreed] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [posterFile, setPosterFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const handleSubmit = () => {
+  const API_PATH =
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+
+  const handleSubmit = async () => {
+    const newErrors: { [key: string]: string } = {};
+
     if (!agreed) {
+      newErrors["agreement"] = "Please agree to the advertisement guidelines";
+    }
+
+    // Validate required fields
+    const requiredFields = [
+      { name: "business_name", label: "Business Name" },
+      { name: "business_category", label: "Business Category" },
+      { name: "contact_number", label: "Contact Number" },
+      { name: "business_description", label: "Business Description" },
+      { name: "business_address", label: "Business Address" },
+    ];
+
+    const form = formRef.current;
+    if (!form) {
       return;
     }
 
-    setSubmitted(true);
+    // Check all required fields
+    requiredFields.forEach(({ name, label }) => {
+      const field = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement;
+      if (!field || !field.value.trim()) {
+        newErrors[name] = `${label} is required`;
+      }
+    });
 
-    window.setTimeout(() => {
-      setSubmitted(false);
-    }, 3000);
+    // Validate files based on ad type
+    if (adType === "poster" && !posterFile) {
+      newErrors["poster"] = "Please upload a poster image";
+    }
+    if (adType === "video" && !videoFile) {
+      newErrors["video"] = "Please upload a video";
+    }
+    if (adType === "both" && (!posterFile || !videoFile)) {
+      newErrors["media"] = "Please upload both poster and video";
+    }
+
+    // If there are errors, set them and return
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Clear errors if validation passes
+    setErrors({});
+
+    setLoading(true);
+    const formData = new FormData();
+
+    // Add action and ad type
+    formData.append("action", "add_business_promotion");
+    formData.append("ad_type", adType);
+
+    // Collect all form field values
+    const allFields = [
+      "business_name",
+      "business_category",
+      "contact_number",
+      "whatsapp_number",
+      "business_description",
+      "business_location",
+      "business_address",
+      "website",
+      "social_media_links",
+      "advertisement_title",
+      "advertisement_description",
+    ];
+
+    allFields.forEach((fieldName) => {
+      const field = form.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement;
+      if (field) {
+        const value = field.value.trim();
+        if (value) {
+          formData.append(fieldName, value);
+          console.log(`Added ${fieldName}: ${value}`);
+        }
+      }
+    });
+
+    // Add files
+    if (posterFile) {
+      formData.append("poster", posterFile);
+      console.log("Added poster:", posterFile.name);
+    }
+
+    if (videoFile) {
+      formData.append("video", videoFile);
+      console.log("Added video:", videoFile.name);
+    }
+    let user=JSON.parse(localStorage.getItem('mobile_user') || '{}');
+    formData.append('owner_name',user.name)
+    formData.append('created_by',user.id)
+    
+    // Log FormData for debugging
+    console.log("=== FormData Contents ===");
+    formData.forEach((value, key) => {
+      if (value instanceof File) {
+        console.log(`${key}: File - ${value.name} (${value.size} bytes)`);
+      } else {
+        console.log(`${key}: ${value}`);
+      }
+    });
+
+    try {
+      console.log(`Sending to: ${API_PATH}/action_layer.php`);
+
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      const result = await response.json();
+      console.log("API Response:", result);
+
+      if (result.status === 1) {
+        setSubmitted(true);
+        // Reset form
+        form.reset();
+        setPosterFile(null);
+        setVideoFile(null);
+        setAdType("poster");
+
+        setTimeout(() => {
+          setSubmitted(false);
+          navigate("/home");
+        }, 3000);
+      } else {
+        alert(result.message || "Submission failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Submit error:", error);
+      alert("Unable to submit application. Please check your connection.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen w-full bg-[var(--cream)] pb-10 text-[var(--ink)]">
+    <form ref={formRef} className="min-h-screen w-full bg-[var(--cream)] pb-10 text-[var(--ink)]">
       <div className="mx-auto max-w-md px-4 pt-5 sm:max-w-lg md:max-w-3xl md:px-8 lg:max-w-4xl">
 
         {/* ---------------------------------------------------------------- */}
@@ -423,8 +581,10 @@ export default function BusinessPromotion() {
               Icon={Store}
               label="Business Name"
               placeholder="e.g. Kohali Textiles"
+              name="business_name"
               required
               colSpan
+              error={errors.business_name}
             />
 
             {/* Business Category */}
@@ -432,22 +592,27 @@ export default function BusinessPromotion() {
               Icon={Tag}
               label="Business Category"
               placeholder="e.g. Retail, Food, Services"
+              name="business_category"
               required
+              error={errors.business_category}
             />
 
             {/* Contact Number */}
             <Field
               Icon={Smartphone}
               label="Contact Number"
+              name="contact_number"
               placeholder="+91 00000 00000"
               type="tel"
               required
+              error={errors.contact_number}
             />
 
             {/* WhatsApp */}
             <Field
               Icon={MessageCircle}
               label="WhatsApp Number"
+              name="whatsapp_number"
               placeholder="+91 00000 00000"
               type="tel"
             />
@@ -457,9 +622,11 @@ export default function BusinessPromotion() {
               Icon={FileText}
               label="Business Description"
               placeholder="What does your business offer?"
+              name="business_description"
               textarea
               required
               colSpan
+              error={errors.business_description}
             />
 
             {/* Business Address */}
@@ -467,15 +634,18 @@ export default function BusinessPromotion() {
               Icon={MapPin}
               label="Business Address"
               placeholder="Shop / street / area, city"
+              name="business_address"
               textarea
               required
               colSpan
+              error={errors.business_address}
             />
 
             {/* Business Location */}
             <Field
               Icon={Navigation}
               label="Business Location"
+              name="business_location"
               placeholder="Pin dropped on map"
               action={
                 <button
@@ -493,6 +663,7 @@ export default function BusinessPromotion() {
               label="Website"
               placeholder="www.yourbusiness.com"
               type="url"
+              name="website"
             />
 
             {/* Social Media */}
@@ -501,6 +672,7 @@ export default function BusinessPromotion() {
               label="Social Media Links"
               placeholder="Instagram / Facebook profile links"
               colSpan
+              name="social_media_links"
             />
 
           </div>
@@ -538,11 +710,10 @@ export default function BusinessPromotion() {
                         key={key}
                         type="button"
                         onClick={() => setAdType(key)}
-                        className={`relative flex flex-col items-center gap-1.5 rounded-2xl border py-3 text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
-                          active
-                            ? "border-[var(--gold-500)] bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-[0_6px_16px_rgba(212,175,55,0.35)]"
-                            : "border-[var(--gold-500)] bg-[var(--cream)]"
-                        }`}
+                        className={`relative flex flex-col items-center gap-1.5 rounded-2xl border py-3 text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${active
+                          ? "border-[var(--gold-500)] bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-[0_6px_16px_rgba(212,175,55,0.35)]"
+                          : "border-[var(--gold-500)] bg-[var(--cream)]"
+                          }`}
                       >
 
                         {/* Selected indicator */}
@@ -557,21 +728,19 @@ export default function BusinessPromotion() {
 
                         {/* Icon */}
                         <Icon
-                          className={`h-5 w-5 transition-transform duration-200 ${
-                            active
-                              ? "scale-110 text-[var(--maroon-900)] opacity-100"
-                              : "scale-100 text-[var(--ink)] opacity-55"
-                          }`}
+                          className={`h-5 w-5 transition-transform duration-200 ${active
+                            ? "scale-110 text-[var(--maroon-900)] opacity-100"
+                            : "scale-100 text-[var(--ink)] opacity-55"
+                            }`}
                           strokeWidth={2.25}
                         />
 
                         {/* Label */}
                         <span
-                          className={`text-[11px] font-bold leading-tight ${
-                            active
-                              ? "text-[var(--maroon-900)] opacity-100"
-                              : "text-[var(--ink)] opacity-60"
-                          }`}
+                          className={`text-[11px] font-bold leading-tight ${active
+                            ? "text-[var(--maroon-900)] opacity-100"
+                            : "text-[var(--ink)] opacity-60"
+                            }`}
                         >
                           {label}
                         </span>
@@ -584,18 +753,120 @@ export default function BusinessPromotion() {
               </div>
             </div>
 
+            {/* Advertisement Media Upload */}
+            <div className="mt-4">
+              <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-2">
+
+                {/* Poster Upload */}
+                {(adType === "poster" || adType === "both") && (
+                  <label className="block cursor-pointer">
+                    <div className="mb-1.5">
+                      <span className={`text-[11.5px] font-bold ${errors.poster ? "text-red-600" : "text-[var(--maroon-700)]"}`}>
+                        Poster Image <span className="text-[var(--gold-600)]">*</span>
+                      </span>
+                    </div>
+
+                    <div className={`rounded-2xl border-[1.5px] border-dashed bg-[var(--cream)]/50 px-4 py-5 text-center transition-all ${
+                      errors.poster
+                        ? "border-red-500 hover:border-red-600"
+                        : "border-[var(--gold-500)] hover:border-[var(--maroon-700)]"
+                    }`}>
+                      <ImageIcon className={`mx-auto mb-2 h-7 w-7 ${errors.poster ? "text-red-500" : "text-[var(--maroon-700)]"}`} />
+
+                      <p className="text-[13px] font-bold text-[var(--ink)]">
+                        {posterFile ? posterFile.name : "Upload Poster"}
+                      </p>
+
+                      <p className="mt-1 text-[10px] text-[var(--text-muted)]">
+                        JPG, JPEG, PNG, WEBP • Max 5 MB
+                      </p>
+
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        onChange={(e) => {
+                          setPosterFile(e.target.files?.[0] || null);
+                          if (e.target.files?.[0]) {
+                            setErrors(prev => ({ ...prev, poster: "" }));
+                          }
+                        }}
+                      />
+                    </div>
+                    {errors.poster && (
+                      <p className="mt-1.5 text-[11px] font-medium text-red-600 flex items-center gap-1">
+                        <span>⚠</span> {errors.poster}
+                      </p>
+                    )}
+                  </label>
+                )}
+
+                {/* Video Upload */}
+                {(adType === "video" || adType === "both") && (
+                  <label className="block cursor-pointer">
+                    <div className="mb-1.5">
+                      <span className={`text-[11.5px] font-bold ${errors.video ? "text-red-600" : "text-[var(--maroon-700)]"}`}>
+                        Advertisement Video <span className="text-[var(--gold-600)]">*</span>
+                      </span>
+                    </div>
+
+                    <div className={`rounded-2xl border-[1.5px] border-dashed bg-[var(--cream)]/50 px-4 py-5 text-center transition-all ${
+                      errors.video
+                        ? "border-red-500 hover:border-red-600"
+                        : "border-[var(--gold-500)] hover:border-[var(--maroon-700)]"
+                    }`}>
+                      <Video className={`mx-auto mb-2 h-7 w-7 ${errors.video ? "text-red-500" : "text-[var(--maroon-700)]"}`} />
+
+                      <p className="text-[13px] font-bold text-[var(--ink)]">
+                        {videoFile ? videoFile.name : "Upload Video"}
+                      </p>
+
+                      <p className="mt-1 text-[10px] text-[var(--text-muted)]">
+                        MP4, MOV, WEBM • Max 50 MB
+                      </p>
+
+                      <input
+                        type="file"
+                        accept="video/mp4,video/webm,video/quicktime"
+                        className="hidden"
+                        onChange={(e) => {
+                          setVideoFile(e.target.files?.[0] || null);
+                          if (e.target.files?.[0]) {
+                            setErrors(prev => ({ ...prev, video: "" }));
+                          }
+                        }}
+                      />
+                    </div>
+                    {errors.video && (
+                      <p className="mt-1.5 text-[11px] font-medium text-red-600 flex items-center gap-1">
+                        <span>⚠</span> {errors.video}
+                      </p>
+                    )}
+                  </label>
+                )}
+
+              </div>
+              {errors.media && (
+                <p className="mt-3 text-[11px] font-medium text-red-600 flex items-center gap-1">
+                  <span>⚠</span> {errors.media}
+                </p>
+              )}
+            </div>
+
             {/* Advertisement fields */}
-            <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-2">
+            <div className="mt-4 grid grid-cols-1 gap-3.5 lg:grid-cols-2">
 
               <Field
                 Icon={Type}
                 label="Advertisement Title"
+                name="advertisement_title"
                 placeholder="A short catchy title"
               />
 
               <Field
                 Icon={FileText}
                 label="Advertisement Description"
+                name="advertisement_description"
                 placeholder="What should the ad say?"
                 textarea
                 colSpan
@@ -613,19 +884,25 @@ export default function BusinessPromotion() {
                 {/* Agreement */}
                 <button
                   type="button"
-                  onClick={() =>
-                    setAgreed((current) => !current)
-                  }
-                  className="flex w-full items-start gap-3 rounded-2xl border border-[var(--gold-500)] bg-[var(--cream)]/50 px-3.5 py-3 text-left transition-all duration-200 hover:border-[var(--maroon-300)] active:scale-[0.99]"
+                  onClick={() => {
+                    setAgreed((current) => !current);
+                    if (!agreed) {
+                      setErrors(prev => ({ ...prev, agreement: "" }));
+                    }
+                  }}
+                  className={`flex w-full items-start gap-3 rounded-2xl border px-3.5 py-3 text-left transition-all duration-200 ${
+                    errors.agreement
+                      ? "border-red-500 bg-red-50 hover:border-red-600"
+                      : "border-[var(--gold-500)] bg-[var(--cream)]/50 hover:border-[var(--maroon-300)]"
+                  } active:scale-[0.99]`}
                 >
 
                   {/* Checkbox */}
                   <span
-                    className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 transition-all duration-200 ${
-                      agreed
-                        ? "border-[var(--maroon-700)] bg-[var(--maroon-700)]"
-                        : "border-[var(--gold-500)] bg-transparent"
-                    }`}
+                    className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 transition-all duration-200 ${agreed
+                      ? "border-[var(--maroon-700)] bg-[var(--maroon-700)]"
+                      : "border-[var(--gold-500)] bg-transparent"
+                      }`}
                   >
                     {agreed && (
                       <CheckCircle2
@@ -650,11 +927,17 @@ export default function BusinessPromotion() {
 
                 </button>
 
+                {errors.agreement && (
+                  <p className="mt-2 text-[11px] font-medium text-red-600 flex items-center gap-1">
+                    <span>⚠</span> {errors.agreement}
+                  </p>
+                )}
+
                 {/* Submit */}
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  disabled={!agreed}
+                  disabled={!agreed || loading}
                   className="relative mt-4 flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-[linear-gradient(135deg,var(--maroon-700),var(--maroon-900))] py-3.5 text-[14px] font-extrabold text-[var(--paper)] shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 md:w-auto md:px-10"
                 >
                   {submitted ? (
@@ -664,6 +947,11 @@ export default function BusinessPromotion() {
                         strokeWidth={2.5}
                       />
                       Application Submitted
+                    </>
+                  ) : loading ? (
+                    <>
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--paper)] border-t-transparent" />
+                      Submitting...
                     </>
                   ) : (
                     <>
@@ -680,6 +968,6 @@ export default function BusinessPromotion() {
         </Reveal>
 
       </div>
-    </div>
+    </form>
   );
 }

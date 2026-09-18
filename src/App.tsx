@@ -26,6 +26,7 @@ import Notices from "./components/pages/Notices";
 import PhotoGallery from "./components/pages/PhotoGallery";
 import VideoGallery from "./components/pages/VideoGallery";
 import Events from "./components/pages/Events";
+import GoogleTranslate from "./components/GoogleTranslate";
 // import EventDetails from "./components/pages/EventDetails";
 // import { getBookById } from "./data/books";
 
@@ -53,7 +54,9 @@ function BookDetailRoute() {
 
 export default function App() {
   return (
+    <>
     <BrowserRouter>
+    <GoogleTranslate />
       <Routes>
         {/* login sits outside MobileLayout — no bottom nav / sidebar here */}
         <Route path="/" element={<LoginPage />} />
@@ -82,5 +85,6 @@ export default function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </>
   );
 }

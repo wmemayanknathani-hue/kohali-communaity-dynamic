@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell, User, Globe, Check, ChevronDown } from "lucide-react";
 import {
@@ -59,8 +59,69 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const navigate = useNavigate();
   const [notifOpen, setNotifOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [lang, setLang] = useState<"mr" | "en">("mr");
+  const [lang, setLang] = useState<"mr" | "en">(
+  (localStorage.getItem("language") as "mr" | "en") || "mr"
+);
+ const changeGoogleLanguage = (language: "mr" | "en") => {
+  setLang(language);
 
+  localStorage.setItem("language", language);
+
+  const applyLanguage = () => {
+    const googleSelect = document.querySelector(
+      ".goog-te-combo"
+    ) as HTMLSelectElement | null;
+
+    if (!googleSelect) {
+      return false;
+    }
+
+    googleSelect.value = language;
+    googleSelect.dispatchEvent(new Event("change"));
+
+    return true;
+  };
+
+  if (applyLanguage()) {
+    return;
+  }
+
+  setTimeout(() => {
+    applyLanguage();
+  }, 300);
+
+  setTimeout(() => {
+    applyLanguage();
+  }, 800);
+
+  setTimeout(() => {
+    applyLanguage();
+  }, 1500);
+};
+
+  useEffect(() => {
+  const savedLanguage = localStorage.getItem("language") as
+    | "mr"
+    | "en"
+    | null;
+
+  if (!savedLanguage || savedLanguage === "mr") {
+    return;
+  }
+
+  const timer = setTimeout(() => {
+    const googleSelect = document.querySelector(
+      ".goog-te-combo"
+    ) as HTMLSelectElement | null;
+
+    if (googleSelect) {
+      googleSelect.value = savedLanguage;
+      googleSelect.dispatchEvent(new Event("change"));
+    }
+  }, 1000);
+
+  return () => clearTimeout(timer);
+}, []);
   const unreadCount = notifications.filter((notification) => !notification.read).length;
 
   return (
@@ -114,11 +175,10 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 }}
                 aria-label="Change language"
                 aria-expanded={langOpen}
-                className={`flex h-9 items-center gap-1 rounded-full border px-2 transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 sm:px-2.5 md:h-11 md:px-3 ${
-                  langOpen
+                className={`flex h-9 items-center gap-1 rounded-full border px-2 transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 sm:px-2.5 md:h-11 md:px-3 ${langOpen
                     ? "border-[var(--gold-500)]/60 bg-[var(--gold-300)]/55 text-[var(--maroon-900)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]"
                     : "border-[var(--gold-500)]/25 bg-[var(--gold-100)] text-[var(--maroon-800)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-[var(--gold-500)]/40 hover:bg-[var(--gold-300)]/45 hover:shadow-[0_2px_6px_-2px_rgba(90,15,20,0.18)]"
-                }`}
+                  }`}
               >
                 <Globe strokeWidth={2.2} className="h-3.5 w-3.5 xs:h-4 xs:w-4 md:h-[18px] md:w-[18px]" />
 
@@ -127,9 +187,8 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 </span>
 
                 <ChevronDown
-                  className={`h-3 w-3 transition-transform duration-200 ease-out md:h-3.5 md:w-3.5 ${
-                    langOpen ? "rotate-180" : ""
-                  }`}
+                  className={`h-3 w-3 transition-transform duration-200 ease-out md:h-3.5 md:w-3.5 ${langOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
@@ -155,14 +214,13 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                         key={option.code}
                         type="button"
                         onClick={() => {
-                          setLang(option.code);
+                          changeGoogleLanguage(option.code);
                           setLangOpen(false);
                         }}
-                        className={`flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-[12px] font-bold transition-colors duration-150 md:px-3 md:py-2.5 md:text-[13px] ${
-                          lang === option.code
+                        className={`flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-[12px] font-bold transition-colors duration-150 md:px-3 md:py-2.5 md:text-[13px] ${lang === option.code
                             ? "bg-[var(--gold-100)] text-[var(--maroon-800)]"
                             : "text-[var(--ink)] hover:bg-[var(--cream)]"
-                        }`}
+                          }`}
                       >
                         {option.label}
 
@@ -178,7 +236,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
               )}
             </div>
 
-            {/* Notifications */}
+            {/* Notifications
             <div className="relative">
               <button
                 type="button"
@@ -188,11 +246,10 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 }}
                 aria-label="Notifications"
                 aria-expanded={notifOpen}
-                className={`relative grid h-9 w-9 place-items-center rounded-full border transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 xs:w-10 md:h-11 md:w-11 ${
-                  notifOpen
+                className={`relative grid h-9 w-9 place-items-center rounded-full border transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:scale-[0.94] active:duration-75 xs:h-10 xs:w-10 md:h-11 md:w-11 ${notifOpen
                     ? "border-[var(--gold-500)]/60 bg-[var(--gold-300)]/55 text-[var(--maroon-900)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)]"
                     : "border-[var(--gold-500)]/25 bg-[var(--gold-100)] text-[var(--maroon-800)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:border-[var(--gold-500)]/40 hover:bg-[var(--gold-300)]/45 hover:shadow-[0_2px_6px_-2px_rgba(90,15,20,0.18)]"
-                }`}
+                  }`}
               >
                 <Bell strokeWidth={2.2} className="h-4 w-4 xs:h-[18px] xs:w-[18px] md:h-5 md:w-5" />
 
@@ -208,7 +265,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 notifications={notifications}
                 onClose={() => setNotifOpen(false)}
               />
-            </div>
+            </div> */}
 
             {/* Profile / menu */}
             <button

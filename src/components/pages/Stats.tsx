@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
@@ -17,7 +17,7 @@ import {
   Sparkles,
   PieChart,
   BarChart3,
-  Wheat, 
+  Wheat,
 } from "lucide-react";
 import SectionHeader from "../SectionHeader";
 
@@ -69,83 +69,83 @@ const PALETTE = [
 
 /* ============================= DATA ============================= */
 
-const overview = { totalMembers: 3842, totalFamilies: 812 };
+// const overview = { totalMembers: 3842, totalFamilies: 812 };
 
-const quickFacts = [
-  { label: "Villages", value: 96, icon: MapPin },
-  { label: "Talukas", value: 14, icon: Landmark },
-  { label: "Districts", value: 6, icon: Landmark },
-];
+// const quickFacts = [
+//   { label: "Villages", value: 96, icon: MapPin },
+//   { label: "Talukas", value: 14, icon: Landmark },
+//   { label: "Districts", value: 6, icon: Landmark },
+// ];
 
-const atAGlance = [
-  { label: "Working members", labelMr: "नोकरदार सदस्य", value: 1540, icon: Briefcase },
-  { label: "Students", labelMr: "विद्यार्थी", value: 972, icon: GraduationCap },
-  { label: "Farmers", labelMr: "शेतकरी", value: 640, icon: Sprout },
-  { label: "Business owners", labelMr: "व्यावसायिक", value: 318, icon: Store },
-];
+// const atAGlance = [
+//   { label: "Working members", labelMr: "नोकरदार सदस्य", value: 1540, icon: Briefcase },
+//   { label: "Students", labelMr: "विद्यार्थी", value: 972, icon: GraduationCap },
+//   { label: "Farmers", labelMr: "शेतकरी", value: 640, icon: Sprout },
+//   { label: "Business owners", labelMr: "व्यावसायिक", value: 318, icon: Store },
+// ];
 
-const genderStats = { male: 1986, female: 1856 };
+// const genderStats = { male: 1986, female: 1856 };
 
-const educationData = [
-  { label: "Graduate", value: 28 },
-  { label: "Secondary", value: 22 },
-  { label: "Higher secondary", value: 18 },
-  { label: "Post graduate", value: 14 },
-  { label: "Primary", value: 12 },
-  { label: "Professional", value: 4 },
-  { label: "Other", value: 2 },
-].map((d, i) => ({ ...d, color: PALETTE[i % PALETTE.length] }));
+// const educationData = [
+//   { label: "Graduate", value: 28 },
+//   { label: "Secondary", value: 22 },
+//   { label: "Higher secondary", value: 18 },
+//   { label: "Post graduate", value: 14 },
+//   { label: "Primary", value: 12 },
+//   { label: "Professional", value: 4 },
+//   { label: "Other", value: 2 },
+// ].map((d, i) => ({ ...d, color: PALETTE[i % PALETTE.length] }));
 
-const occupationData = [
-  { label: "Agriculture", value: 22, icon: Sprout },
-  { label: "Private service", value: 20, icon: Building2 },
-  { label: "Business", value: 16, icon: Store },
-  { label: "Government service", value: 12, icon: Landmark },
-  { label: "Student", value: 12, icon: GraduationCap },
-  { label: "Self employed", value: 10, icon: Briefcase },
-  { label: "Homemaker", value: 6, icon: Home },
-  { label: "Other", value: 2, icon: Sparkles },
-].sort((a, b) => b.value - a.value);
+// const occupationData = [
+//   { label: "Agriculture", value: 22, icon: Sprout },
+//   { label: "Private service", value: 20, icon: Building2 },
+//   { label: "Business", value: 16, icon: Store },
+//   { label: "Government service", value: 12, icon: Landmark },
+//   { label: "Student", value: 12, icon: GraduationCap },
+//   { label: "Self employed", value: 10, icon: Briefcase },
+//   { label: "Homemaker", value: 6, icon: Home },
+//   { label: "Other", value: 2, icon: Sparkles },
+// ].sort((a, b) => b.value - a.value);
 
-const geoTabs = {
-  State: [
-    { label: "Maharashtra", value: 3540 },
-    { label: "Madhya Pradesh", value: 180 },
-    { label: "Other states", value: 122 },
-  ],
-  District: [
-    { label: "Nagpur", value: 1120 },
-    { label: "Wardha", value: 640 },
-    { label: "Chandrapur", value: 520 },
-    { label: "Bhandara", value: 460 },
-    { label: "Gondia", value: 380 },
-    { label: "Other districts", value: 722 },
-  ],
-  Taluka: [
-    { label: "Nagpur (Rural)", value: 420 },
-    { label: "Kamptee", value: 310 },
-    { label: "Hingna", value: 275 },
-    { label: "Umred", value: 240 },
-    { label: "Katol", value: 210 },
-    { label: "Other talukas", value: 2387 },
-  ],
-  Village: [
-    { label: "Kelwad", value: 186 },
-    { label: "Bhiwapur", value: 164 },
-    { label: "Mowad", value: 141 },
-    { label: "Sindi", value: 128 },
-    { label: "Kondhali", value: 112 },
-    { label: "Other villages", value: 3111 },
-  ],
-} as const;
+// const geoTabs = {
+//   State: [
+//     { label: "Maharashtra", value: 3540 },
+//     { label: "Madhya Pradesh", value: 180 },
+//     { label: "Other states", value: 122 },
+//   ],
+//   District: [
+//     { label: "Nagpur", value: 1120 },
+//     { label: "Wardha", value: 640 },
+//     { label: "Chandrapur", value: 520 },
+//     { label: "Bhandara", value: 460 },
+//     { label: "Gondia", value: 380 },
+//     { label: "Other districts", value: 722 },
+//   ],
+//   Taluka: [
+//     { label: "Nagpur (Rural)", value: 420 },
+//     { label: "Kamptee", value: 310 },
+//     { label: "Hingna", value: 275 },
+//     { label: "Umred", value: 240 },
+//     { label: "Katol", value: 210 },
+//     { label: "Other talukas", value: 2387 },
+//   ],
+//   Village: [
+//     { label: "Kelwad", value: 186 },
+//     { label: "Bhiwapur", value: 164 },
+//     { label: "Mowad", value: 141 },
+//     { label: "Sindi", value: 128 },
+//     { label: "Kondhali", value: 112 },
+//     { label: "Other villages", value: 3111 },
+//   ],
+// } as const;
 
-const agriculture = {
-  farmingFamilies: 512,
-  cropCategories: 6,
-  irrigatedPct: 62,
-  nonIrrigatedPct: 38,
-  majorCrops: ["Cotton", "Soybean", "Wheat", "Tur (pigeon pea)", "Orange", "Vegetables"],
-};
+// const agriculture = {
+//   farmingFamilies: 512,
+//   cropCategories: 6,
+//   irrigatedPct: 62,
+//   nonIrrigatedPct: 38,
+//   majorCrops: ["Cotton", "Soybean", "Wheat", "Tur (pigeon pea)", "Orange", "Vegetables"],
+// };
 
 /* ============================= HOOKS ============================= */
 
@@ -231,26 +231,29 @@ function DonutChart({
   );
 }
 
-function EducationChart() {
+function EducationChart({
+  data,
+}: {
+  data: { label: string; value: number; color: string }[];
+}) {
   const [active, setActive] = useState<number | null>(null);
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
       <DonutChart
-        data={educationData}
+        data={data}
         activeIndex={active}
-        centerLabel={active !== null ? `${educationData[active].value}%` : "7"}
-        centerSub={active !== null ? educationData[active].label : "categories"}
+        centerLabel={active !== null ? `${data[active].value}%` : "7"}
+        centerSub={active !== null ? data[active].label : "categories"}
       />
       <div className="w-full flex-1 space-y-0.5">
-        {educationData.map((d, i) => (
+        {data.map((d, i) => (
           <button
             key={d.label}
             onMouseEnter={() => setActive(i)}
             onMouseLeave={() => setActive(null)}
             onClick={() => setActive((a) => (a === i ? null : i))}
-            className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-left text-[12px] transition-colors md:text-[12.5px] ${
-              active === i ? "bg-[var(--gold-100)]" : "hover:bg-[var(--gold-100)]/50"
-            }`}
+            className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-left text-[12px] transition-colors md:text-[12.5px] ${active === i ? "bg-[var(--gold-100)]" : "hover:bg-[var(--gold-100)]/50"
+              }`}
           >
             <span className="flex items-center gap-2 text-[var(--ink)]/85">
               <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: d.color }} />
@@ -346,7 +349,10 @@ function AccordionSection({
 }: {
   title: string;
   titleMr: string;
-  Icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  Icon: React.ComponentType<{
+    className?: string;
+    strokeWidth?: number;
+  }>;
   defaultOpen?: boolean;
   children: React.ReactNode;
 }) {
@@ -378,30 +384,193 @@ function AccordionSection({
 /* ============================= PAGE ============================= */
 
 export default function Stats() {
+
   const navigate = useNavigate();
-  const [geoTab, setGeoTab] = useState<keyof typeof geoTabs>("District");
-  const geoRows = geoTabs[geoTab];
-  const geoMax = Math.max(...geoRows.map((r) => r.value));
+  const [geoTab, setGeoTab] = useState<
+    "State" | "District" | "Taluka" | "Village"
+  >("District");
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  // const geoRows = geoTabs[geoTab];
+  // const geoMax = Math.max(...geoRows.map((r) => r.value));
 
-  const membersCount = useCountUp(overview.totalMembers);
-  const familiesCount = useCountUp(overview.totalFamilies);
+  // const membersCount = useCountUp(overview.totalMembers);
+  // const familiesCount = useCountUp(overview.totalFamilies);
 
-  const genderTotal = genderStats.male + genderStats.female;
-  const malePct = Math.round((genderStats.male / genderTotal) * 100);
+  // const genderTotal = genderStats.male + genderStats.female;
+  // const malePct = Math.round((genderStats.male / genderTotal) * 100);
+  // const femalePct = 100 - malePct;
+
+  const API_PATH =
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "get_stats",
+        }),
+      });
+
+      const result = await response.json();
+      console.log("STATS API RESPONSE:", result);
+      if (result.status === 1) {
+        setStats(result);
+      } else {
+        setError(result.message || "Unable to load statistics");
+      }
+    } catch (error) {
+      console.error("Stats API Error:", error);
+      setError("Unable to load statistics");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const overview = stats?.overview;
+  const quickFacts: {
+    label: string;
+    value: number;
+  }[] = stats?.quickFacts || [];
+  const atAGlance: {
+    label: string;
+    value: number;
+
+  }[] = stats?.atAGlance || [];
+  const genderStats = stats?.gender || {
+    male: 0,
+    female: 0,
+  };
+
+  const educationData: {
+    label: string;
+    value: number;
+    color: string;
+  }[] = (stats?.education || []).map(
+    (d: any, i: number) => ({
+      label: String(d.label || ""),
+      value: Number(d.percentage || 0),
+      color: PALETTE[i % PALETTE.length],
+    })
+  );
+  const occupationData: {
+    label: string;
+    count: number;
+    value: number;
+  }[] = (stats?.occupation || [])
+    .map((d: any) => ({
+      label: String(d.label || ""),
+      count: Number(d.count || 0),
+      value: Number(d.percentage || 0),
+    }))
+    .sort((a: { value: number }, b: { value: number }) => b.value - a.value);
+
+  const geoTabs: {
+    State: any[];
+    District: any[];
+    Taluka: any[];
+    Village: any[];
+  } = stats?.geography || {
+    State: [],
+    District: [],
+    Taluka: [],
+    Village: [],
+  };
+
+  const agriculture = stats?.agriculture || {
+    farmingFamilies: 0,
+    cropCategories: 0,
+    irrigatedPercentage: 0,
+    nonIrrigatedPercentage: 0,
+    majorCrops: [],
+  };
+
+  const geoRows: {
+    label: string;
+    value: number;
+    percent: number;
+  }[] = (geoTabs[geoTab] || []).map((r: any) => ({
+    label: String(r.label || ""),
+    value: Number(r.count || 0),
+    percent: Number(r.percentage || 0),
+  }));
+
+  // const geoMax =
+  //   geoRows.length > 0
+  //     ? Math.max(...geoRows.map((r: any) => Number(r.count)))
+  //     : 1;
+
+  const membersCount = useCountUp(
+    Number(overview?.totalMembers || 0)
+  );
+
+  const familiesCount = useCountUp(
+    Number(overview?.totalFamilies || 0)
+  );
+
+  const genderTotal =
+    Number(genderStats.male) + Number(genderStats.female);
+
+  const malePct =
+    genderTotal > 0
+      ? Math.round((Number(genderStats.male) / genderTotal) * 100)
+      : 0;
+
   const femalePct = 100 - malePct;
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[var(--cream)]">
+        <div className="text-center">
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-[var(--gold-300)] border-t-[var(--maroon-800)]" />
+          <p className="mt-3 text-sm font-semibold text-[var(--maroon-800)]">
+            Loading statistics...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[var(--cream)] px-5">
+        <div className="rounded-2xl bg-[var(--paper)] p-6 text-center shadow">
+          <p className="font-semibold text-red-600">{error}</p>
+
+          <button
+            onClick={fetchStats}
+            className="mt-4 rounded-full bg-[var(--maroon-800)] px-5 py-2 text-sm font-semibold text-white"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
+
     <div className="min-h-screen bg-[var(--cream)] font-body">
       <GlobalStyles />
 
       <div className="mx-auto w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
-         <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
-            <SectionHeader eyebrow="Numbers" title="Community Statistics"/>
+        <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
+          <SectionHeader eyebrow="Numbers" title="Community Statistics" />
 
-            <button onClick={() => navigate("/home")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
-              <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
-            </button>
-          </div>
+          <button onClick={() => navigate("/home")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
+            <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
+          </button>
+        </div>
 
         <div className="px-4 pb-10 sm:px-6 md:px-8 lg:px-10">
           {/* ================= HERO — the one bold maroon card, same move as the Home banner ================= */}
@@ -412,7 +581,7 @@ export default function Stats() {
             />
 
             <p className="relative text-[10.5px] font-bold uppercase tracking-[0.14em] text-[var(--gold-300)]">
-              Community overview 
+              Community overview
             </p>
 
             <div className="relative mt-3 flex items-stretch">
@@ -433,15 +602,24 @@ export default function Stats() {
 
             {/* quick facts as solid gold pill badges — same device as the "स्वागत" / category badges on Home */}
             <div className="relative mt-4 flex flex-wrap gap-1.5">
-              {quickFacts.map((f) => (
-                <span
-                  key={f.label}
-                  className="flex items-center gap-1.5 rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]  px-3 py-1.5 text-[11px] font-bold text-[var(--maroon-800)]"
-                >
-                  <f.icon className="h-3.5 w-3.5" strokeWidth={2.4} />
-                  {f.value.toLocaleString()} {f.label}
-                </span>
-              ))}
+              {quickFacts.map((f, i) => {
+                const icons = [MapPin, Landmark, Landmark];
+                const Icon = icons[i] || MapPin;
+
+                return (
+                  <span
+                    key={f.label}
+                    className="flex items-center gap-1.5 rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] px-3 py-1.5 text-[11px] font-bold text-[var(--maroon-800)]"
+                  >
+                    <Icon
+                      className="h-3.5 w-3.5"
+                      strokeWidth={2.4}
+                    />
+
+                    {Number(f.value).toLocaleString()} {f.label}
+                  </span>
+                );
+              })}
             </div>
 
             <div className="relative mt-4 border-t border-white/10 pt-3.5">
@@ -460,20 +638,45 @@ export default function Stats() {
             <SectionHeader eyebrow="Quick numbers" title="At a glance" />
             <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
               <div className="divide-y divide-[var(--gold-300)]/50">
-                {atAGlance.map((s, i) => (
-                  <div key={s.label} className="kc-rise flex items-center gap-3 px-4 py-3 md:px-5" style={{ animationDelay: `${i * 50}ms` }}>
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]  shadow-sm">
-                      <s.icon className="h-4.5 w-4.5 text-[var(--maroon-800)]" strokeWidth={2.2} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="font-display block text-[14px] font-bold text-[var(--ink)] md:text-[14px]">{s.label}</span>
-                      <span className="font-mr block text-[12px] text-[var(--text-muted)]">{s.labelMr}</span>
-                    </span>
-                    <span className="font-display shrink-0 text-[17px] font-extrabold text-[var(--maroon-800)] md:text-[18px]">
-                      {s.value.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
+                {atAGlance.map((s, i) => {
+                  const icons = [
+                    Briefcase,
+                    Store,
+                    Sprout,
+                    GraduationCap,
+                  ];
+
+                  const Icon = icons[i] || Sparkles;
+
+                  return (
+                    <div
+                      key={s.label}
+                      className="kc-rise flex items-center gap-3 px-4 py-3 md:px-5"
+                      style={{ animationDelay: `${i * 50}ms` }}
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm">
+                        <Icon
+                          className="h-4.5 w-4.5 text-[var(--maroon-800)]"
+                          strokeWidth={2.2}
+                        />
+                      </span>
+
+                      <span className="min-w-0 flex-1">
+                        <span className="font-display block text-[14px] font-bold text-[var(--ink)] md:text-[14px]">
+                          {s.label}
+                        </span>
+
+                        {/* <span className="font-mr block text-[12px] text-[var(--text-muted)]">
+                          {s.labelMr}
+                        </span> */}
+                      </span>
+
+                      <span className="font-display shrink-0 text-[17px] font-extrabold text-[var(--maroon-800)] md:text-[18px]">
+                        {Number(s.value).toLocaleString()}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -483,26 +686,55 @@ export default function Stats() {
             <SectionHeader eyebrow="Detailed statistics" title="Full Breakdown" />
             <div className="space-y-3">
               <AccordionSection title="Education statistics" titleMr="शैक्षणिक आकडेवारी" Icon={PieChart}>
-                <EducationChart />
+                <EducationChart data={educationData} />
               </AccordionSection>
 
               <AccordionSection title="Occupation statistics" titleMr="व्यवसाय आकडेवारी" Icon={BarChart3}>
                 <div className="space-y-3">
-                  {occupationData.map((d, i) => (
-                    <BarRow key={d.label} label={d.label} percent={d.value} color={PALETTE[i % PALETTE.length]} Icon={d.icon} delay={i * 40} />
-                  ))}
+                  {occupationData.map((d, i) => {
+                    let Icon = Briefcase;
+
+                    const job = String(d.label).toLowerCase();
+
+                    if (job.includes("business")) {
+                      Icon = Store;
+                    } else if (job.includes("farm")) {
+                      Icon = Sprout;
+                    } else if (job.includes("student")) {
+                      Icon = GraduationCap;
+                    } else if (job.includes("government")) {
+                      Icon = Landmark;
+                    } else if (job.includes("private")) {
+                      Icon = Building2;
+                    } else if (job.includes("home")) {
+                      Icon = Home;
+                    }
+
+                    return (
+                      <BarRow
+                        key={d.label}
+                        label={d.label}
+                        value={d.count}
+                        percent={d.value}
+                        color={PALETTE[i % PALETTE.length]}
+                        Icon={Icon}
+                        delay={i * 40}
+                      />
+                    );
+                  })}
                 </div>
               </AccordionSection>
 
               <AccordionSection title="Geographic statistics" titleMr="भौगोलिक आकडेवारी" Icon={MapPin}>
                 <div className="mb-3 flex gap-1.5 overflow-x-auto">
-                  {(Object.keys(geoTabs) as (keyof typeof geoTabs)[]).map((tab) => (
+                  {(["State", "District", "Taluka", "Village"] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setGeoTab(tab)}
-                      className={`shrink-0 rounded-full px-3.5 py-1.5 text-[11px] font-bold transition-colors md:text-[12px] ${
-                        geoTab === tab ? "bg-[var(--maroon-800)] text-white" : "bg-[var(--gold-100)] text-[var(--maroon-800)]"
-                      }`}
+                      className={`shrink-0 rounded-full px-3.5 py-1.5 text-[11px] font-bold transition-colors md:text-[12px] ${geoTab === tab
+                          ? "bg-[var(--maroon-800)] text-white"
+                          : "bg-[var(--gold-100)] text-[var(--maroon-800)]"
+                        }`}
                     >
                       {tab}-wise
                     </button>
@@ -514,7 +746,7 @@ export default function Stats() {
                       key={r.label}
                       label={r.label}
                       value={r.value}
-                      percent={Math.round((r.value / geoMax) * 100)}
+                      percent={r.percent}
                       color={PALETTE[i % PALETTE.length]}
                       delay={i * 40}
                     />
@@ -546,7 +778,7 @@ export default function Stats() {
                 <div className="mt-4">
                   <p className="mb-1.5 text-[11px] font-semibold text-[var(--ink)]/70">Major crops</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {agriculture.majorCrops.map((c) => (
+                    {agriculture.majorCrops.map((c: string) => (
                       <span key={c} className="rounded-full bg-[var(--maroon-800)]/8 px-2.5 py-1 text-[10.5px] font-semibold text-[var(--maroon-800)]">
                         {c}
                       </span>
