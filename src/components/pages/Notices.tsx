@@ -5,6 +5,10 @@ import type { ElementType, ReactNode } from "react";
 import {
   ChevronLeft, CheckCheck, ChevronRight, BellOff, Bell,
   CalendarDays, Clock, Radio, Sparkles, RefreshCw, HeartHandshake, Paperclip,
+  BriefcaseBusiness,
+  Image,
+  Video,
+  BookOpen,
 } from "lucide-react";
 import type { Notification, NotificationCategory } from "../NotificationDropdown";
 /* ============================= REVEAL ============================= */
@@ -66,8 +70,12 @@ const categoryLabel: Record<NotificationCategory, string> = {
   स्मरणपत्र: "स्मरणपत्र",
   लाइव्ह: "लाइव्ह",
   घोषणा: "घोषणा",
+  व्यवसाय: "व्यवसाय",
   अपडेट: "अपडेट",
   सेवा: "सेवा",
+  फोटो: "फोटो",
+  व्हिडिओ: "व्हिडिओ",
+  पुस्तक: "पुस्तक",
 };
 
 // each category gets a real color pairing + icon, plus a solid accent hex used for the card's top band / wash
@@ -86,44 +94,77 @@ const categoryStyle: Record<
     icon: Bell,
     accent: "#d4af37",
   },
+
   कार्यक्रम: {
     bg: "bg-[linear-gradient(160deg,var(--maroon-600,#8a2237),var(--maroon-800))]",
     text: "text-white",
     icon: CalendarDays,
     accent: "#6f1327",
   },
+
   स्मरणपत्र: {
     bg: "bg-[linear-gradient(160deg,#f4b942,#d6902a)]",
     text: "text-white",
     icon: Clock,
     accent: "#d6902a",
   },
+
   लाइव्ह: {
     bg: "bg-[linear-gradient(160deg,#e0364f,#b3243a)]",
     text: "text-white",
     icon: Radio,
     accent: "#b3243a",
   },
+
   घोषणा: {
     bg: "bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]",
     text: "text-[var(--maroon-900)]",
     icon: Sparkles,
     accent: "#d4af37",
   },
+
+  व्यवसाय: {
+    bg: "bg-[linear-gradient(160deg,#c99532,#9c6d12)]",
+    text: "text-white",
+    icon: BriefcaseBusiness,
+    accent: "#9c6d12",
+  },
+
   अपडेट: {
     bg: "bg-[linear-gradient(160deg,#7c6fd1,#5a4bb8)]",
     text: "text-white",
     icon: RefreshCw,
     accent: "#5a4bb8",
   },
+
   सेवा: {
     bg: "bg-[linear-gradient(160deg,#2fa87a,#1f8562)]",
     text: "text-white",
     icon: HeartHandshake,
     accent: "#1f8562",
   },
-};
 
+  फोटो: {
+    bg: "bg-[linear-gradient(160deg,#d85b8a,#ad3263)]",
+    text: "text-white",
+    icon: Image,
+    accent: "#ad3263",
+  },
+
+  व्हिडिओ: {
+    bg: "bg-[linear-gradient(160deg,#e05252,#b52f2f)]",
+    text: "text-white",
+    icon: Video,
+    accent: "#b52f2f",
+  },
+
+  पुस्तक: {
+    bg: "bg-[linear-gradient(160deg,#6d8fc7,#4669a3)]",
+    text: "text-white",
+    icon: BookOpen,
+    accent: "#4669a3",
+  },
+};
 type NoticeItem = Notification & { attachment?: string; attachmentUrl?: string };
 
 // const sampleNotices: NoticeItem[] = [

@@ -10,7 +10,7 @@ export type NotificationCategory =
   | "व्यवसाय"    // Business promotions
   | "अपडेट"        // Important updates
   | "सेवा"     // Service-related notifications
-  | "फोटो"      // Photo-related notifications
+  | "फोटो"     // Photo-related notifications
   | "व्हिडिओ"    // Video-related notifications
   | "पुस्तक"    // Book-related notifications
 export type Notification = {
