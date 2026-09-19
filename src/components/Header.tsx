@@ -1,67 +1,24 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell, User, Globe, Check, ChevronDown } from "lucide-react";
+import logo from "../assets/kohali-logo.png";
 import {
   NotificationDropdown,
   type Notification,
 } from "./NotificationDropdown";
-import logo from "../assets/kohali-logo.png";
 
-const notifications: Notification[] = [
-  {
-    id: "1",
-    title: "Annual General Meeting 2024",
-    description:
-      "Join us for the AGM to review yearly progress and vote on upcoming samaj initiatives.",
-    date: "24 Oct, 10:00 AM",
-    category: "सूचना",
-    read: false,
-  },
-  {
-    id: "2",
-    title: "Diwali Milan Samaroh — Live Now",
-    description:
-      "The community Diwali gathering has started. Tap to join the live stream.",
-    date: "Today, 6:30 PM",
-    category: "लाइव्ह",
-    read: false,
-  },
-  {
-    id: "3",
-    title: "Scholarship Applications Open",
-    description:
-      "Applications for the 2024–25 student scholarship program are now open for members.",
-    date: "20 Oct, 9:00 AM",
-    category: "घोषणा",
-    read: false,
-  },
-  {
-    id: "4",
-    title: "Reminder: Blood Donation Camp",
-    description:
-      "The samaj blood donation camp begins tomorrow morning at the community hall.",
-    date: "Tomorrow, 8:00 AM",
-    category: "स्मरणपत्र",
-    read: true,
-  },
-  {
-    id: "5",
-    title: "App Update: Faster Directory Search",
-    description:
-      "We've improved search speed and added filters to the business directory.",
-    date: "18 Oct, 4:15 PM",
-    category: "अपडेट",
-    read: true,
-  },
-];
+
 
 export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const navigate = useNavigate();
   const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [langOpen, setLangOpen] = useState(false);
+  const API_PATH =window.location.hostname === "localhost" ||window.location.hostname === "192.168.1.62"? import.meta.env.VITE_LOCAL_API_PATH: import.meta.env.VITE_LIVE_API_PATH;
   const [lang, setLang] = useState<"mr" | "en">(
   (localStorage.getItem("language") as "mr" | "en") || "mr"
 );
+
  const changeGoogleLanguage = (language: "mr" | "en") => {
   setLang(language);
 
@@ -122,6 +79,83 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
 
   return () => clearTimeout(timer);
 }, []);
+useEffect(() => {
+  fetchNotifications();
+}, []);
+
+const fetchNotifications = async () => {
+  try {
+    const mobileUser = JSON.parse(
+      localStorage.getItem("mobile_user") || "{}"
+    );
+
+    if (!mobileUser?.id) return;
+
+    const response = await fetch(
+      `${API_PATH}/action_layer.php`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        credentials: "include",
+        body: new URLSearchParams({
+          action: "get_notifications",
+          user_id: String(mobileUser.id),
+        }).toString(),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.status) {
+      setNotifications(data.notifications || []);
+    }
+  } catch (error) {
+    console.error("Notification error:", error);
+  }
+};
+
+
+const readNotification = async (notificationId: string) => {
+  try {
+    const mobileUser = JSON.parse(
+      localStorage.getItem("mobile_user") || "{}"
+    );
+
+    if (!mobileUser?.id) return;
+
+    const response = await fetch(`${API_PATH}/action_layer.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      credentials: "include",
+      body: new URLSearchParams({
+        action: "read_notification",
+        notification_id: notificationId,
+        user_id: String(mobileUser.id),
+      }).toString(),
+    });
+
+    const data = await response.json();
+
+    if (!data.status) {
+      console.error("Notification read failed:", data.message);
+      return;
+    }
+
+    // UI se immediately remove
+    setNotifications((prev) =>
+      prev.filter(
+        (notification) => notification.id !== notificationId
+      )
+    );
+
+  } catch (error) {
+    console.error("Read notification error:", error);
+  }
+};
   const unreadCount = notifications.filter((notification) => !notification.read).length;
 
   return (
@@ -236,7 +270,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
               )}
             </div>
 
-            {/* Notifications
+            {/* Notifications */}
             <div className="relative">
               <button
                 type="button"
@@ -264,8 +298,9 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 open={notifOpen}
                 notifications={notifications}
                 onClose={() => setNotifOpen(false)}
+                onMarkRead={readNotification}
               />
-            </div> */}
+            </div>
 
             {/* Profile / menu */}
             <button

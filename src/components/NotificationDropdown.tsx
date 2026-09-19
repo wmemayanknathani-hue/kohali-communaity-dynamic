@@ -1,4 +1,5 @@
 import { ChevronRight, X, BellOff, } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 export type NotificationCategory =
   | "सूचना"        // Latest notices
@@ -6,9 +7,12 @@ export type NotificationCategory =
   | "स्मरणपत्र"      // Upcoming event reminders
   | "लाइव्ह"          // Live event notifications
   | "घोषणा"  // Community announcements
+  | "व्यवसाय"    // Business promotions
   | "अपडेट"        // Important updates
-  | "सेवा";      // Service-related notifications
-
+  | "सेवा"     // Service-related notifications
+  | "फोटो"      // Photo-related notifications
+  | "व्हिडिओ"    // Video-related notifications
+  | "पुस्तक"    // Book-related notifications
 export type Notification = {
   id: string;
   title: string;
@@ -16,6 +20,7 @@ export type Notification = {
   date: string;      // display label, e.g. "आज", "काल", "१२ ऑग"
   category: NotificationCategory;
   read: boolean;
+  type:String;
 };
 
 const categoryLabel: Record<NotificationCategory, string> = {
@@ -26,6 +31,10 @@ const categoryLabel: Record<NotificationCategory, string> = {
   घोषणा: "घोषणा",
   अपडेट: "अपडेट",
   सेवा: "सेवा",
+  व्यवसाय: "व्यवसाय",
+  फोटो: "फोटो",
+  व्हिडिओ: "व्हिडिओ",
+  पुस्तक: "पुस्तक",
 };
 
 // One accent color per category 
@@ -37,6 +46,10 @@ const categoryAccent: Record<NotificationCategory, string> = {
   घोषणा: "var(--gold-500)",
   अपडेट: "var(--maroon-500,var(--maroon-700))",
   सेवा: "var(--maroon-800)",
+  व्यवसाय: "var(--gold-500)",
+  फोटो: "var(--maroon-800)",
+  व्हिडिओ: "var(--gold-500)",
+  पुस्तक: "var(--maroon-800)",  
 };
 
 function groupByDate(notifications: Notification[]) {
@@ -61,6 +74,53 @@ export function NotificationDropdown({
   onMarkRead?: (id: string) => void;
   onMarkAllRead?: () => void;
 }) {
+  const navigate = useNavigate();
+const handleNotificationClick = async (notification: Notification) => {
+  await onMarkRead?.(notification.id);
+  switch (notification.type) {
+    case "business_promotion":
+      navigate("/business");
+      break;
+
+    case "live_program":
+      navigate("/live-events");
+      break;
+
+    case "notices":
+      navigate("/notices");
+      break;
+
+    case "events":
+      navigate("/live-events");
+      break;
+
+    case "photos":
+      navigate("/photo-gallery");
+      break;
+
+    case "videos":
+      navigate("/video-gallery");
+      break;
+
+    case "books":
+      navigate("/books");
+      break;
+
+    case "commite":
+      navigate("/committee");
+      break;
+
+    case "family_member":
+      navigate("/family");
+      break;
+
+    default:
+      break;
+  }
+  onClose();
+};
+
+
   if (!open) return null;
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -123,7 +183,7 @@ export function NotificationDropdown({
                 {group.items.map((n) => (
                   <button
                     key={n.id}
-                    onClick={() => onMarkRead?.(n.id)}
+                  onClick={() => handleNotificationClick(n)}
                     className={`group flex w-full cursor-pointer gap-3 px-4 py-3 text-left transition-colors duration-150 ${
                       !n.read ? "bg-[var(--gold-100)]/35" : "bg-transparent"
                     } hover:bg-[var(--gold-100)]/50`}

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 declare global {
   interface Window {
@@ -9,21 +8,22 @@ declare global {
 }
 
 const GoogleTranslate = () => {
-  const location = useLocation();
-
-  // Initialize Google Translate
   useEffect(() => {
-    window.googleTranslateElementInit = () => {
+    const initGoogleTranslate = () => {
       if (!window.google?.translate) {
         return;
       }
 
-      // Avoid creating multiple instances
       const element = document.getElementById(
         "google_translate_element"
       );
 
-      if (element && element.innerHTML !== "") {
+      if (!element) {
+        return;
+      }
+
+      // Already initialized
+      if (element.dataset.initialized === "true") {
         return;
       }
 
@@ -35,75 +35,47 @@ const GoogleTranslate = () => {
         },
         "google_translate_element"
       );
+
+      element.dataset.initialized = "true";
     };
 
-    if (!document.getElementById("google-translate-script")) {
-      const script = document.createElement("script");
+    window.googleTranslateElementInit = initGoogleTranslate;
 
-      script.id = "google-translate-script";
-      script.src =
-        "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      script.async = true;
-
-      document.body.appendChild(script);
-    } else if (window.google?.translate) {
-      window.googleTranslateElementInit();
-    }
-  }, []);
-
-  // Re-apply language whenever route changes
-  useEffect(() => {
-    const savedLanguage =
-      localStorage.getItem("language") || "mr";
-
-    if (savedLanguage === "mr") {
+    // Google already loaded
+    if (window.google?.translate) {
+      initGoogleTranslate();
       return;
     }
 
-    const applyLanguage = () => {
-      const googleSelect = document.querySelector(
-        ".goog-te-combo"
-      ) as HTMLSelectElement | null;
+    // Script already exists
+    if (document.getElementById("google-translate-script")) {
+      return;
+    }
 
-      if (!googleSelect) {
-        return false;
-      }
+    const script = document.createElement("script");
 
-      if (googleSelect.value !== savedLanguage) {
-        googleSelect.value = savedLanguage;
-        googleSelect.dispatchEvent(new Event("change"));
-      }
+    script.id = "google-translate-script";
+    script.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
 
-      return true;
-    };
-
-    // React route render hone ke baad Google Translate ko apply karo
-    const timer1 = setTimeout(() => {
-      applyLanguage();
-    }, 300);
-
-    const timer2 = setTimeout(() => {
-      applyLanguage();
-    }, 800);
-
-    const timer3 = setTimeout(() => {
-      applyLanguage();
-    }, 1500);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, [location.pathname]);
+    document.body.appendChild(script);
+  }, []);
 
   return (
     <div
-      id="google_translate_element"
+      id="google_translate_wrapper"
       style={{
-        display: "none",
+        position: "fixed",
+        left: "-10000px",
+        top: "-10000px",
+        width: "1px",
+        height: "1px",
+        overflow: "hidden",
       }}
-    />
+    >
+      <div id="google_translate_element" />
+    </div>
   );
 };
 
