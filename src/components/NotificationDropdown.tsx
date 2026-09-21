@@ -74,7 +74,7 @@ export function NotificationDropdown({
   onMarkRead?: (id: string) => void;
   onMarkAllRead?: () => void;
 }) {
-  const navigate = useNavigate();
+const navigate = useNavigate();
 const handleNotificationClick = async (notification: Notification) => {
   await onMarkRead?.(notification.id);
   switch (notification.type) {

@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   useParams,
+  useLocation,
 } from "react-router-dom";
 
 import { MobileLayout } from "./components/layouts/MobileLayout";
@@ -51,12 +52,16 @@ function BookDetailRoute() {
 
   return <BookDetail id={bookId} />;
 }
+function AppContent() {
+  const location = useLocation();
 
-export default function App() {
+  const isLoginPage =
+    location.pathname === "/" ||
+    location.pathname === "/login";
+
   return (
     <>
-    <BrowserRouter>
-    <GoogleTranslate />
+      {!isLoginPage && <GoogleTranslate />}
       <Routes>
         {/* login sits outside MobileLayout — no bottom nav / sidebar here */}
         <Route path="/" element={<LoginPage />} />
@@ -84,7 +89,13 @@ export default function App() {
           <Route path="/video-gallery" element={<VideoGallery />} />
         </Route>
       </Routes>
-    </BrowserRouter>
     </>
+  );
+}
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }

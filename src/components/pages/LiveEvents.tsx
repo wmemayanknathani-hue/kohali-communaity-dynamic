@@ -27,6 +27,7 @@ interface UpcomingItem {
   host: string;
   promoDuration?: string;
   youtubeId?: string;
+  description?: string;
 }
 
 // const YT = {
@@ -465,7 +466,7 @@ export default function LiveEvents() {
                 </h2>
 
                 <p className="mt-1 text-sm text-[var(--gold-100)] md:text-[15px]">
-                  Raksha Bandhan Get-together
+                  {liveEvent?.description}
                 </p>
 
                 {/* DETAILS */}

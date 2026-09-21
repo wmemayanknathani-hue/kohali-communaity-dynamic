@@ -476,7 +476,7 @@ export default function BusinessPromotion() {
       setLoading(false);
     }
   };
-
+   let userData=JSON.parse(localStorage.getItem('mobile_user') || '{}');
   return (
     <form ref={formRef} className="min-h-screen w-full bg-[var(--cream)] pb-10 text-[var(--ink)]">
       <div className="mx-auto max-w-md px-4 pt-5 sm:max-w-lg md:max-w-3xl md:px-8 lg:max-w-4xl">
@@ -545,19 +545,19 @@ export default function BusinessPromotion() {
             <InfoRow
               Icon={User}
               label="Name"
-              value="Rajesh Kohali"
+              value={userData.name}
             />
 
             <InfoRow
               Icon={Phone}
               label="Phone"
-              value="+91 98765 43210"
+              value={userData.phone_number}
             />
 
             <InfoRow
               Icon={MapPin}
               label="Address"
-              value="Nagpur, Maharashtra"
+              value={userData.address}
               last
             />
 
