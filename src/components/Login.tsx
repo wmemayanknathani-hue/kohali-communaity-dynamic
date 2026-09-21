@@ -121,7 +121,7 @@ export function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const [userId,setUserId]= useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const mobileValid = /^\d{10}$/.test(mobile);
@@ -178,6 +178,7 @@ export function LoginPage() {
         otpInputRefs.current[0]?.focus();
         localStorage.clear();
         localStorage.setItem("mobile_user", JSON.stringify(data.data));
+        setUserId(data.data.id);
         localStorage.setItem("auth_settings", data.settings);
         localStorage.setItem("is_device_login", "1");
         localStorage.setItem("otp_status", "pending");
@@ -201,6 +202,7 @@ export function LoginPage() {
   function handleChangeNumber() {
     setMemberStep("mobile");
     setOtp(Array(OTP_LENGTH).fill(""));
+    console.log(otp);
     setOtpError("");
     if (resendTimerRef.current) clearInterval(resendTimerRef.current);
     setResendIn(0);
@@ -239,12 +241,42 @@ export function LoginPage() {
     otpInputRefs.current[focusIndex]?.focus();
   }
 
-  function handleVerifyOtp() {
-    if (!otpValid || isLoading) return;
-    setIsLoading(true);
-    navigate("/home", { replace: true });
-    localStorage.setItem("otp_status", "done");
+ async function handleVerifyOtp() {
+  if (!otpValid || isLoading) return;
+
+  setIsLoading(true);
+
+  const otpNew = otp.join("");
+
+  try {
+    const response = await fetch(`${API_PATH}/action_layer.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        action: "verify_otp",
+        user_id: userId,
+        otp: otpNew,
+      }),
+    });
+    const result = await response.json();
+    console.log("Verify OTP Response:", result);
+
+    if (result.status === true || result.success === true) {
+      localStorage.setItem("otp_status", "done");
+
+      navigate("/home", { replace: true });
+    } else {
+      setOtpError(result.msg);
+    }
+  } catch (error) {
+    console.error("Verify OTP Error:", error);
+  } finally {
+    setIsLoading(false);
   }
+}
 
   const API_PATH =
     window.location.hostname === "localhost" || window.location.hostname === "192.168.1.62"
