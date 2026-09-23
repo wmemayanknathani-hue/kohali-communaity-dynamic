@@ -28,6 +28,9 @@ import PhotoGallery from "./components/pages/PhotoGallery";
 import VideoGallery from "./components/pages/VideoGallery";
 import Events from "./components/pages/Events";
 import GoogleTranslate from "./components/GoogleTranslate";
+import { TermsConditions } from "./components/pages/TermsConditions";
+import { PrivacyPolicy } from "./components/pages/PrivacyPolicy";
+import { ChildSafety } from "./components/pages/ChildSafety";
 // import EventDetails from "./components/pages/EventDetails";
 // import { getBookById } from "./data/books";
 
@@ -57,7 +60,10 @@ function AppContent() {
 
   const isLoginPage =
     location.pathname === "/" ||
-    location.pathname === "/login";
+    location.pathname === "/login" ||
+    location.pathname === "/terms" ||
+    location.pathname === "/privacy" ||
+    location.pathname === "/child-safety";
 
   return (
     <>
@@ -66,6 +72,12 @@ function AppContent() {
         {/* login sits outside MobileLayout — no bottom nav / sidebar here */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
+
+        {/* public policy pages — must stay outside MobileLayout's auth guard
+            so they're reachable without logging in (app store review links) */}
+        <Route path="/terms" element={<TermsConditions />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/child-safety" element={<ChildSafety />} />
 
         <Route element={<MobileLayout />}>
           <Route path="/home" element={<Home />} />
