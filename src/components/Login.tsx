@@ -1,4 +1,4 @@
-import { useRef, useState,useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 // 
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/kohali-logo.png";
@@ -126,7 +126,7 @@ type PolicyDoc = {
   effectiveDate: string;
   appName: string;
   organization: string;
-  extra?: string; 
+  extra?: string;
   sections: PolicySection[];
 };
 
@@ -711,7 +711,7 @@ function PolicyModal({
             ))}
           </div>
 
-          
+
         </div>
 
         {/* sticky footer */}
@@ -755,24 +755,24 @@ export function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [userId,setUserId]= useState("");
+  const [userId, setUserId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const mobileValid = /^\d{10}$/.test(mobile);
   const adminValid = username.trim().length > 0 && password.length > 0;
   const otpValid = otp.every((d) => d.length === 1);
 
-    useEffect(() => {
+  useEffect(() => {
 
-      const otpStatus = localStorage.getItem("otp_status");
-      const isDeviceLogin = localStorage.getItem("is_device_login");
-      // alert(otpStatus)
-      if (
-          otpStatus === "done" &&
-          isDeviceLogin === "1"
-      ) {
-          navigate("/home", { replace: true });
-      }
+    const otpStatus = localStorage.getItem("otp_status");
+    const isDeviceLogin = localStorage.getItem("is_device_login");
+    // alert(otpStatus)
+    if (
+      otpStatus === "done" &&
+      isDeviceLogin === "1"
+    ) {
+      navigate("/home", { replace: true });
+    }
   }, [navigate]);
 
   function startResendTimer() {
@@ -825,12 +825,41 @@ export function LoginPage() {
     }
   }
 
-  function handleResendOtp() {
+  async function handleResendOtp() {
     if (resendIn > 0 || isLoading) return;
     setOtp(Array(OTP_LENGTH).fill(""));
     setOtpError("");
     startResendTimer();
     otpInputRefs.current[0]?.focus();
+    // const otpNew = otp.join("");
+    try {
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          action: "resend_otp",
+          user_id: userId,
+          mobile: mobile,
+        }),
+      });
+      const result = await response.json();
+      console.log("Verify OTP Response:", result);
+
+      if (result.status === true || result.success === true) {
+        localStorage.setItem("otp_status", "done");
+
+        // navigate("/home", { replace: true });
+      } else {
+        // setOtpError(result.msg);
+      }
+    } catch (error) {
+      console.error("Resend OTP Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function handleChangeNumber() {
@@ -875,42 +904,42 @@ export function LoginPage() {
     otpInputRefs.current[focusIndex]?.focus();
   }
 
- async function handleVerifyOtp() {
-  if (!otpValid || isLoading) return;
+  async function handleVerifyOtp() {
+    if (!otpValid || isLoading) return;
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  const otpNew = otp.join("");
+    const otpNew = otp.join("");
 
-  try {
-    const response = await fetch(`${API_PATH}/action_layer.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        action: "verify_otp",
-        user_id: userId,
-        otp: otpNew,
-      }),
-    });
-    const result = await response.json();
-    console.log("Verify OTP Response:", result);
+    try {
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          action: "verify_otp",
+          user_id: userId,
+          otp: otpNew,
+        }),
+      });
+      const result = await response.json();
+      console.log("Verify OTP Response:", result);
 
-    if (result.status === true || result.success === true) {
-      localStorage.setItem("otp_status", "done");
+      if (result.status === true || result.success === true) {
+        localStorage.setItem("otp_status", "done");
 
-      navigate("/home", { replace: true });
-    } else {
-      setOtpError(result.msg);
+        navigate("/home", { replace: true });
+      } else {
+        setOtpError(result.msg);
+      }
+    } catch (error) {
+      console.error("Verify OTP Error:", error);
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error("Verify OTP Error:", error);
-  } finally {
-    setIsLoading(false);
   }
-}
 
   const API_PATH =
     window.location.hostname === "localhost" || window.location.hostname === "192.168.1.62"
@@ -1010,11 +1039,10 @@ export function LoginPage() {
               role="tab"
               aria-selected={lang === "mr"}
               onClick={() => setLang("mr")}
-              className={`rounded-full px-2.5 py-1 text-[10.5px] font-bold transition-colors duration-150 ${
-                lang === "mr"
+              className={`rounded-full px-2.5 py-1 text-[10.5px] font-bold transition-colors duration-150 ${lang === "mr"
                   ? "bg-[var(--gold-300)] text-[var(--maroon-950)]"
                   : "text-[var(--gold-100)]/80 hover:text-[var(--gold-100)]"
-              }`}
+                }`}
             >
               मराठी
             </button>
@@ -1022,11 +1050,10 @@ export function LoginPage() {
               role="tab"
               aria-selected={lang === "en"}
               onClick={() => setLang("en")}
-              className={`rounded-full px-2.5 py-1 text-[10.5px] font-bold transition-colors duration-150 ${
-                lang === "en"
+              className={`rounded-full px-2.5 py-1 text-[10.5px] font-bold transition-colors duration-150 ${lang === "en"
                   ? "bg-[var(--gold-300)] text-[var(--maroon-950)]"
                   : "text-[var(--gold-100)]/80 hover:text-[var(--gold-100)]"
-              }`}
+                }`}
             >
               EN
             </button>
@@ -1043,11 +1070,10 @@ export function LoginPage() {
                 role="tab"
                 aria-selected={tab === "member"}
                 onClick={() => switchTab("member")}
-                className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-[13px] font-bold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${
-                  tab === "member"
+                className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-[13px] font-bold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${tab === "member"
                     ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow-[var(--shadow-gold)]"
                     : "text-[var(--maroon-800)] hover:bg-white/60"
-                }`}
+                  }`}
               >
                 <Phone size={14} />
                 {t.member}
@@ -1056,11 +1082,10 @@ export function LoginPage() {
                 role="tab"
                 aria-selected={tab === "admin"}
                 onClick={() => switchTab("admin")}
-                className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-[13px] font-bold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${
-                  tab === "admin"
+                className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-[13px] font-bold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${tab === "admin"
                     ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow-[var(--shadow-gold)]"
                     : "text-[var(--maroon-800)] hover:bg-white/60"
-                }`}
+                  }`}
               >
                 <ShieldCheck size={14} />
                 {t.admin}
@@ -1082,11 +1107,10 @@ export function LoginPage() {
                   {t.mobileNumber}
                 </label>
                 <div
-                  className={`flex items-center gap-2 rounded-xl border bg-[var(--cream)] px-3 py-3 transition-colors duration-150 ${
-                    mobile.length > 0 && !mobileValid
+                  className={`flex items-center gap-2 rounded-xl border bg-[var(--cream)] px-3 py-3 transition-colors duration-150 ${mobile.length > 0 && !mobileValid
                       ? "border-red-400"
                       : "border-[var(--gold-500)]/35 focus-within:border-[var(--gold-500)]"
-                  }`}
+                    }`}
                 >
                   <span className="text-[13.5px] font-bold text-[var(--maroon-800)] pr-2 border-r border-[var(--gold-500)]/30">
                     +91
@@ -1168,11 +1192,10 @@ export function LoginPage() {
                       value={digit}
                       onChange={(e) => handleOtpDigitChange(i, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                      className={`w-[44px] h-[52px] shrink-0 text-center text-[19px] font-extrabold rounded-xl border bg-[var(--cream)] text-[var(--maroon-950)] outline-none shadow-[inset_0_1px_3px_rgba(90,10,20,0.08)] transition-all duration-150 ${
-                        otpError
+                      className={`w-[44px] h-[52px] shrink-0 text-center text-[19px] font-extrabold rounded-xl border bg-[var(--cream)] text-[var(--maroon-950)] outline-none shadow-[inset_0_1px_3px_rgba(90,10,20,0.08)] transition-all duration-150 ${otpError
                           ? "border-red-400"
                           : "border-[var(--gold-500)]/35 focus:border-[var(--gold-500)] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.18)]"
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -1224,11 +1247,10 @@ export function LoginPage() {
                 <button
                   aria-pressed={adminRole === "master"}
                   onClick={() => setAdminRole("master")}
-                  className={`flex flex-col items-center gap-2 rounded-xl border py-3.5 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${
-                    adminRole === "master"
+                  className={`flex flex-col items-center gap-2 rounded-xl border py-3.5 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${adminRole === "master"
                       ? "border-[var(--gold-500)] bg-[var(--gold-100)]"
                       : "border-[var(--gold-500)]/25 bg-transparent hover:border-[var(--gold-500)]/50 hover:bg-[var(--gold-100)]/50"
-                  }`}
+                    }`}
                 >
                   <span className="grid h-9 w-9 place-items-center rounded-full bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))]">
                     <ShieldCheck size={16} className="text-[var(--gold-300)]" />
@@ -1238,11 +1260,10 @@ export function LoginPage() {
                 <button
                   aria-pressed={adminRole === "survey"}
                   onClick={() => setAdminRole("survey")}
-                  className={`flex flex-col items-center gap-2 rounded-xl border py-3.5 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${
-                    adminRole === "survey"
+                  className={`flex flex-col items-center gap-2 rounded-xl border py-3.5 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${adminRole === "survey"
                       ? "border-[var(--gold-500)] bg-[var(--gold-100)]"
                       : "border-[var(--gold-500)]/25 bg-transparent hover:border-[var(--gold-500)]/50 hover:bg-[var(--gold-100)]/50"
-                  }`}
+                    }`}
                 >
                   <span className="grid h-9 w-9 place-items-center rounded-full bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))]">
                     <ClipboardList size={16} className="text-[var(--gold-300)]" />
