@@ -18,7 +18,7 @@ import {
   Check,
   User,
   Smartphone,
-  AtSign,
+  
   MapPin,
   Navigation,
   Landmark,
@@ -447,7 +447,7 @@ export default function Support() {
                     </div>
 
                     {/* Email */}
-                    <div>
+                    {/* <div>
                       <FieldLabel label="Email" />
 
                       <TextInput
@@ -456,7 +456,7 @@ export default function Support() {
                         name="email"
                         placeholder="you@example.com"
                       />
-                    </div>
+                    </div> */}
 
                     {/* Preferred Contact Method */}
                     <div>

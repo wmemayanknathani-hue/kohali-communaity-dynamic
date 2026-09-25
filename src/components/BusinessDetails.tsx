@@ -2,6 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import SectionHeader from "../components/SectionHeader";
 import { useNavigate } from "react-router-dom";
+// import type { IconType } from "react-icons";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube,
+} from "react-icons/fa";
 import {
   Phone, Globe, Mail, Share2,
   MapPin, PlayCircle, Star, Navigation, User, BadgeCheck, ChevronLeft,
@@ -13,11 +19,15 @@ import {
   getBusinesses,
   toWhatsAppHref,
   toWebsiteHref,
-  toMailHref,
+  // toMailHref,
   toDirectionsHref,
   type Business,
 } from "../data/business";
 import { FaWhatsapp } from "react-icons/fa";
+// interface SocialItem {
+//   Icon: IconType;
+//   label: string;
+// }
 
 function useRevealVisible() {
   const ref = useRef<HTMLDivElement>(null);
@@ -110,7 +120,7 @@ export default function BusinessDetailPage() {
     ? getBusinessById(businesses, businessId)
     : undefined;
 
-    if (loading) {
+  if (loading) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center bg-[var(--cream)]">
         <p className="text-sm text-[var(--text-muted)]">
@@ -151,6 +161,9 @@ export default function BusinessDetailPage() {
     whatsapp,
     email,
     website,
+    instagram,
+    facebook,
+    youtube,
     adType,
     posterUrl,
     youtubeUrl,
@@ -353,8 +366,44 @@ export default function BusinessDetailPage() {
                     label="Email"
                     last={!email || true}
                   >
-                    <a href={toMailHref(email)} className="text-[var(--maroon-800)] no-underline">
+                    <a href={toWebsiteHref(email)} className="text-[var(--maroon-800)] no-underline">
                       {email}
+                    </a>
+                  </DetailRow>
+                )}
+
+                {instagram && (
+                  <DetailRow
+                    icon={<FaInstagram size={16} className="text-[var(--maroon-800)]" />}
+                    label="Instagram"
+                    last={!instagram || true}
+                  >
+                    <a href={toWebsiteHref(instagram)} className="text-[var(--maroon-800)] no-underline">
+                      {instagram}
+                    </a>
+                  </DetailRow>
+                )}
+
+                {facebook && (
+                  <DetailRow
+                    icon={<FaFacebookF size={16} className="text-[var(--maroon-800)]" />}
+                    label="Facebook"
+                    last={!facebook || true}
+                  >
+                    <a href={toWebsiteHref(facebook)} className="text-[var(--maroon-800)] no-underline">
+                      {facebook}
+                    </a>
+                  </DetailRow>
+                )}
+
+                  {youtube && (
+                  <DetailRow
+                    icon={<FaYoutube size={16} className="text-[var(--maroon-800)]" />}
+                    label="Youtube"
+                    last={!youtube || true}
+                  >
+                    <a href={toWebsiteHref(youtube)} className="text-[var(--maroon-800)] no-underline">
+                      {youtube}
                     </a>
                   </DetailRow>
                 )}

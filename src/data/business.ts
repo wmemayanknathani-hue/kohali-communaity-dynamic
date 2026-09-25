@@ -24,6 +24,9 @@ export interface Business {
   adTitle?: string;
   adDescription?: string;
   declaration?: string;
+  instagram?:string;
+  facebook?:string;
+  youtube?:string;
 }
 
 export function getYouTubeId(url: string): string | null {
@@ -118,14 +121,16 @@ export async function getBusinesses(): Promise<Business[]> {
       adTitle: item.adTitle || "",
       adDescription: item.adDescription || "",
       declaration: item.declaration || "",
+      instagram:item.instagram || "",
+      facebook:item.facebook || "",
+      youtube:item.youtube || "",
+
     }));
   } catch (error) {
     console.error("Failed to fetch businesses:", error);
     return [];
   }
 }
-
-
 export function getBusinessById(
   businesses: Business[],
   id: string
