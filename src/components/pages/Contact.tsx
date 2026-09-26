@@ -10,7 +10,7 @@ import {
   Navigation,
   CheckCircle2,
   User,
-  AtSign,
+  // AtSign,
   Smartphone,
   Type,
   MessageSquare, ChevronLeft,
@@ -421,16 +421,17 @@ export default function Contact() {
                   placeholder="+91 00000 00000"
                   type="tel"
                   required
+                  colSpan
                 />
 
-                <Field
+                {/* <Field
                   Icon={AtSign}
                   name="email"
                   label="Email"
                   placeholder="you@example.com"
                   type="email"
                   required
-                />
+                /> */}
 
                 <Field
                   Icon={Type}

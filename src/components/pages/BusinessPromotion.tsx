@@ -402,7 +402,9 @@ export default function BusinessPromotion() {
       "business_location",
       "business_address",
       "website",
-      "social_media_links",
+      "instagram",
+      "facebook",
+      "youtube",
       "advertisement_title",
       "advertisement_description",
     ];
@@ -462,10 +464,10 @@ export default function BusinessPromotion() {
         setVideoFile(null);
         setAdType("poster");
 
-        setTimeout(() => {
-          setSubmitted(false);
-          navigate("/home");
-        }, 3000);
+        // setTimeout(() => {
+        //   setSubmitted(false);
+        //   navigate("/home");
+        // }, 3000);
       } else {
         alert(result.message || "Submission failed. Please try again.");
       }
@@ -669,10 +671,23 @@ export default function BusinessPromotion() {
             {/* Social Media */}
             <Field
               Icon={Link2}
-              label="Social Media Links"
-              placeholder="Instagram / Facebook profile links"
-              colSpan
-              name="social_media_links"
+              label="Instagram Link"
+              placeholder="Instagram profile links"
+              name="instagram"
+            />
+
+            <Field
+              Icon={Link2}
+              label="Facebook Link"
+              placeholder="Facebook profile links"
+              name="facebook"
+            />
+
+            <Field
+              Icon={Link2}
+              label="Youtube Link"
+              placeholder="Youtube profile links"
+              name="youtube"
             />
 
           </div>
