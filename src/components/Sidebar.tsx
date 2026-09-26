@@ -13,6 +13,7 @@ import {
   Globe,
   LogOut,
   Landmark,
+  Trophy,
   // ChevronDown,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +24,7 @@ const primaryLinks = [
   { to: "/live-events", label: "Live Events", icon: Radio },
   { to: "/services", label: "Services", icon: Grid3x3 },
   { to: "/stats", label: "Stats", icon: BarChart3 },
+  { to: "/success-stories", label: "Success Stories", icon: Trophy },
   { to: "/business-promotion", label: "Business Promotion", icon: Store },
 ];
 

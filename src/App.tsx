@@ -31,6 +31,8 @@ import GoogleTranslate from "./components/GoogleTranslate";
 import { TermsConditions } from "./components/pages/TermsConditions";
 import { PrivacyPolicy } from "./components/pages/PrivacyPolicy";
 import { ChildSafety } from "./components/pages/ChildSafety";
+import SuccessStories from "./components/pages/SuccessStories";
+import SuccessstoriesDetail from "./components/pages/SuccessstoriesDetail";
 // import EventDetails from "./components/pages/EventDetails";
 // import { getBookById } from "./data/books";
 
@@ -99,6 +101,8 @@ function AppContent() {
           <Route path="/events" element={<Events />} />
           <Route path="/photo-gallery" element={<PhotoGallery />} />
           <Route path="/video-gallery" element={<VideoGallery />} />
+          <Route path="/success-stories" element={<SuccessStories />} />
+          <Route path="/success-stories/:storySlug" element={<SuccessstoriesDetail />} />
         </Route>
       </Routes>
     </>
