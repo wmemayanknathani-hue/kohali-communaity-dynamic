@@ -20,6 +20,7 @@ export interface CommitteeMember {
   shortIntro?: string;
   responsibilities?: string[];
   phone?: string;
+  wp_number?: string;
   email?: string;
   contactPublic: boolean;
 }
@@ -472,6 +473,7 @@ export default function ExecutiveCommittee() {
                   ? member.responsibilities
                   : [],
               phone: member.phone || "",
+              wp_number: member.wp_number || "",
               email: member.email || "",
               contactPublic:
                 Number(member.contactPublic ?? member.contact_public ?? 0) ===

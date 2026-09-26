@@ -24,6 +24,7 @@ interface CommitteeMemberWithResponsibilities {
   shortIntro: string;
   contactPublic?: boolean;
   phone?: string;
+  wp_number?: string;
   email?: string;
   responsibilities?: string[];
 }
@@ -286,7 +287,7 @@ export default function CommitteeDetail() {
                     Call
                   </a>
                   <a
-                    href={`https://wa.me/${member.phone.replace(/[^0-9]/g, "")}`}
+                    href={`https://wa.me/${member.wp_number}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-1.5 rounded-xl border border-[var(--gold-300)] bg-white px-3 py-2.5 text-sm font-bold text-[var(--maroon-900)] shadow-sm transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.97]"

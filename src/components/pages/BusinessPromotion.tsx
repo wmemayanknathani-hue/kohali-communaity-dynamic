@@ -17,7 +17,7 @@ import {
   Link2,
   Image as ImageIcon,
   Video,
-  Layers,
+  // Layers,
   Send,
   CheckCircle2,
   ShieldCheck,
@@ -145,11 +145,11 @@ const AD_TYPES: AdType[] = [
     label: "Video",
     Icon: Video,
   },
-  {
-    key: "both",
-    label: "Poster + Video",
-    Icon: Layers,
-  },
+  // {
+  //   key: "both",
+  //   label: "Poster + Video",
+  //   Icon: Layers,
+  // },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -464,10 +464,10 @@ export default function BusinessPromotion() {
         setVideoFile(null);
         setAdType("poster");
 
-        // setTimeout(() => {
-        //   setSubmitted(false);
-        //   navigate("/home");
-        // }, 3000);
+        setTimeout(() => {
+          setSubmitted(false);
+          navigate("/home");
+        }, 3000);
       } else {
         alert(result.message || "Submission failed. Please try again.");
       }

@@ -227,7 +227,23 @@ export default function BusinessDetailPage() {
                   </div>
                 ) : posterUrl ? (
                   <div className="relative aspect-[4/3] w-full sm:aspect-video">
-                    <img src={posterUrl} alt={name} className="h-full w-full object-cover" />
+                    {adType?.toLowerCase() === "video" ? (
+                      <video
+                        src={posterUrl}
+                        className="h-full w-full object-cover"
+                        autoPlay
+                        muted
+                        controls
+                        loop
+                        playsInline
+                      />
+                    ) : (
+                      <img
+                        src={posterUrl}
+                        alt={name}
+                        className="h-full w-full object-cover"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(59,10,22,0.75)_0%,rgba(59,10,22,0)_55%)]" />
                   </div>
                 ) : (
@@ -396,7 +412,7 @@ export default function BusinessDetailPage() {
                   </DetailRow>
                 )}
 
-                  {youtube && (
+                {youtube && (
                   <DetailRow
                     icon={<FaYoutube size={16} className="text-[var(--maroon-800)]" />}
                     label="Youtube"

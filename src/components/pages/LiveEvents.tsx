@@ -235,7 +235,7 @@ function VideoLightbox({ youtubeId, title, onClose }: { youtubeId: string; title
           <button
             onClick={onClose}
             aria-label="Close"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[var(--gold-200)] transition-colors hover:bg-white/10"
+            className="flex h-7 w-7 shrink-0 items-center bg-white justify-center rounded-full text-[var(--gold-200)] transition-colors hover:bg-white/50"
           >
             <CloseIcon className="h-4 w-4" />
           </button>

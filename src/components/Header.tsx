@@ -166,7 +166,6 @@ const readNotification = async (notificationId: string) => {
           {/* Brand — click to go home */}
           <button
             type="button"
-            onClick={() => navigate("/home")}
             aria-label="Go to home page"
             className="flex min-w-0 flex-1 items-center gap-2 rounded-xl py-1 text-left transition-opacity duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-500)]/60 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--cream)] active:opacity-80 sm:gap-2.5 md:gap-3"
           >
@@ -183,7 +182,7 @@ const readNotification = async (notificationId: string) => {
             </div>
 
             <div className="min-w-0">
-              <p className="kc-font-display truncate text-[12px] font-extrabold leading-tight tracking-tight text-[var(--maroon-900)] xs:text-[13px] sm:text-[16px] md:text-[18px] lg:text-[19px]">
+              <p onClick={() => navigate("/home")}  className="kc-font-display cursor-pointer truncate text-[12px] font-extrabold leading-tight tracking-tight text-[var(--maroon-900)] xs:text-[13px] sm:text-[16px] md:text-[18px] lg:text-[19px]">
                 कोहळी समाज विकास मंडळ
               </p>
 

@@ -39,16 +39,28 @@ export function BusinessCard({ business }: BusinessCardProps) {
       >
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--maroon-800)]">
           {mediaSrc ? (
-            <img
-              src={mediaSrc}
-              alt={displayName}
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs font-semibold text-[var(--gold-300)]">
-              {name}
-            </div>
+            adType?.toLowerCase() === "video" ? (
+              <video
+                src={mediaSrc}
+                className="absolute inset-0 h-full w-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+              />
+            ) : (
+              <img
+                src={mediaSrc}
+                alt={displayName}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            )
+          )  : (
+          <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs font-semibold text-[var(--gold-300)]">
+            {name}
+          </div>
           )}
 
           {/* category chip — top-left, no overlap with play button */}
