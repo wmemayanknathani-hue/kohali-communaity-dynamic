@@ -1,16 +1,30 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ArrowRight, Calendar, MapPin } from "lucide-react";
-import { successStories, getInitial } from "../../data/success-stories";
+import {
+  getSuccessStories,
+  getInitial,
+} from "../../data/success-stories";
+import type{  SuccessStory  } from "../../data/success-stories";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 export default function SuccessStories() {
   const [mounted, setMounted] = useState(false);
-
+  const [successStories, setSuccessStories] = useState<SuccessStory[]>([])
   useEffect(() => {
     const t = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(t);
   }, []);
+
+    useEffect(() => {
+    const loadSuccessStories = async () => {
+      const data = await getSuccessStories();
+      setSuccessStories(data);
+    };
+
+    loadSuccessStories();
+  }, []);
+
 const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[var(--cream)]">

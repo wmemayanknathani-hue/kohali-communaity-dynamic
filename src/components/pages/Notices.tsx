@@ -456,7 +456,7 @@ const getNotifications = async () => {
                               {n.description}
                             </p>
 
-                            {n.attachment && (
+                            {n.attachment && (  
                               <a
                                 href={n.attachmentUrl ?? "#"}
                                 target="_blank"

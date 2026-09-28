@@ -9,30 +9,57 @@ import {
   Quote,
   ArrowRight,
 } from "lucide-react";
-import { successStories, getStoryBySlug, getInitial } from "../../data/success-stories";
+import {
+  getSuccessStories,
+  getInitial,
+} from "../../data/success-stories";
+import type { SuccessStory } from "../../data/success-stories";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
-
 export default function SuccessStoryDetail() {
   const { storySlug } = useParams<{ storySlug: string }>();
-  const story = getStoryBySlug(storySlug ?? "");
+  const navigate = useNavigate();
+
+  const [story, setStory] = useState<SuccessStory | undefined>();
+  const [successStories, setSuccessStories] = useState<SuccessStory[]>([]);
   const [mounted, setMounted] = useState(false);
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
     setMounted(false);
     setSlide(0);
+
     const t = requestAnimationFrame(() => setMounted(true));
+
     return () => cancelAnimationFrame(t);
+  }, [storySlug]);
+
+  useEffect(() => {
+    const loadSuccessStories = async () => {
+      const data = await getSuccessStories();
+
+      setSuccessStories(data);
+
+      const foundStory = data.find(
+        (s) => s.slug === storySlug
+      );
+
+      setStory(foundStory);
+    };
+
+    loadSuccessStories();
   }, [storySlug]);
 
   if (!story) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[var(--cream)] px-6 text-center font-['Tiro_Devanagari_Marathi']">
-        <p className="text-lg text-[var(--maroon-900)]">ही यशोगाथा सापडली नाही</p>
+        <p className="text-lg text-[var(--maroon-900)]">
+          ही यशोगाथा सापडली नाही
+        </p>
+
         <Link
           to="/success-stories"
-          className=" text-sm font-semibold text-[var(--maroon-800)] underline"
+          className="text-sm font-semibold text-[var(--maroon-800)] underline"
         >
           सर्व यशोगाथा पहा
         </Link>
@@ -40,28 +67,34 @@ export default function SuccessStoryDetail() {
     );
   }
 
-  const bodyParagraphs = story.body ?? [story.desc];
-  const related = successStories.filter((s) => s.slug !== story.slug).slice(0, 3);
+  const bodyParagraphs = [story.desc];
+  console.log("bodyParagraphs",bodyParagraphs);
+
+  const related = successStories
+    .filter((s) => s.slug !== story.slug)
+    .slice(0, 3);
 
   const reveal = (step: number) => ({
-    className: `transition-all duration-500 ease-out ${
-      mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-    }`,
-    style: { transitionDelay: mounted ? `${step * 90}ms` : "0ms" },
+    className: `transition-all duration-500 ease-out ${mounted
+        ? "translate-y-0 opacity-100"
+        : "translate-y-4 opacity-0"
+      }`,
+    style: {
+      transitionDelay: mounted ? `${step * 90}ms` : "0ms",
+    },
   });
-
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[var(--cream)]">
       {/* Top bar */}
       <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
-            <SectionHeader eyebrow="Story Detail" title="सर्व यशोगाथा पहा" />
+        <SectionHeader eyebrow="Story Detail" title="सर्व यशोगाथा पहा" />
 
-            <button onClick={() => navigate("/success-stories")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
-            <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
-            </button>
-        </div>
-      
+        <button onClick={() => navigate("/success-stories")} className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))]  shadow-sm transition-transform duration-150 active:scale-95 md:h-[40px] md:w-[40px]">
+          <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
+        </button>
+      </div>
+
 
       <div className="mx-auto w-full px-4 pb-4 sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5xl">
         {/* Category + title + byline */}
@@ -149,9 +182,8 @@ export default function SuccessStoryDetail() {
                 <div
                   key={i}
                   style={{ transitionDelay: mounted ? `${450 + i * 80}ms` : "0ms" }}
-                  className={`flex items-center gap-3 rounded-xl border border-[var(--gold-100)] bg-[var(--paper)] p-3 transition-all duration-400 ease-out ${
-                    mounted ? "translate-x-0 opacity-100" : "translate-x-3 opacity-0"
-                  }`}
+                  className={`flex items-center gap-3 rounded-xl border border-[var(--gold-100)] bg-[var(--paper)] p-3 transition-all duration-400 ease-out ${mounted ? "translate-x-0 opacity-100" : "translate-x-3 opacity-0"
+                    }`}
                 >
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--gold-100)]">
                     <CheckCircle2 className="h-4 w-4 stroke-[var(--gold-700)]" />
@@ -266,9 +298,8 @@ export default function SuccessStoryDetail() {
                   type="button"
                   aria-label={`स्लाइड ${i + 1}`}
                   onClick={() => setSlide(i)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === slide ? "w-5 bg-[var(--gold-600)]" : "w-1.5 bg-[var(--gold-100)]"
-                  }`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${i === slide ? "w-5 bg-[var(--gold-600)]" : "w-1.5 bg-[var(--gold-100)]"
+                    }`}
                 />
               ))}
             </div>
