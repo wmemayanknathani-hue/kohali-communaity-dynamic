@@ -94,8 +94,7 @@ export default function SuccessStoryDetail() {
           <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
         </button>
       </div>
-
-
+      
       <div className="mx-auto w-full px-4 pb-4 sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5xl">
         {/* Category + title + byline */}
         <div {...reveal(0)}>
