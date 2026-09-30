@@ -18,6 +18,7 @@ import Books from "./components/pages/Books";
 import BookDetail from "./components/pages/BookDetailPage";
 import Support from "./components/pages/Support";
 import LiveEvents from "./components/pages/LiveEvents";
+import LiveEventDetail from "./components/pages/LiveEventDetail";
 import Contact from "./components/pages/Contact";
 import BusinessPromotion from "./components/pages/BusinessPromotion";
 import Business from "./components/pages/Business";
@@ -33,7 +34,7 @@ import { PrivacyPolicy } from "./components/pages/PrivacyPolicy";
 import { ChildSafety } from "./components/pages/ChildSafety";
 import SuccessStories from "./components/pages/SuccessStories";
 import SuccessstoriesDetail from "./components/pages/SuccessstoriesDetail";
-// import EventDetails from "./components/pages/EventDetails";
+import EventDetails from "./components/pages/EventDetails";
 // import { getBookById } from "./data/books";
 
 function BookDetailRoute() {
@@ -93,12 +94,14 @@ function AppContent() {
           <Route path="/books/:bookId" element={<BookDetailRoute />} />
           <Route path="/support" element={<Support />} />
           <Route path="/live-events" element={<LiveEvents />} />
+          <Route path="/live-events/:eventId" element={<LiveEventDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/business" element={<Business />} />
           <Route path="/business/:businessId" element={<BusinessDetails />} />
           <Route path="/business-promotion" element={<BusinessPromotion />} />
           <Route path="/notices" element={<Notices />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/events/:eventId" element={<EventDetails />} />
           <Route path="/photo-gallery" element={<PhotoGallery />} />
           <Route path="/video-gallery" element={<VideoGallery />} />
           <Route path="/success-stories" element={<SuccessStories />} />

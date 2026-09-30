@@ -1,6 +1,6 @@
 import React, { useMemo, useState,useEffect } from "react";
 import SectionHeader from "../SectionHeader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   ChevronLeft,
   CalendarDays,
@@ -202,7 +202,7 @@ const CATEGORY_ACCENT: Record<CategoryId, { solid: string; soft: string }> = {
 /* ------------------------------------------------------------------ */
 /*  Shared container widths           */
 /* ------------------------------------------------------------------ */
-const CONTAINER = "sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5xl";
+const CONTAINER = "sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl xl:max-w-5xl lg:px-10".replace("lg:max-w-4xl xl:max-w-5xl lg:px-10", "lg:max-w-4xl lg:px-10 xl:max-w-5xl");
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                             */
@@ -379,6 +379,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
       <main className={`mx-auto w-full px-4 pb-14 ${CONTAINER}`}>
        
         {featured ? (
+          <Link to={`/events/${featured.id}`} className="block no-underline">
           <section className="ei-enter relative isolate mb-6 flex min-h-[19rem] flex-col justify-end overflow-hidden rounded-3xl border border-[var(--gold-500,#D4AF37)]/25 shadow-[0_16px_38px_-16px_rgba(58,10,18,0.55)] sm:min-h-[20rem] md:min-h-[22rem] lg:min-h-[25rem]">
             <div className="absolute inset-0 -z-20 h-full w-full">
               <EventImage
@@ -441,6 +442,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
               </div>
             </div>
           </section>
+          </Link>
         ) : (
           <section className="ei-enter mb-6 flex items-center gap-3 rounded-3xl bg-[linear-gradient(135deg,var(--maroon-900,#4A0F1A),var(--maroon-700,#7A2035))] p-5 text-[var(--cream,#F7F1E6)] shadow-lg">
             <Sparkles size={20} className="shrink-0 text-[var(--gold-300,#F3D98B)]" />
@@ -540,9 +542,13 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
               const accent = CATEGORY_ACCENT[event.category];
               const past = !isUpcoming(event.date);
               return (
-                <article
+                <Link
                   key={event.id}
-                  className="ei-card ei-enter flex flex-col overflow-hidden rounded-[20px] bg-[var(--paper,#FFFDF8)] shadow-[0_4px_14px_rgba(43,33,24,0.08)] transition-all hover:-translate-y-1 hover:shadow-[0_10px_26px_-8px_rgba(58,10,18,0.35)] hover:ring-1 hover:ring-[var(--gold-500,#D4AF37)]/45"
+                  to={`/events/${event.id}`}
+                  className="block no-underline"
+                >
+                <article
+                  className="ei-card ei-enter flex h-full flex-col overflow-hidden rounded-[20px] bg-[var(--paper,#FFFDF8)] shadow-[0_4px_14px_rgba(43,33,24,0.08)] transition-all hover:-translate-y-1 hover:shadow-[0_10px_26px_-8px_rgba(58,10,18,0.35)] hover:ring-1 hover:ring-[var(--gold-500,#D4AF37)]/45"
                   style={{ animationDelay: `${idx * 60}ms` }}
                 >
                   {/* Image — fixed height is fine here because badges sit
@@ -609,6 +615,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
                     </p>
                   </div>
                 </article>
+                </Link>
               );
             })}
           </div>

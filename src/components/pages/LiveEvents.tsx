@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import SectionHeader from "../SectionHeader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   ChevronLeft,
 } from "lucide-react";
@@ -8,6 +8,7 @@ import {
 type Tab = "upcoming" | "previous";
 
 interface PreviousItem {
+  id?: string;
   titleEn: string;
   titleMr?: string;
   date: string;
@@ -18,6 +19,7 @@ interface PreviousItem {
 }
 
 interface UpcomingItem {
+  id?: string;
   titleEn: string;
   titleMr?: string;
   date: string;
@@ -132,6 +134,12 @@ interface UpcomingItem {
 
 function ytThumb(id: string) {
   return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+}
+
+/** Detail page path. Uses the item's id when the API sends one, otherwise
+ *  falls back to the encoded title. */
+function detailPath(item: { id?: string; titleEn: string }) {
+  return `/live-events/${item.id ?? encodeURIComponent(item.titleEn)}`;
 }
 
 /** Pulls the leading number out of a countdown string ("in 7 days" -> 7) so
@@ -460,14 +468,20 @@ export default function LiveEvents() {
                   प्रसारण चालू आहे
                 </div>
 
-                {/* TITLE — same size step as the Events hero title (md:text-[28px]) */}
-                <h2 className="text-[17px] font-extrabold leading-snug text-white sm:text-2xl md:text-[28px]">
-                  {liveEvent?.titleMr || liveEvent?.titleEn}
-                </h2>
+                {/* TITLE + DESCRIPTION — link to the detail page */}
+                <Link
+                  to={detailPath(liveEvent!)}
+                  className="block text-inherit no-underline"
+                >
+                  {/* TITLE — same size step as the Events hero title (md:text-[28px]) */}
+                  <h2 className="text-[17px] font-extrabold leading-snug text-white sm:text-2xl md:text-[28px]">
+                    {liveEvent?.titleMr || liveEvent?.titleEn}
+                  </h2>
 
-                <p className="mt-1 text-sm text-[var(--gold-100)] md:text-[15px]">
-                  {liveEvent?.description}
-                </p>
+                  <p className="mt-1 text-sm text-[var(--gold-100)] md:text-[15px]">
+                    {liveEvent?.description}
+                  </p>
+                </Link>
 
                 {/* DETAILS */}
                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] font-medium text-white/90 md:text-sm">
@@ -557,10 +571,11 @@ export default function LiveEvents() {
                 const days = daysFromCountdown(ev.countdown);
                 const soon = days !== null && days <= 7;
                 return (
-                  <div
+                  <Link
                     key={ev.titleEn}
+                    to={detailPath(ev)}
                     style={{ animationDelay: `${i * 60}ms` }}
-                    className="fade-up relative flex items-start gap-3 overflow-hidden rounded-2xl border border-[var(--gold-300)] bg-white p-3 pl-4 md:p-4"
+                    className="fade-up relative flex items-start gap-3 overflow-hidden rounded-2xl border border-[var(--gold-300)] bg-white p-3 pl-4 text-inherit no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--gold-400)] hover:shadow-md active:scale-[0.99] md:p-4"
                   >
 
                     <div className="relative shrink-0">
@@ -618,7 +633,7 @@ export default function LiveEvents() {
                         </button>
                       )} */}
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
@@ -627,7 +642,7 @@ export default function LiveEvents() {
               {previous.map((item, i) => (
                 <button
                   key={item.titleEn}
-                  onClick={() => setPlaying({ youtubeId: item.youtubeId, title: item.titleEn })}
+                  onClick={() => navigate(detailPath(item))}
                   style={{ animationDelay: `${i * 60}ms` }}
                   className="fade-up flex w-full items-start gap-3 rounded-2xl border border-[var(--gold-300)] bg-white p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--gold-400)] hover:shadow-md active:scale-[0.99] md:p-4"
                 >

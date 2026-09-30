@@ -42,10 +42,12 @@ function useRevealVisible() {
 function Reveal({
   children,
   delay = 0,
+  y = 14,
   className = "",
 }: {
   children: React.ReactNode;
   delay?: number;
+  y?: number;
   className?: string;
 }) {
   const { ref, visible } = useRevealVisible();
@@ -55,7 +57,7 @@ function Reveal({
       className={className}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(14px)",
+        transform: visible ? "translateY(0)" : `translateY(${y}px)`,
         transition: `opacity 0.5s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.5s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
       }}
     >
@@ -94,6 +96,12 @@ function DetailRow({
     </div>
   );
 }
+
+type SocialLink = {
+  Icon: React.ComponentType<{ size?: number }>;
+  label: string;
+  href: string;
+};
 
 export default function BusinessDetailPage() {
   const navigate = useNavigate();
@@ -173,6 +181,19 @@ export default function BusinessDetailPage() {
   } = business;
 
   const youtubeId = adType === "video" && youtubeUrl ? getYouTubeId(youtubeUrl) : null;
+
+  const socialLinks: SocialLink[] = [
+    facebook ? { Icon: FaFacebookF, label: "Facebook", href: toWebsiteHref(facebook) } : null,
+    instagram ? { Icon: FaInstagram, label: "Instagram", href: toWebsiteHref(instagram) } : null,
+    youtube ? { Icon: FaYoutube, label: "YouTube", href: toWebsiteHref(youtube) } : null,
+    (whatsapp ?? mobile)
+      ? {
+          Icon: FaWhatsapp,
+          label: "WhatsApp",
+          href: toWhatsAppHref(whatsapp ?? mobile, `Hi ${ownerName}, I found ${name} on Kohali Connect.`),
+        }
+      : null,
+  ].filter(Boolean) as SocialLink[];
 
   const handleShare = async () => {
     const shareData = { title: name, text: `Check out ${name} on Kohali Connect`, url: window.location.href };
@@ -387,44 +408,34 @@ export default function BusinessDetailPage() {
                     </a>
                   </DetailRow>
                 )}
-
-                {instagram && (
-                  <DetailRow
-                    icon={<FaInstagram size={16} className="text-[var(--maroon-800)]" />}
-                    label="Instagram"
-                    last={!instagram || true}
-                  >
-                    <a href={toWebsiteHref(instagram)} className="text-[var(--maroon-800)] no-underline">
-                      {instagram}
-                    </a>
-                  </DetailRow>
-                )}
-
-                {facebook && (
-                  <DetailRow
-                    icon={<FaFacebookF size={16} className="text-[var(--maroon-800)]" />}
-                    label="Facebook"
-                    last={!facebook || true}
-                  >
-                    <a href={toWebsiteHref(facebook)} className="text-[var(--maroon-800)] no-underline">
-                      {facebook}
-                    </a>
-                  </DetailRow>
-                )}
-
-                {youtube && (
-                  <DetailRow
-                    icon={<FaYoutube size={16} className="text-[var(--maroon-800)]" />}
-                    label="Youtube"
-                    last={!youtube || true}
-                  >
-                    <a href={toWebsiteHref(youtube)} className="text-[var(--maroon-800)] no-underline">
-                      {youtube}
-                    </a>
-                  </DetailRow>
-                )}
               </div>
             </Reveal>
+
+            {/* ---- social media ---- */}
+            {socialLinks.length > 0 && (
+              <section className="mt-8 px-5 sm:px-6 md:px-8 lg:px-10 text-center">
+                <Reveal>
+                  <p className="inline-block rounded-full border border-[var(--maroon-800)] bg-[linear-gradient(100deg,var(--gold-300),var(--gold-500))] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--maroon-900)]">
+                    Follow Us
+                  </p>
+                </Reveal>
+                <div className="mt-3 flex items-center justify-center gap-3 rounded-full bg-[var(--paper)] p-2 shadow-[var(--shadow-gold)] mx-auto w-fit">
+                  {socialLinks.map(({ Icon, label, href }, i) => (
+                    <Reveal key={label} delay={i * 60} y={10}>
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        className="grid h-9 w-9 md:h-10 md:w-10 place-items-center rounded-full bg-[linear-gradient(160deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] no-underline shadow transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:scale-90"
+                      >
+                        <Icon size={14} />
+                      </a>
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         </div>
       </div>

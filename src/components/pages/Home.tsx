@@ -143,7 +143,6 @@ function WarliMotif({ className = "", opacity = 0.14 }: { className?: string; op
 function HeroSlider() {
   const [active, setActive] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const n = heroSlides.length;
   const API_PATH =window.location.hostname === "localhost" ||window.location.hostname === "192.168.1.62"? import.meta.env.VITE_LOCAL_API_PATH: import.meta.env.VITE_LIVE_API_PATH;
@@ -174,22 +173,22 @@ function HeroSlider() {
       console.error("Profile API Error:", error);
     }
   };
-  const startTimer = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => setActive((i) => (i + 1) % n), 4200);
-  };
 
   useEffect(() => {
-    startTimer();
     // trigger the mount-in animation a beat after paint
     const t = setTimeout(() => setMounted(true), 40);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-      clearTimeout(t);
-    };
+    return () => clearTimeout(t);
   }, []);
 
-  const goTo = (i: number) => { setActive(i); startTimer(); };
+  // FIX: auto-slide. Re-runs when slides load (n) and after every slide change
+  // (active), so it always uses the real slide count and resets on manual clicks.
+  useEffect(() => {
+    if (n < 2) return;
+    const id = setTimeout(() => setActive((i) => (i + 1) % n), 4200);
+    return () => clearTimeout(id);
+  }, [n, active]);
+
+  const goTo = (i: number) => { setActive(i); };
 
   return (
     <div className="mt-4 px-4 sm:px-6 md:px-8 lg:px-10">
@@ -200,7 +199,7 @@ function HeroSlider() {
             { transform: "translateX(0px) rotate(0deg) scale(1)", zIndex: 30, opacity: 1 },
             { transform: "translateX(22px) rotate(3.5deg) scale(0.94)", zIndex: 20, opacity: 0.9 },
             { transform: "translateX(40px) rotate(6.5deg) scale(0.88)", zIndex: 10, opacity: 0.55 },
-          ][offset];
+          ][offset] ?? { transform: "translateX(40px) rotate(6.5deg) scale(0.88)", zIndex: 0, opacity: 0 };
 
           // on first mount, fan the cards in from a stacked, slightly-dropped position
           const mountStyle = !mounted
@@ -209,11 +208,11 @@ function HeroSlider() {
 
           return (
             <button
-              key={slide.id}
+              key={slide.id ?? i}
               onClick={() => goTo(i)}
               aria-label={slide.title}
               className="absolute inset-0 h-full w-full origin-bottom-left cursor-pointer overflow-hidden rounded-[26px] shadow-[var(--shadow-maroon)] transition-all duration-500 ease-out"
-              style={{ ...mountStyle, transitionDelay: !mounted ? "0ms" : `${offset * 70}ms` }}
+              style={{ ...mountStyle, transitionDelay: !mounted ? "0ms" : `${Math.min(offset, 2) * 70}ms` }}
             >
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-[6000ms] ease-out"
