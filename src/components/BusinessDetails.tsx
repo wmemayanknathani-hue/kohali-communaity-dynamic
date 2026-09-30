@@ -1,16 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import SectionHeader from "../components/SectionHeader";
-import { useNavigate } from "react-router-dom";
-// import type { IconType } from "react-icons";
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaYoutube,
-} from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import {
   Phone, Globe, Mail, Share2,
-  MapPin, PlayCircle, Star, Navigation, User, BadgeCheck, ChevronLeft,
+  MapPin, PlayCircle, Play, Star, Navigation, User, BadgeCheck, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import {
   getBusinessById,
@@ -19,15 +13,23 @@ import {
   getBusinesses,
   toWhatsAppHref,
   toWebsiteHref,
-  // toMailHref,
   toDirectionsHref,
   type Business,
 } from "../data/business";
-import { FaWhatsapp } from "react-icons/fa";
-// interface SocialItem {
-//   Icon: IconType;
-//   label: string;
-// }
+
+type MediaItem = {
+  type: "image" | "video" | "youtube";
+  src: string; // image url, mp4 url, or YouTube url
+};
+
+// Static sample gallery. Later replace with data from the API (business.gallery).
+const STATIC_MEDIA: MediaItem[] = [
+  { type: "image", src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80" },
+  { type: "image", src: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200&q=80" },
+  { type: "video", src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" },
+  { type: "image", src: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80" },
+  { type: "youtube", src: "https://www.youtube.com/watch?v=aqz-KE-bpKQ" },
+];
 
 function useRevealVisible() {
   const ref = useRef<HTMLDivElement>(null);
@@ -80,8 +82,12 @@ function DetailRow({
   last?: boolean;
 }) {
   return (
-    <div className={`group kc-row-shine flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4  cursor-pointer transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99] ${last ? "" : "border-t border-[color:var(--gold-300)]/50"}`}>
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))]  shadow-sm">
+    <div
+      className={`group kc-row-shine flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 cursor-pointer transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99] ${
+        last ? "" : "border-t border-[color:var(--gold-300)]/50"
+      }`}
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm">
         {icon}
       </span>
       <div className="min-w-0 flex-1">
@@ -108,6 +114,21 @@ export default function BusinessDetailPage() {
   const { businessId } = useParams<{ businessId: string }>();
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const touchStartX = useRef<number | null>(null);
+
+  // keep the active thumbnail centred in the strip when the slide changes
+  useEffect(() => {
+    const strip = stripRef.current;
+    const thumb = thumbRefs.current[activeIndex];
+    if (!strip || !thumb) return;
+    strip.scrollTo({
+      left: thumb.offsetLeft - strip.clientWidth / 2 + thumb.clientWidth / 2,
+      behavior: "smooth",
+    });
+  }, [activeIndex]);
 
   useEffect(() => {
     const loadBusinesses = async () => {
@@ -131,12 +152,11 @@ export default function BusinessDetailPage() {
   if (loading) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center bg-[var(--cream)]">
-        <p className="text-sm text-[var(--text-muted)]">
-          Loading business...
-        </p>
+        <p className="text-sm text-[var(--text-muted)]">Loading business...</p>
       </div>
     );
   }
+
   if (!business) {
     return (
       <div className="flex min-h-[70vh] flex-col items-center justify-center gap-3 bg-[var(--cream)] p-6 text-center">
@@ -182,6 +202,30 @@ export default function BusinessDetailPage() {
 
   const youtubeId = adType === "video" && youtubeUrl ? getYouTubeId(youtubeUrl) : null;
 
+  // first item = the business's main ad, followed by the gallery items
+  const mainItem: MediaItem | null = youtubeId
+    ? { type: "youtube", src: youtubeUrl as string }
+    : posterUrl
+      ? { type: adType?.toLowerCase() === "video" ? "video" : "image", src: posterUrl }
+      : null;
+  const media: MediaItem[] = [...(mainItem ? [mainItem] : []), ...STATIC_MEDIA];
+
+  const goTo = (i: number) => setActiveIndex((i + media.length) % media.length);
+  const goNext = () => goTo(activeIndex + 1);
+  const goPrev = () => goTo(activeIndex - 1);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(diff) < 50) return;
+    if (diff < 0) goNext();
+    else goPrev();
+  };
+
   const socialLinks: SocialLink[] = [
     facebook ? { Icon: FaFacebookF, label: "Facebook", href: toWebsiteHref(facebook) } : null,
     instagram ? { Icon: FaInstagram, label: "Instagram", href: toWebsiteHref(instagram) } : null,
@@ -195,10 +239,20 @@ export default function BusinessDetailPage() {
       : null,
   ].filter(Boolean) as SocialLink[];
 
+  const hasSocial = socialLinks.length > 0;
+
   const handleShare = async () => {
-    const shareData = { title: name, text: `Check out ${name} on Kohali Connect`, url: window.location.href };
+    const shareData = {
+      title: name,
+      text: `Check out ${name} on Kohali Connect`,
+      url: window.location.href,
+    };
     if (navigator.share) {
-      try { await navigator.share(shareData); } catch { /* cancelled */ }
+      try {
+        await navigator.share(shareData);
+      } catch {
+        /* cancelled */
+      }
     } else {
       await navigator.clipboard.writeText(window.location.href);
     }
@@ -207,7 +261,7 @@ export default function BusinessDetailPage() {
   return (
     <div className="min-h-screen bg-[var(--cream)] pb-10">
       {/* Header */}
-      <div className="mx-auto flex w-full items-center justify-between gap-3 md:max-w-3xl md:gap-4  lg:max-w-4xl xl:max-w-5xl px-4 pt-3  sm:px-6 md:px-8 md:pt-5 lg:px-10">
+      <div className="mx-auto flex w-full items-center justify-between gap-3 px-4 pt-3 sm:px-6 md:max-w-3xl md:gap-4 md:px-8 md:pt-5 lg:max-w-4xl lg:px-10 xl:max-w-5xl">
         <SectionHeader eyebrow="Information" title="Business Details" />
 
         <div className="flex gap-2">
@@ -223,78 +277,191 @@ export default function BusinessDetailPage() {
             aria-label="Back"
             className="mb-3.5 flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full border bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 hover:brightness-110 active:scale-95 md:h-[40px] md:w-[40px]"
           >
-            <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
+            <ChevronLeft className="h-4 w-4 text-white md:h-[18px] md:w-[18px]" strokeWidth={2.2} />
           </button>
         </div>
       </div>
-
 
       <div className="mx-auto w-full px-4 sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5xl">
         <div className="lg:grid lg:grid-cols-[1.3fr_1fr] lg:items-start lg:gap-6">
           {/* ================= LEFT COLUMN ================= */}
           <div>
-            {/* hero */}
+            {/* hero gallery */}
             <Reveal>
               <div className="relative overflow-hidden rounded-3xl shadow-[var(--shadow-maroon)]">
-                {youtubeId ? (
-                  <div className="aspect-video w-full bg-black">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${youtubeId}`}
-                      title={name}
-                      className="h-full w-full"
-                      allow="accelerated-video; encrypted-media; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                ) : posterUrl ? (
-                  <div className="relative aspect-[4/3] w-full sm:aspect-video">
-                    {adType?.toLowerCase() === "video" ? (
-                      <video
-                        src={posterUrl}
-                        className="h-full w-full object-cover"
-                        autoPlay
-                        muted
-                        controls
-                        loop
-                        playsInline
-                      />
-                    ) : (
-                      <img
-                        src={posterUrl}
-                        alt={name}
-                        className="h-full w-full object-cover"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(59,10,22,0.75)_0%,rgba(59,10,22,0)_55%)]" />
-                  </div>
-                ) : (
-                  <div className="flex aspect-video w-full items-center justify-center bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)]">
-                    <PlayCircle className="h-10 w-10" strokeWidth={1.5} />
-                  </div>
-                )}
+                {/* sliding track */}
+                <div
+                  className="relative aspect-[4/3] w-full bg-black sm:aspect-video"
+                  onTouchStart={onTouchStart}
+                  onTouchEnd={onTouchEnd}
+                >
+                  <div
+                    className="flex h-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+                  >
+                    {media.map((item, i) => {
+                      const isActive = i === activeIndex;
+                      const ytId = item.type === "youtube" ? getYouTubeId(item.src) : null;
+                      return (
+                        <div key={`${item.src}-${i}`} className="relative h-full w-full shrink-0">
+                          {item.type === "image" && (
+                            <>
+                              <img src={item.src} alt={name} className="h-full w-full object-cover" />
+                              <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(59,10,22,0.75)_0%,rgba(59,10,22,0)_55%)]" />
+                            </>
+                          )}
 
-                {/* category + open badges, always on top, never covered by video controls */}
+                          {item.type === "video" &&
+                            (isActive ? (
+                              <video
+                                src={item.src}
+                                className="h-full w-full object-cover"
+                                autoPlay
+                                muted
+                                controls
+                                loop
+                                playsInline
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center bg-black text-white/80">
+                                <PlayCircle className="h-10 w-10" strokeWidth={1.5} />
+                              </div>
+                            ))}
+
+                          {item.type === "youtube" &&
+                            ytId &&
+                            (isActive ? (
+                              <iframe
+                                src={`https://www.youtube.com/embed/${ytId}`}
+                                title={name}
+                                className="h-full w-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              />
+                            ) : (
+                              <img
+                                src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
+                            ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {media.length === 0 && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)]">
+                      <PlayCircle className="h-10 w-10" strokeWidth={1.5} />
+                    </div>
+                  )}
+
+                  {/* arrows */}
+                  {media.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={goPrev}
+                        aria-label="Previous"
+                        className="absolute left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-[var(--maroon-900)] shadow-md backdrop-blur transition-all duration-200 hover:scale-110 hover:bg-white active:scale-90"
+                      >
+                        <ChevronLeft size={20} strokeWidth={2.4} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={goNext}
+                        aria-label="Next"
+                        className="absolute right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-[var(--maroon-900)] shadow-md backdrop-blur transition-all duration-200 hover:scale-110 hover:bg-white active:scale-90"
+                      >
+                        <ChevronRight size={20} strokeWidth={2.4} />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {/* category + open badges */}
                 <div className="pointer-events-none absolute inset-x-3 top-3 flex items-start justify-between">
                   <span className="pointer-events-auto rounded-full bg-[linear-gradient(100deg,var(--gold-300),var(--gold-500))] px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-[var(--maroon-900)] shadow-sm">
                     {categoryMr ?? category}
                   </span>
                   {typeof isOpen === "boolean" && (
                     <span
-                      className={`pointer-events-auto flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-sm ${isOpen ? "bg-[#1a9c4d]" : "bg-[var(--maroon-950)]"
-                        }`}
+                      className={`pointer-events-auto flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-sm ${
+                        isOpen ? "bg-[#1a9c4d]" : "bg-[var(--maroon-950)]"
+                      }`}
                     >
                       <span className={`h-1.5 w-1.5 rounded-full bg-white ${isOpen ? "animate-pulse" : ""}`} />
                       {isOpen ? "Open Now" : "Closed"}
                     </span>
                   )}
                 </div>
+
+                {/* counter */}
+                {media.length > 1 && (
+                  <span className="pointer-events-none absolute right-3 top-12 rounded-full bg-black/55 px-2.5 py-1 text-[10px] font-bold text-white">
+                    {activeIndex + 1} / {media.length}
+                  </span>
+                )}
               </div>
+
+              {/* thumbnail strip */}
+              {media.length > 1 && (
+                <div ref={stripRef} className="relative mt-3 flex gap-2 overflow-x-auto pb-1">
+                  {media.map((item, i) => {
+                    const ytId = item.type === "youtube" ? getYouTubeId(item.src) : null;
+                    const isActive = i === activeIndex;
+                    return (
+                      <button
+                        key={`${item.src}-${i}`}
+                        ref={(el) => {
+                          thumbRefs.current[i] = el;
+                        }}
+                        type="button"
+                        onClick={() => setActiveIndex(i)}
+                        aria-label={`Show ${item.type} ${i + 1}`}
+                        className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-black transition-all duration-200 active:scale-95 md:h-[68px] md:w-28 ${
+                          isActive
+                            ? "ring-2 ring-[var(--gold-500)] ring-offset-2 ring-offset-[var(--cream)]"
+                            : "opacity-70 hover:opacity-100"
+                        }`}
+                      >
+                        {item.type === "image" && (
+                          <img src={item.src} alt="" className="h-full w-full object-cover" />
+                        )}
+                        {item.type === "youtube" && ytId && (
+                          <img
+                            src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        )}
+                        {item.type === "video" && (
+                          <video
+                            src={`${item.src}#t=0.5`}
+                            preload="metadata"
+                            muted
+                            playsInline
+                            className="h-full w-full object-cover"
+                          />
+                        )}
+                        {item.type !== "image" && (
+                          <span className="absolute inset-0 flex items-center justify-center bg-black/30">
+                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-[var(--maroon-900)]">
+                              <Play size={12} fill="currentColor" strokeWidth={0} />
+                            </span>
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </Reveal>
 
-
+            {/* owner + title */}
             <Reveal delay={80} className="mt-5">
-              <div className="mt-4 flex items-start gap-3">
-                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] ring-2 ring-white shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm ring-2 ring-white">
                   {ownerAvatarUrl ? (
                     <img src={ownerAvatarUrl} alt={ownerName} className="h-full w-full object-cover" />
                   ) : (
@@ -324,7 +491,7 @@ export default function BusinessDetailPage() {
               </div>
             </Reveal>
 
-
+            {/* call / whatsapp */}
             <Reveal delay={120}>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <a
@@ -344,9 +511,10 @@ export default function BusinessDetailPage() {
               </div>
             </Reveal>
 
+            {/* about */}
             <Reveal delay={160} className="mt-5">
               <SectionHeader eyebrow="More Info" title="About Us" />
-              <p className="mt-1.5 text-[14px] leading-relaxed text-[var(--text-muted)]">{description}</p>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-[var(--text-muted)] text-justify">{description}</p>
             </Reveal>
           </div>
 
@@ -358,6 +526,7 @@ export default function BusinessDetailPage() {
                 <DetailRow
                   icon={<MapPin size={16} className="text-[var(--maroon-800)]" />}
                   label="Address"
+                  last={!memberId && !website && !email && !hasSocial}
                   action={
                     <a
                       href={toDirectionsHref(addressLine ?? location)}
@@ -376,6 +545,7 @@ export default function BusinessDetailPage() {
                   <DetailRow
                     icon={<BadgeCheck size={16} className="text-[var(--maroon-800)]" />}
                     label="Member ID"
+                    last={!website && !email && !hasSocial}
                   >
                     {memberId}
                   </DetailRow>
@@ -385,6 +555,7 @@ export default function BusinessDetailPage() {
                   <DetailRow
                     icon={<Globe size={16} className="text-[var(--maroon-800)]" />}
                     label="Website"
+                    last={!email && !hasSocial}
                   >
                     <a
                       href={toWebsiteHref(website)}
@@ -401,41 +572,38 @@ export default function BusinessDetailPage() {
                   <DetailRow
                     icon={<Mail size={16} className="text-[var(--maroon-800)]" />}
                     label="Email"
-                    last={!email || true}
+                    last={!hasSocial}
                   >
-                    <a href={toWebsiteHref(email)} className="text-[var(--maroon-800)] no-underline">
+                    <a href={`mailto:${email}`} className="text-[var(--maroon-800)] no-underline">
                       {email}
                     </a>
                   </DetailRow>
                 )}
+
+                {/* ---- social media (inside card) ---- */}
+                {hasSocial && (
+                  <div className="border-t border-[color:var(--gold-300)]/50 px-4 py-4 text-center md:px-5">
+                    <p className="inline-block rounded-full border border-[var(--maroon-800)] bg-[linear-gradient(100deg,var(--gold-300),var(--gold-500))] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--maroon-900)]">
+                      Follow Us
+                    </p>
+                    <div className="mt-3 flex items-center justify-center gap-3">
+                      {socialLinks.map(({ Icon, label, href }) => (
+                        <a
+                          key={label}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={label}
+                          className="grid h-9 w-9 place-items-center rounded-full bg-[linear-gradient(160deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] no-underline shadow transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:scale-90 md:h-10 md:w-10"
+                        >
+                          <Icon size={14} />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </Reveal>
-
-            {/* ---- social media ---- */}
-            {socialLinks.length > 0 && (
-              <section className="mt-8 px-5 sm:px-6 md:px-8 lg:px-10 text-center">
-                <Reveal>
-                  <p className="inline-block rounded-full border border-[var(--maroon-800)] bg-[linear-gradient(100deg,var(--gold-300),var(--gold-500))] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--maroon-900)]">
-                    Follow Us
-                  </p>
-                </Reveal>
-                <div className="mt-3 flex items-center justify-center gap-3 rounded-full bg-[var(--paper)] p-2 shadow-[var(--shadow-gold)] mx-auto w-fit">
-                  {socialLinks.map(({ Icon, label, href }, i) => (
-                    <Reveal key={label} delay={i * 60} y={10}>
-                      <a
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={label}
-                        className="grid h-9 w-9 md:h-10 md:w-10 place-items-center rounded-full bg-[linear-gradient(160deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] no-underline shadow transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:scale-90"
-                      >
-                        <Icon size={14} />
-                      </a>
-                    </Reveal>
-                  ))}
-                </div>
-              </section>
-            )}
           </div>
         </div>
       </div>
