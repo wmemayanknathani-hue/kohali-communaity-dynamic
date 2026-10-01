@@ -21,6 +21,7 @@ export interface Business {
   rating?: number;
   reviewCount?: number;
   isOpen?: boolean;
+  all_files?: { type: "image" | "video" | "youtube"; src: string }[];
   adTitle?: string;
   adDescription?: string;
   declaration?: string;
@@ -90,41 +91,31 @@ export async function getBusinesses(): Promise<Business[]> {
         }),
       }
     );
-
     const result = await response.json();
-
     console.log("Business API Response:", result);
-
     if (!result.status) {
       return [];
     }
-
     return (result.businesses || []).map((item: any): Business => ({
       id: String(item.id),
       name: item.name || "",
       category: item.category || "",
       description: item.description || "",
-
       location: item.location || "",
       ownerName:item.ownerName || "",
       addressLine: item.addressLine || "",
-
       mobile: item.mobile || "",
       whatsapp: item.whatsapp || "",
-
       website: item.website || "",
-
       adType: item.adType === "video" ? "video" : "poster",
-
       posterUrl: item.posterUrl || "",
-
       adTitle: item.adTitle || "",
       adDescription: item.adDescription || "",
+      all_files: item.all_files || "",
       declaration: item.declaration || "",
       instagram:item.instagram || "",
       facebook:item.facebook || "",
       youtube:item.youtube || "",
-
     }));
   } catch (error) {
     console.error("Failed to fetch businesses:", error);

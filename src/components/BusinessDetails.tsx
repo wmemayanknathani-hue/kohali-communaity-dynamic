@@ -23,13 +23,13 @@ type MediaItem = {
 };
 
 // Static sample gallery. Later replace with data from the API (business.gallery).
-const STATIC_MEDIA: MediaItem[] = [
-  { type: "image", src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80" },
-  { type: "image", src: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200&q=80" },
-  { type: "video", src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" },
-  { type: "image", src: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80" },
-  { type: "youtube", src: "https://www.youtube.com/watch?v=aqz-KE-bpKQ" },
-];
+// const STATIC_MEDIA: MediaItem[] = [
+//   { type: "image", src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80" },
+//   { type: "image", src: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1200&q=80" },
+//   { type: "video", src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" },
+//   { type: "image", src: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80" },
+//   { type: "youtube", src: "https://www.youtube.com/watch?v=aqz-KE-bpKQ" },
+// ];  
 
 function useRevealVisible() {
   const ref = useRef<HTMLDivElement>(null);
@@ -192,24 +192,20 @@ export default function BusinessDetailPage() {
     instagram,
     facebook,
     youtube,
-    adType,
-    posterUrl,
-    youtubeUrl,
+    // adType,
+    // posterUrl,
+    // youtubeUrl,
     rating,
     reviewCount,
     isOpen,
   } = business;
 
-  const youtubeId = adType === "video" && youtubeUrl ? getYouTubeId(youtubeUrl) : null;
+  // const youtubeId = adType === "video" && youtubeUrl ? getYouTubeId(youtubeUrl) : null;
 
   // first item = the business's main ad, followed by the gallery items
-  const mainItem: MediaItem | null = youtubeId
-    ? { type: "youtube", src: youtubeUrl as string }
-    : posterUrl
-      ? { type: adType?.toLowerCase() === "video" ? "video" : "image", src: posterUrl }
-      : null;
-  const media: MediaItem[] = [...(mainItem ? [mainItem] : []), ...STATIC_MEDIA];
-
+const media: MediaItem[] = Array.isArray(business.all_files)
+  ? business.all_files
+  : [];
   const goTo = (i: number) => setActiveIndex((i + media.length) % media.length);
   const goNext = () => goTo(activeIndex + 1);
   const goPrev = () => goTo(activeIndex - 1);

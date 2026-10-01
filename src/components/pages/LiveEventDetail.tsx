@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 import {
   ChevronLeft,
@@ -10,7 +10,7 @@ import {
   User,
   Eye,
   Radio,
-  Bell,
+  // Bell,
 } from "lucide-react";
 import {
   FaYoutube,
@@ -18,46 +18,29 @@ import {
 /* ------------------------------------------------------------------ */
 /*  Static data (replace with API data later)                          */
 /* ------------------------------------------------------------------ */
-const LIVE_EVENT = {
-  titleEn: "Annual Convention Meeting",
-  titleMr: "समाज वार्षिक अधिवेशन सभा",
-  youtubeId: "YE7VzlLtp-4",
-  isLive: true,
-  viewers: "1.2K watching",
-  date: "15 Jun 2027",
-  time: "10:00 AM",
-  location: "समाज भवन, नागपूर",
-  host: "अध्यक्ष श्री. प्रकाश बाळबुधे",
-  description:
-    "कोहळी समाजाची वार्षिक सर्वसाधारण सभा थेट प्रक्षेपण. समाज विकासाचा आढावा, मागील वर्षातील कामकाजाचा अहवाल, गुणवंत विद्यार्थ्यांचा सन्मान व नवीन योजनांची घोषणा या कार्यक्रमात होईल.",
-  agenda: [
-    { time: "10:00 AM", title: "स्वागत व दीपप्रज्वलन" },
-    { time: "11:00 AM", title: "वार्षिक अहवाल सादरीकरण" },
-    { time: "12:30 PM", title: "सन्मान सोहळा" },
-    { time: "02:00 PM", title: "समारोप व आभार" },
-  ],
-};
+interface AgendaItem {
+  time: string;
+  title: string;
+}
 
-const UP_NEXT = [
-  {
-    titleEn: "Ganesh Utsav Community Celebration",
-    date: "05 Sep 2027",
-    time: "6:00 PM",
-    location: "समाज भवन, नागपूर",
-    countdown: "in 7 days",
-    youtubeId: "TLkA0RELQ1g",
-  },
-  {
-    titleEn: "Free Health Check-up Camp",
-    date: "20 Sep 2027",
-    time: "9:00 AM",
-    location: "समाज भवन, नागपूर",
-    countdown: "in 22 days",
-    youtubeId: "R6MlUcmOul8",
-  },
-];
+interface LiveEventData {
+  id: string;
+  titleEn: string;
+  titleMr?: string;
+  youtubeId?: string;
+  isLive: boolean;
+  viewers?: string;
+  date: string;
+  time: string;
+  location: string;
+  host: string;
+  description?: string;
+  agenda?: AgendaItem[];
+  countdown?: string;
+}
 
-const ytThumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+// const ytThumb = (id?: string) =>
+//   id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
 
 const CONTAINER =
   "sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5xl";
@@ -109,9 +92,8 @@ function InfoRow({
 }) {
   return (
     <div
-      className={`flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 ${
-        last ? "" : "border-b border-[color:var(--gold-300)]/50"
-      }`}
+      className={`flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 ${last ? "" : "border-b border-[color:var(--gold-300)]/50"
+        }`}
     >
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm">
         {icon}
@@ -130,8 +112,93 @@ function InfoRow({
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 export default function LiveEventDetail() {
+  const API_PATH =
+    window.location.hostname === "localhost" ||
+      window.location.hostname === "192.168.1.62"
+      ? import.meta.env.VITE_LOCAL_API_PATH
+      : import.meta.env.VITE_LIVE_API_PATH;
+  const [event, setEvent] = useState<LiveEventData | null>(null);
+  // const [upNext, setUpNext] = useState<LiveEventData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { eventId  } = useParams();
+  // alert(id);
+  useEffect(() => {
+    const fetchEventDetails = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          `${API_PATH}/action_layer.php`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              action: "get_live_events",
+            }),
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.status === 1) {
+          const allEvents = [
+            ...(data.previous || []),
+            ...(data.upcoming || []),
+            ...(data.live_event ? [data.live_event] : []),
+          ];
+
+          const selectedEvent = allEvents.find(
+            (item: LiveEventData) =>
+              String(item.id) === String(eventId)
+          );
+
+          if (selectedEvent) {
+            setEvent(selectedEvent);
+            // setUpNext(data.upcoming || []);
+          } else {
+            setError("Event not found");
+          }
+        } else {
+          setError(data.message || "Unable to load event");
+        }
+      } catch (err) {
+        console.error("Event details API error:", err);
+        setError("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (eventId) {
+      fetchEventDetails();
+    }
+  }, [eventId])
   const navigate = useNavigate();
-  const e = LIVE_EVENT;
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p>Loading event details...</p>
+      </div>
+    );
+  }
+
+  if (error || !event) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <p>{error || "Event not found"}</p>
+
+        <button onClick={() => navigate("/live-events")}>
+          Back to Live Events
+        </button>
+      </div>
+    );
+  }
+
+  const e = event;
 
   const handleShare = async () => {
     const shareData = {
@@ -251,7 +318,7 @@ export default function LiveEventDetail() {
                 >
                   <FaYoutube className="h-4 w-4" /> Watch on YouTube
                 </a>
-               
+
               </div>
             </Reveal>
 
@@ -264,17 +331,16 @@ export default function LiveEventDetail() {
             </Reveal>
 
             {/* Agenda */}
-            <Reveal delay={200} className="mt-6">
+            {/* <Reveal delay={200} className="mt-6">
               <SectionHeader eyebrow="Programme" title="Agenda" />
               <div className="mt-2 overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
-                {e.agenda.map((a, i) => (
+                {(e.agenda || []).map((a, i) => (
                   <div
                     key={a.time}
-                    className={`flex items-center gap-3 px-4 py-3 md:px-5 ${
-                      i === e.agenda.length - 1
-                        ? ""
-                        : "border-b border-[color:var(--gold-300)]/50"
-                    }`}
+                    className={`flex items-center gap-3 px-4 py-3 md:px-5 ${i === (e.agenda || []).length - 1
+                      ? ""
+                      : "border-b border-[color:var(--gold-300)]/50"
+                      }`}
                   >
                     <span className="w-[76px] shrink-0 rounded-full bg-[linear-gradient(100deg,var(--gold-300),var(--gold-500))] px-2 py-1 text-center text-[10.5px] font-bold text-[var(--maroon-900)]">
                       {a.time}
@@ -285,7 +351,7 @@ export default function LiveEventDetail() {
                   </div>
                 ))}
               </div>
-            </Reveal>
+            </Reveal> */}
           </div>
 
           {/* ================= RIGHT COLUMN ================= */}
@@ -323,56 +389,57 @@ export default function LiveEventDetail() {
             </Reveal>
 
             {/* Up next */}
-            <Reveal delay={260} className="mt-6">
+            {/* <Reveal delay={260} className="mt-6">
               <SectionHeader eyebrow="Coming Soon" title="Up Next" />
               <div className="mt-2 grid gap-3">
-                {UP_NEXT.map((ev) => (
-                  <div
-                    key={ev.titleEn}
-                    className="flex items-start gap-3 rounded-2xl border border-[var(--gold-300)] bg-white p-3 md:p-4"
-                  >
-                    <span className="relative flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--maroon-950)] md:h-20 md:w-28">
-                      <img
-                        src={ytThumb(ev.youtubeId)}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                      <span className="absolute inset-0 bg-black/15" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="rounded-full bg-[var(--gold-100)] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[var(--gold-700)]">
-                          Scheduled
-                        </span>
-                        <span className="text-[11px] font-semibold text-[var(--maroon-700)]">
-                          {ev.countdown}
-                        </span>
+                {upNext
+                  .filter((ev) => String(ev.id) !== String(event?.id))
+                  .map((ev) => (
+                    <div
+                      key={ev.id}
+                      className="flex items-start gap-3 rounded-2xl border border-[var(--gold-300)] bg-white p-3 md:p-4"
+                    >
+                      <span className="relative flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--maroon-950)] md:h-20 md:w-28">
+                        <img
+                          src={ytThumb(ev.youtubeId)}
+                          alt=""
+                        />
+                        <span className="absolute inset-0 bg-black/15" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="rounded-full bg-[var(--gold-100)] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[var(--gold-700)]">
+                            Scheduled
+                          </span>
+                          <span className="text-[11px] font-semibold text-[var(--maroon-700)]">
+                            {ev.countdown}
+                          </span>
+                        </div>
+                        <p className="mt-1 truncate text-[14px] font-bold text-[var(--maroon-950)] md:text-[15px]">
+                          {ev.titleEn}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[12px] text-[var(--text-muted)]">
+                          <span className="flex items-center gap-1">
+                            <CalendarDays size={12} />
+                            {ev.date}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Clock size={12} />
+                            {ev.time}
+                          </span>
+                          <span className="flex min-w-0 items-center gap-1">
+                            <MapPin size={12} className="shrink-0" />
+                            <span className="truncate">{ev.location}</span>
+                          </span>
+                        </div>
+                        <button className="mt-2 inline-flex items-center gap-1 rounded-full border border-[var(--gold-400)] px-2.5 py-1 text-[11px] font-semibold text-[var(--maroon-800)] transition-transform active:scale-95">
+                          <Bell size={11} /> Remind me
+                        </button>
                       </div>
-                      <p className="mt-1 truncate text-[14px] font-bold text-[var(--maroon-950)] md:text-[15px]">
-                        {ev.titleEn}
-                      </p>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[12px] text-[var(--text-muted)]">
-                        <span className="flex items-center gap-1">
-                          <CalendarDays size={12} />
-                          {ev.date}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock size={12} />
-                          {ev.time}
-                        </span>
-                        <span className="flex min-w-0 items-center gap-1">
-                          <MapPin size={12} className="shrink-0" />
-                          <span className="truncate">{ev.location}</span>
-                        </span>
-                      </div>
-                      <button className="mt-2 inline-flex items-center gap-1 rounded-full border border-[var(--gold-400)] px-2.5 py-1 text-[11px] font-semibold text-[var(--maroon-800)] transition-transform active:scale-95">
-                        <Bell size={11} /> Remind me
-                      </button>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
-            </Reveal>
+            </Reveal> */}
           </div>
         </div>
       </main>

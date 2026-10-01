@@ -25,12 +25,9 @@ export function BusinessCard({ business }: BusinessCardProps) {
     rating,
     reviewCount,
   } = business;
-
   const mediaSrc =
     adType === "video" && youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : posterUrl;
-
   const displayName = nameMr ?? name;
-
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl bg-[var(--paper)] shadow-[var(--shadow-maroon,0_2px_10px_-2px_rgba(59,10,22,0.15))] ring-1 ring-[var(--gold-500)]/15 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))] focus-within:-translate-y-1 focus-within:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))]">
       <Link

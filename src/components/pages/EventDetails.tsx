@@ -1,55 +1,86 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 import {
   ChevronLeft,
   Share2,
-  CalendarDays,
-  Clock,
+  // CalendarDays,
+  // Clock,
   MapPin,
-  Navigation,
-  Phone,
-  User,
-  Ticket,
-  Users,
+  // Navigation,
+  // Phone,
+  // User,
+  // Ticket,
+  // Users,
   Music2,
-  CheckCircle2,
+  // CheckCircle2,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  Static data (replace with API data later)                          */
 /* ------------------------------------------------------------------ */
-const EVENT = {
-  titleEn: "Kohali Samaj Annual Convention",
-  titleMr: "कोहळी समाज वार्षिक अधिवेशन",
-  category: "सामाजिक",
-  categoryAccent: { solid: "#8B5CF6", soft: "#EEE8FF" },
-  image:
-    "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80",
-  date: "2027-06-15",
-  time: "10:00 AM – 5:00 PM",
-  location: "समाज भवन, नागपूर",
-  address: "Samaj Bhavan, Central Avenue, Nagpur, Maharashtra 440018",
-  entry: "Free entry for all members",
-  expectedGuests: "500+ attendees",
-  organizerName: "Kohali Samaj Trust",
-  organizerPhone: "+91 98765 43210",
-  description:
-    "वार्षिक सर्वसाधारण सभा — समाज विकासाचा आढावा, मागील वर्षातील कामकाजाचा अहवाल व नवीन योजनांची घोषणा. समाजातील सर्व बांधव, भगिनी व युवकांनी या कार्यक्रमात आवर्जून उपस्थित राहावे.",
-  highlights: [
-    "वार्षिक अहवाल व आर्थिक ताळेबंद सादरीकरण",
-    "गुणवंत विद्यार्थ्यांचा सन्मान सोहळा",
-    "नवीन कार्यकारिणीची घोषणा",
-    "सांस्कृतिक कार्यक्रम व स्नेहभोजन",
-  ],
-  schedule: [
-    { time: "10:00 AM", title: "नोंदणी व स्वागत" },
-    { time: "11:00 AM", title: "उद्घाटन सत्र व दीपप्रज्वलन" },
-    { time: "12:30 PM", title: "वार्षिक अहवाल सादरीकरण" },
-    { time: "02:00 PM", title: "स्नेहभोजन" },
-    { time: "03:00 PM", title: "सन्मान सोहळा व सांस्कृतिक कार्यक्रम" },
-  ],
-};
+// const EVENT = {
+//   titleEn: "Kohali Samaj Annual Convention",
+//   titleMr: "कोहळी समाज वार्षिक अधिवेशन",
+//   category: "सामाजिक",
+//   categoryAccent: { solid: "#8B5CF6", soft: "#EEE8FF" },
+//   image:
+//     "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80",
+//   date: "2027-06-15",
+//   time: "10:00 AM – 5:00 PM",
+//   location: "समाज भवन, नागपूर",
+//   address: "Samaj Bhavan, Central Avenue, Nagpur, Maharashtra 440018",
+//   entry: "Free entry for all members",
+//   expectedGuests: "500+ attendees",
+//   organizerName: "Kohali Samaj Trust",
+//   organizerPhone: "+91 98765 43210",
+//   description:
+//     "वार्षिक सर्वसाधारण सभा — समाज विकासाचा आढावा, मागील वर्षातील कामकाजाचा अहवाल व नवीन योजनांची घोषणा. समाजातील सर्व बांधव, भगिनी व युवकांनी या कार्यक्रमात आवर्जून उपस्थित राहावे.",
+//   highlights: [
+//     "वार्षिक अहवाल व आर्थिक ताळेबंद सादरीकरण",
+//     "गुणवंत विद्यार्थ्यांचा सन्मान सोहळा",
+//     "नवीन कार्यकारिणीची घोषणा",
+//     "सांस्कृतिक कार्यक्रम व स्नेहभोजन",
+//   ],
+//   schedule: [
+//     { time: "10:00 AM", title: "नोंदणी व स्वागत" },
+//     { time: "11:00 AM", title: "उद्घाटन सत्र व दीपप्रज्वलन" },
+//     { time: "12:30 PM", title: "वार्षिक अहवाल सादरीकरण" },
+//     { time: "02:00 PM", title: "स्नेहभोजन" },
+//     { time: "03:00 PM", title: "सन्मान सोहळा व सांस्कृतिक कार्यक्रम" },
+//   ],
+// };\
+
+interface EventSchedule {
+  time: string;
+  title: string;
+}
+
+interface EventDetailData {
+  id: string;
+  titleEn: string;
+  titleMr: string;
+  category: string;
+  image: string;
+  date: string;
+  time: string;
+  location: string;
+  address: string;
+  entry: string;
+  expectedGuests: string;
+  organizerName: string;
+  organizerPhone: string;
+  description: string;
+  descriptionMr: string;
+  highlights: string[];
+  schedule: EventSchedule[];
+}
+
+const API_PATH =
+  window.location.hostname === "localhost" ||
+    window.location.hostname === "192.168.1.62"
+    ? import.meta.env.VITE_LOCAL_API_PATH
+    : import.meta.env.VITE_LIVE_API_PATH;
 
 const CONTAINER =
   "sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5xl";
@@ -88,46 +119,45 @@ function Reveal({
 /* ------------------------------------------------------------------ */
 /*  Info row                                                           */
 /* ------------------------------------------------------------------ */
-function InfoRow({
-  icon,
-  label,
-  children,
-  last = false,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  children: React.ReactNode;
-  last?: boolean;
-}) {
-  return (
-    <div
-      className={`flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 ${
-        last ? "" : "border-b border-[color:var(--gold-300)]/50"
-      }`}
-    >
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm">
-        {icon}
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="text-[12px] font-semibold text-[var(--text-muted)]">
-          {label}
-        </p>
-        <div className="text-[14px] font-bold text-[var(--ink)]">{children}</div>
-      </div>
-    </div>
-  );
-}
+// function InfoRow({
+//   icon,
+//   label,
+//   children,
+//   last = false,
+// }: {
+//   icon: React.ReactNode;
+//   label: string;
+//   children: React.ReactNode;
+//   last?: boolean;
+// }) {
+//   return (
+//     <div
+//       className={`flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 ${last ? "" : "border-b border-[color:var(--gold-300)]/50"
+//         }`}
+//     >
+//       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm">
+//         {icon}
+//       </span>
+//       <div className="min-w-0 flex-1">
+//         <p className="text-[12px] font-semibold text-[var(--text-muted)]">
+//           {label}
+//         </p>
+//         <div className="text-[14px] font-bold text-[var(--ink)]">{children}</div>
+//       </div>
+//     </div>
+//   );
+// }
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
-const fullDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-IN", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+// const fullDate = (iso: string) =>
+//   new Date(iso).toLocaleDateString("en-IN", {
+//     weekday: "long",
+//     day: "numeric",
+//     month: "long",
+//     year: "numeric",
+//   });
 const dayOf = (iso: string) => new Date(iso).getDate();
 const monthOf = (iso: string) =>
   new Date(iso).toLocaleDateString("en-IN", { month: "short" });
@@ -137,7 +167,117 @@ const monthOf = (iso: string) =>
 /* ------------------------------------------------------------------ */
 export default function EventDetail() {
   const navigate = useNavigate();
-  const e = EVENT;
+  const { eventId } = useParams<{ eventId: string }>();
+
+  const [e, setE] = useState<EventDetailData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (eventId) {
+      getEventDetails();
+    }
+  }, [eventId]);
+
+  const getEventDetails = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "get_events",
+        }),
+      });
+
+      const result = await response.json();
+
+      console.log("Event Details API Response:", result);
+
+      if (result.status === 1 && Array.isArray(result.events)) {
+        const selectedEvent = result.events.find(
+          (event: EventDetailData) => String(event.id) === String(eventId)
+        );
+
+        if (selectedEvent) {
+          setE(selectedEvent);
+        } else {
+          setError("Event not found.");
+        }
+      } else {
+        setError("Unable to fetch event details.");
+      }
+    } catch (error) {
+      console.error("Event Details API Error:", error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  // const handleShare = async () => {
+  //   const shareData = {
+  //     title: e.titleEn,
+  //     text: `Check out ${e.titleEn} on Kohali Connect`,
+  //     url: window.location.href,
+  //   };
+  //   if (navigator.share) {
+  //     try {
+  //       await navigator.share(shareData);
+  //     } catch {
+  //       /* cancelled */
+  //     }
+  //   } else {
+  //     await navigator.clipboard.writeText(window.location.href);
+  //   }
+  // };
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[var(--cream)]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--gold-300)] border-t-[var(--maroon-800)]" />
+        <p className="text-sm font-medium text-[var(--maroon-800)]">
+          Loading event details...
+        </p>
+      </div>
+    );
+  }
+
+  if (error || !e) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[var(--cream)] px-4 text-center">
+        <p className="text-lg font-semibold text-[var(--maroon-900)]">
+          {error || "Event not found"}
+        </p>
+
+        <button
+          onClick={() => navigate("/events")}
+          className="rounded-xl bg-[var(--maroon-800)] px-5 py-3 text-sm font-semibold text-white"
+        >
+          Back to Events
+        </button>
+      </div>
+    );
+  }
+   // Category accent
+  const CATEGORY_ACCENT: Record<
+    string,
+    { solid: string; soft: string }
+  > = {
+    "सांस्कृतिक": { solid: "#C2415D", soft: "#FCE4E9" },
+    "सामाजिक": { solid: "#8B5CF6", soft: "#EEE8FF" },
+    "शैक्षणिक": { solid: "#2563EB", soft: "#E3EEFF" },
+    "आरोग्य": { solid: "#0F9F8F", soft: "#DDF7F3" },
+    "क्रीड़ा": { solid: "#E58A24", soft: "#FFF0D9" },
+    "इतर": { solid: "#D16B2F", soft: "#FBE8DC" },
+  };
+
+  const accent = CATEGORY_ACCENT[e.category] || {
+    solid: "#8B5CF6",
+    soft: "#EEE8FF",
+  };
 
   const handleShare = async () => {
     const shareData = {
@@ -145,11 +285,12 @@ export default function EventDetail() {
       text: `Check out ${e.titleEn} on Kohali Connect`,
       url: window.location.href,
     };
+
     if (navigator.share) {
       try {
         await navigator.share(shareData);
       } catch {
-        /* cancelled */
+        // User cancelled sharing
       }
     } else {
       await navigator.clipboard.writeText(window.location.href);
@@ -206,8 +347,8 @@ export default function EventDetail() {
                   <span
                     className="flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-bold shadow-sm"
                     style={{
-                      background: e.categoryAccent.solid,
-                      color: e.categoryAccent.soft,
+                      background: accent.solid,
+                      color: accent.soft,
                     }}
                   >
                     <Music2 size={11} className="shrink-0" />
@@ -243,7 +384,7 @@ export default function EventDetail() {
             </Reveal>
 
             {/* Action buttons */}
-            <Reveal delay={120}>
+            {/* <Reveal delay={120}>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <a
                   href={`tel:${e.organizerPhone.replace(/\s/g, "")}`}
@@ -262,18 +403,18 @@ export default function EventDetail() {
                   <Navigation className="h-4 w-4" /> Directions
                 </a>
               </div>
-            </Reveal>
+            </Reveal> */}
 
             {/* About */}
             <Reveal delay={160} className="mt-6">
               <SectionHeader eyebrow="More Info" title="About Event" />
               <p className="mt-1.5 text-[14px] leading-relaxed text-[var(--text-muted)]">
-                {e.description}
+                {e.descriptionMr}
               </p>
             </Reveal>
 
             {/* Highlights */}
-            <Reveal delay={200} className="mt-6">
+            {/* <Reveal delay={200} className="mt-6">
               <SectionHeader eyebrow="What to Expect" title="Highlights" />
               <div className="mt-2 grid gap-2.5">
                 {e.highlights.map((h) => (
@@ -293,13 +434,13 @@ export default function EventDetail() {
                   </div>
                 ))}
               </div>
-            </Reveal>
+            </Reveal> */}
           </div>
 
           {/* ================= RIGHT COLUMN ================= */}
           <div className="lg:sticky lg:top-4">
             {/* Event info card */}
-            <Reveal delay={200} className="mt-6 lg:mt-0">
+            {/* <Reveal delay={200} className="mt-6 lg:mt-0">
               <SectionHeader eyebrow="Event Info" title="Date & Venue" />
               <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
                 <InfoRow
@@ -346,20 +487,19 @@ export default function EventDetail() {
                   </span>
                 </InfoRow>
               </div>
-            </Reveal>
+            </Reveal> */}
 
             {/* Schedule */}
-            <Reveal delay={260} className="mt-6">
+            {/* <Reveal delay={260} className="mt-6">
               <SectionHeader eyebrow="Programme" title="Schedule" />
               <div className="overflow-hidden rounded-2xl border border-[color:var(--gold-300)]/60 bg-[var(--paper)] shadow-[0_6px_20px_-12px_rgba(74,11,26,0.35)] md:rounded-3xl">
                 {e.schedule.map((s, i) => (
                   <div
                     key={s.time}
-                    className={`flex items-center gap-3 px-4 py-3 md:px-5 ${
-                      i === e.schedule.length - 1
-                        ? ""
-                        : "border-b border-[color:var(--gold-300)]/50"
-                    }`}
+                    className={`flex items-center gap-3 px-4 py-3 md:px-5 ${i === e.schedule.length - 1
+                      ? ""
+                      : "border-b border-[color:var(--gold-300)]/50"
+                      }`}
                   >
                     <span className="w-[76px] shrink-0 rounded-full bg-[linear-gradient(100deg,var(--gold-300),var(--gold-500))] px-2 py-1 text-center text-[10.5px] font-bold text-[var(--maroon-900)]">
                       {s.time}
@@ -370,7 +510,7 @@ export default function EventDetail() {
                   </div>
                 ))}
               </div>
-            </Reveal>
+            </Reveal> */}
           </div>
         </div>
       </main>

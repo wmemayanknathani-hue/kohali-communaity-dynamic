@@ -138,8 +138,12 @@ function ytThumb(id: string) {
 
 /** Detail page path. Uses the item's id when the API sends one, otherwise
  *  falls back to the encoded title. */
+// function detailPath(item: { id?: string; titleEn: string }) {
+//   return `/live-events/${item.id ?? encodeURIComponent(item.titleEn)}`;
+// }
 function detailPath(item: { id?: string; titleEn: string }) {
-  return `/live-events/${item.id ?? encodeURIComponent(item.titleEn)}`;
+  const eventId = item.id || encodeURIComponent(item.titleEn.trim());
+  return `/live-events/${eventId}`;
 }
 
 /** Pulls the leading number out of a countdown string ("in 7 days" -> 7) so
