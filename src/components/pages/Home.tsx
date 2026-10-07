@@ -6,7 +6,7 @@ import { getBusinesses } from "../../data/business";
 import type { Business } from "../../data/business";
 import {
   User, Users, Radio, Megaphone, CalendarDays, Image as ImageIcon,
-  PlayCircle, BookOpen, Store, ChevronRight,
+  PlayCircle, BookOpen, Store, ChevronRight,TrophyIcon
   // MapPin, Phone, Globe, Play,
 } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
@@ -49,6 +49,7 @@ const quickAccess = [
   { to: "/photo-gallery", label: "Gallery", icon: ImageIcon },
   { to: "/video-gallery", label: "Videos", icon: PlayCircle },
   { to: "/books", label: "Books", icon: BookOpen },
+  { to: "/success-stories", label: "Success Story", icon: TrophyIcon },
 ];
 
 /* ============================= SCROLL REVEAL ============================= */

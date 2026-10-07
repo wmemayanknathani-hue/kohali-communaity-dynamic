@@ -13,6 +13,7 @@ export type NotificationCategory =
   | "फोटो"     // Photo-related notifications
   | "व्हिडिओ"    // Video-related notifications
   | "पुस्तक"    // Book-related notifications
+  | "इतर"    // Other
 export type Notification = {
   id: string;
   title: string;
@@ -35,6 +36,7 @@ const categoryLabel: Record<NotificationCategory, string> = {
   फोटो: "फोटो",
   व्हिडिओ: "व्हिडिओ",
   पुस्तक: "पुस्तक",
+  इतर: "इतर",
 };
 
 // One accent color per category 
@@ -48,8 +50,9 @@ const categoryAccent: Record<NotificationCategory, string> = {
   सेवा: "var(--maroon-800)",
   व्यवसाय: "var(--gold-500)",
   फोटो: "var(--maroon-800)",
-  व्हिडिओ: "var(--gold-500)",
-  पुस्तक: "var(--maroon-800)",  
+  व्हिडिओ: "var(--gold-500)",  
+  पुस्तक: "var(--maroon-800)",
+  इतर: "var(--gold-500)",  
 };
 
 function groupByDate(notifications: Notification[]) {

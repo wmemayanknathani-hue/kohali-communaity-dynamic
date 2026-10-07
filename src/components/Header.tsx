@@ -80,10 +80,16 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   return () => clearTimeout(timer);
 }, []);
 useEffect(() => {
-  fetchNotifications();
+  const interval = setInterval(() => {
+    fetchNotifications();
+  }, 10000); 
+  return () => {
+    clearInterval(interval);
+  };
 }, []);
 
 const fetchNotifications = async () => {
+  // console.log("tick", new Date().toLocaleTimeString(), localStorage.getItem("mobile_user"));
   try {
     const mobileUser = JSON.parse(
       localStorage.getItem("mobile_user") || "{}"

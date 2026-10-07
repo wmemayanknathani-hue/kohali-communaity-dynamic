@@ -76,6 +76,7 @@ const categoryLabel: Record<NotificationCategory, string> = {
   फोटो: "फोटो", 
   व्हिडिओ: "व्हिडिओ",
   पुस्तक: "पुस्तक",
+  इतर: "इतर",
 };
 
 // each category gets a real color pairing + icon, plus a solid accent hex used for the card's top band / wash
@@ -162,6 +163,13 @@ const categoryStyle: Record<
     bg: "bg-[linear-gradient(160deg,#6d8fc7,#4669a3)]",
     text: "text-white",
     icon: BookOpen,
+    accent: "#4669a3",
+  },
+
+   इतर: {
+    bg: "bg-[linear-gradient(160deg,#6d8fc7,#4669a3)]",
+    text: "text-white",
+    icon: Sparkles,
     accent: "#4669a3",
   },
 };
