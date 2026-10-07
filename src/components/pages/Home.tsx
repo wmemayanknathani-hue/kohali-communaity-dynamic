@@ -49,7 +49,7 @@ const quickAccess = [
   { to: "/photo-gallery", label: "Gallery", icon: ImageIcon },
   { to: "/video-gallery", label: "Videos", icon: PlayCircle },
   { to: "/books", label: "Books", icon: BookOpen },
-  { to: "/success-stories", label: "Success Story", icon: TrophyIcon },
+  { to: "/success-stories", label: "Stories", icon: TrophyIcon },
 ];
 
 /* ============================= SCROLL REVEAL ============================= */
