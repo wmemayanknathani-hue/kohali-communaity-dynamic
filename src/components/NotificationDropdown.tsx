@@ -1,69 +1,16 @@
-import { ChevronRight, X, BellOff, } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-export type NotificationCategory =
-  | "सूचना"        // Latest notices
-  | "कार्यक्रम"         // Event notifications
-  | "स्मरणपत्र"      // Upcoming event reminders
-  | "लाइव्ह"          // Live event notifications
-  | "घोषणा"  // Community announcements
-  | "व्यवसाय"    // Business promotions
-  | "अपडेट"        // Important updates
-  | "सेवा"     // Service-related notifications
-  | "फोटो"     // Photo-related notifications
-  | "व्हिडिओ"    // Video-related notifications
-  | "पुस्तक"    // Book-related notifications
-  | "इतर"    // Other
-export type Notification = {
-  id: string;
-  title: string;
-  description: string;
-  date: string;      // display label, e.g. "आज", "काल", "१२ ऑग"
-  category: NotificationCategory;
-  read: boolean;
-  type:String;
-};
+// src/components/NotificationDropdown.tsx
+import { ChevronRight, X, BellOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  categoryAccent,
+  categoryLabel,
+  getNotificationRoute,
+  groupByDate,
+} from "../data/notifications";
+import type { Notification } from "../data/notifications";
 
-const categoryLabel: Record<NotificationCategory, string> = {
-  सूचना: "सूचना",
-  कार्यक्रम: "कार्यक्रम",
-  स्मरणपत्र: "स्मरणपत्र",
-  लाइव्ह: "लाइव्ह",
-  घोषणा: "घोषणा",
-  अपडेट: "अपडेट",
-  सेवा: "सेवा",
-  व्यवसाय: "व्यवसाय",
-  फोटो: "फोटो",
-  व्हिडिओ: "व्हिडिओ",
-  पुस्तक: "पुस्तक",
-  इतर: "इतर",
-};
-
-// One accent color per category 
-const categoryAccent: Record<NotificationCategory, string> = {
-  सूचना: "var(--gold-500)",
-  कार्यक्रम: "var(--maroon-700)",
-  स्मरणपत्र: "var(--gold-500)",
-  लाइव्ह: "var(--maroon-900)",
-  घोषणा: "var(--gold-500)",
-  अपडेट: "var(--maroon-500,var(--maroon-700))",
-  सेवा: "var(--maroon-800)",
-  व्यवसाय: "var(--gold-500)",
-  फोटो: "var(--maroon-800)",
-  व्हिडिओ: "var(--gold-500)",  
-  पुस्तक: "var(--maroon-800)",
-  इतर: "var(--gold-500)",  
-};
-
-function groupByDate(notifications: Notification[]) {
-  const groups: { date: string; items: Notification[] }[] = [];
-  for (const n of notifications) {
-    const g = groups.find((g) => g.date === n.date);
-    if (g) g.items.push(n);
-    else groups.push({ date: n.date, items: [n] });
-  }
-  return groups;
-}
+// Re-exported so existing imports from this file keep working
+export type { Notification, NotificationCategory } from "../data/notifications";
 
 export function NotificationDropdown({
   open,
@@ -77,52 +24,14 @@ export function NotificationDropdown({
   onMarkRead?: (id: string) => void;
   onMarkAllRead?: () => void;
 }) {
-const navigate = useNavigate();
-const handleNotificationClick = async (notification: Notification) => {
-  await onMarkRead?.(notification.id);
-  switch (notification.type) {
-    case "business_promotion":
-      navigate("/business");
-      break;
+  const navigate = useNavigate();
 
-    case "live_program":
-      navigate("/live-events");
-      break;
-
-    case "notices":
-      navigate("/notices");
-      break;
-
-    case "events":
-      navigate("/live-events");
-      break;
-
-    case "photos":
-      navigate("/photo-gallery");
-      break;
-
-    case "videos":
-      navigate("/video-gallery");
-      break;
-
-    case "books":
-      navigate("/books");
-      break;
-
-    case "commite":
-      navigate("/committee");
-      break;
-
-    case "family_member":
-      navigate("/family");
-      break;
-
-    default:
-      break;
-  }
-  onClose();
-};
-
+  const handleNotificationClick = async (notification: Notification) => {
+    await onMarkRead?.(notification.id);
+    const route = getNotificationRoute(notification.type);
+    if (route) navigate(route);
+    onClose();
+  };
 
   if (!open) return null;
 
@@ -175,7 +84,7 @@ const handleNotificationClick = async (notification: Notification) => {
           ) : (
             groups.map((group) => (
               <div key={group.date}>
-                {/* date divider — the panel's organizing device, not decoration */}
+                {/* date divider */}
                 <div className="sticky top-0 z-10 flex items-center gap-2 bg-[var(--paper)]/95 px-4 pt-2.5 pb-1.5 backdrop-blur-sm">
                   <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--maroon-700)]">
                     {group.date}
@@ -186,12 +95,11 @@ const handleNotificationClick = async (notification: Notification) => {
                 {group.items.map((n) => (
                   <button
                     key={n.id}
-                  onClick={() => handleNotificationClick(n)}
+                    onClick={() => handleNotificationClick(n)}
                     className={`group flex w-full cursor-pointer gap-3 px-4 py-3 text-left transition-colors duration-150 ${
                       !n.read ? "bg-[var(--gold-100)]/35" : "bg-transparent"
                     } hover:bg-[var(--gold-100)]/50`}
                   >
-                    {/* accent bar replaces the loud pill badge */}
                     <div
                       className="mt-0.5 w-[3px] shrink-0 self-stretch rounded-full"
                       style={{ background: categoryAccent[n.category] }}
@@ -216,10 +124,6 @@ const handleNotificationClick = async (notification: Notification) => {
                       <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-[var(--text-muted)]">
                         {n.description}
                       </p>
-
-                      {/* <span className="mt-1.5 flex items-center gap-0.5 text-[10.5px] font-bold text-[var(--maroon-800)]">
-                        तपशील पहा <ChevronRight size={11} />
-                      </span> */}
                     </div>
                   </button>
                 ))}
@@ -228,10 +132,10 @@ const handleNotificationClick = async (notification: Notification) => {
           )}
         </div>
 
-        {/* Footer action — only shown when there's something to act on */}
-        {unreadCount > 0 && (
+        {/* Footer — opens the full notifications page */}
+        {notifications.length > 0 && (
           <Link
-            to="/notices"
+            to="/notifications"
             onClick={onClose}
             className="flex w-full shrink-0 cursor-pointer items-center justify-center gap-1.5 border-t border-[var(--gold-500)]/25 bg-[var(--paper)] py-2.5 text-center text-[11px] font-bold text-[var(--maroon-800)] transition-colors hover:bg-[var(--gold-100)]/40"
           >

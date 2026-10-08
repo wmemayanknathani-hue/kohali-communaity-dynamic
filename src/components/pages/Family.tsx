@@ -51,8 +51,6 @@ function MotionStyles() {
 }
 
 /* ============================= SCROLL REVEAL ============================= */
-/* Same lightweight pattern used across the other pages — fades + lifts an
-   element in once it enters the viewport, staggered by `delay`. */
 
 function useRevealVisible() {
   const ref = useRef<HTMLDivElement>(null);

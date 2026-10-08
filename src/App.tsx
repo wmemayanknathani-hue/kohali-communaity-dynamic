@@ -35,6 +35,8 @@ import { ChildSafety } from "./components/pages/ChildSafety";
 import SuccessStories from "./components/pages/SuccessStories";
 import SuccessstoriesDetail from "./components/pages/SuccessstoriesDetail";
 import EventDetails from "./components/pages/EventDetails";
+import Notifications from "./components/pages/Notifications";
+
 // import { getBookById } from "./data/books";
 
 function BookDetailRoute() {
@@ -106,6 +108,7 @@ function AppContent() {
           <Route path="/video-gallery" element={<VideoGallery />} />
           <Route path="/success-stories" element={<SuccessStories />} />
           <Route path="/success-stories/:storySlug" element={<SuccessstoriesDetail />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Route>
       </Routes>
     </>
