@@ -16,19 +16,45 @@ import {
 import type { SuccessStory } from "../../data/success-stories";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
+const getYouTubeVideoId = (url?: string) => {
+  if (!url) return null;
+
+  try {
+    const parsedUrl = new URL(url);
+    let videoId = "";
+
+    if (parsedUrl.hostname.includes("youtu.be")) {
+      videoId = parsedUrl.pathname.slice(1).split("/")[0];
+    } else if (parsedUrl.hostname.includes("youtube.com")) {
+      if (parsedUrl.pathname === "/watch") {
+        videoId = parsedUrl.searchParams.get("v") || "";
+      } else {
+        videoId = parsedUrl.pathname.split("/").filter(Boolean).pop() || "";
+      }
+    }
+
+    return /^[a-zA-Z0-9_-]{11}$/.test(videoId)
+      ? videoId
+      : null;
+
+  } catch {
+    return null;
+  }
+};
 export default function SuccessStoryDetail() {
   const { storySlug } = useParams<{ storySlug: string }>();
   const navigate = useNavigate();
 
   const [story, setStory] = useState<SuccessStory | undefined>();
   const [successStories, setSuccessStories] = useState<SuccessStory[]>([]);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
     setMounted(false);
     setSlide(0);
-
+    setIsVideoPlaying(false);
     const t = requestAnimationFrame(() => setMounted(true));
 
     return () => cancelAnimationFrame(t);
@@ -68,7 +94,7 @@ export default function SuccessStoryDetail() {
   }
 
   const bodyParagraphs = [story.desc];
-  console.log("bodyParagraphs",bodyParagraphs);
+  console.log("bodyParagraphs", bodyParagraphs);
 
   const related = successStories
     .filter((s) => s.slug !== story.slug)
@@ -76,8 +102,8 @@ export default function SuccessStoryDetail() {
 
   const reveal = (step: number) => ({
     className: `transition-all duration-500 ease-out ${mounted
-        ? "translate-y-0 opacity-100"
-        : "translate-y-4 opacity-0"
+      ? "translate-y-0 opacity-100"
+      : "translate-y-4 opacity-0"
       }`,
     style: {
       transitionDelay: mounted ? `${step * 90}ms` : "0ms",
@@ -94,7 +120,7 @@ export default function SuccessStoryDetail() {
           <ChevronLeft className="h-4 w-4 md:h-[18px] md:w-[18px] text-white" strokeWidth={2.2} />
         </button>
       </div>
-      
+
       <div className="mx-auto w-full px-4 pb-4 sm:px-6 md:max-w-3xl md:px-8 lg:max-w-4xl lg:px-10 xl:max-w-5xl">
         {/* Category + title + byline */}
         <div {...reveal(0)}>
@@ -131,19 +157,79 @@ export default function SuccessStoryDetail() {
         </div>
 
         {/* Hero image */}
-        <div
-          {...reveal(1)}
-          className={`${reveal(1).className} group mb-5 overflow-hidden rounded-2xl border border-[var(--gold-100)] shadow-[0_4px_16px_rgba(44,5,13,0.10)]`}
-        >
-          <div className="aspect-[16/11] w-full overflow-hidden">
-            <img
-              src={story.img}
-              alt={story.title}
-              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              onError={(e) => (e.currentTarget.style.display = "none")}
-            />
-          </div>
-        </div>
+        {/* Hero image / YouTube video */}
+        {(() => {
+          const videoId = getYouTubeVideoId(story.youtube_url);
+
+          return (
+            <div
+              {...reveal(1)}
+              className={`${reveal(1).className} group mb-5 overflow-hidden rounded-2xl border border-[var(--gold-100)] shadow-[0_4px_16px_rgba(44,5,13,0.10)]`}
+            >
+              <div className="relative aspect-[16/11] w-full overflow-hidden bg-black">
+                {videoId && isVideoPlaying ? (
+                  <iframe
+                    key={videoId}
+                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
+                    title={story.title}
+                    className="absolute inset-0 h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (videoId) {
+                        setIsVideoPlaying(true);
+                      }
+                    }}
+                    disabled={!videoId}
+                    aria-label={
+                      videoId ? "व्हिडिओ सुरू करा" : story.title
+                    }
+                    className={`relative block h-full w-full ${videoId ? "cursor-pointer" : "cursor-default"
+                      }`}
+                  >
+                    <img
+                      src={
+                        videoId
+                          ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                          : story.img
+                      }
+                      alt={story.title}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      onError={(e) => {
+                        if (videoId) {
+                          e.currentTarget.src = story.img;
+                          e.currentTarget.onerror = null;
+                        } else {
+                          e.currentTarget.style.display = "none";
+                        }
+                      }}
+                    />
+
+                    {videoId && (
+                      <>
+                        <div className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/35" />
+
+                        <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-red-600 shadow-xl transition-transform group-hover:scale-110">
+                          <svg
+                            viewBox="0 0 24 24"
+                            className="ml-1 h-8 w-8 fill-white"
+                          >
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </span>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Body */}
         <div {...reveal(2)} className={`${reveal(2).className} mb-5 flex flex-col gap-4`}>

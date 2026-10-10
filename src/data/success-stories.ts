@@ -9,6 +9,7 @@ export interface SuccessStory {
   org: string;
   desc: string;
   body?: string[];
+  youtube_url?: string;
   quote?: {
     text: string;
     author: string;
@@ -83,6 +84,10 @@ export async function getSuccessStories(): Promise<SuccessStory[]> {
         org:
           item.org ||
           item.occupation ||
+          "",
+
+        youtube_url:
+          item.youtube_url ||
           "",
 
         desc:
