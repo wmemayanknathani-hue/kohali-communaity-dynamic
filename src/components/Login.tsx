@@ -27,8 +27,8 @@ const RESEND_SECONDS = 30;
 const STRINGS: Record<Lang, Record<string, string>> = {
   mr: {
     logoname: "कोहली समाज",
-    welcomeBack: "आपल्या समाजामध्ये पुन्हा स्वागत आहे",
-    member: "सदस्य",
+    welcomeBack: "कोहाली समाजात आपले स्वागत आहे",
+    member: "सदस्य", 
     admin: "प्रशासक",
     communityMember: "समाज सदस्य",
     loginWithMobile: "आपल्या मोबाईल क्रमांकाने लॉगिन करा",
@@ -66,7 +66,7 @@ const STRINGS: Record<Lang, Record<string, string>> = {
   },
   en: {
     logoname: "Kohali Samaj",
-    welcomeBack: "Welcome back to your community",
+    welcomeBack: "Welcome to the Kohali Samaj",
     member: "Member",
     admin: "Admin",
     communityMember: "Community member",
