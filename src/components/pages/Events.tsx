@@ -14,6 +14,7 @@ import {
   Sparkles,
   Search,
   ImageOff,
+  ArrowRight
 } from "lucide-react";
 // import event1 from "../../assets/event-adhiveshan.jpg";
 // import event2 from "../../assets/event-mahila-parishad.jpg";
@@ -613,6 +614,12 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
                     <p className="mt-1 text-[14px] text-[var(--text-muted)]">
                       {event.descriptionMr}
                     </p>
+                    <div className="flex items-center justify-between border-t border-[var(--gold-100)] pt-3.5  text-[13px] font-semibold text-[var(--maroon-800)]">
+                      अधिक पहा
+                      <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[var(--gold-100)] transition-colors duration-300 group-hover:bg-[var(--maroon-800)]">
+                        <ArrowRight className="h-3.5 w-3.5 stroke-[var(--maroon-800)] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:stroke-white" />
+                      </span>
+                    </div>
                   </div>
                 </article>
                 </Link>
