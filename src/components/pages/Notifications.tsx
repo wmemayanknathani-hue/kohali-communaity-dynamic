@@ -2,13 +2,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BellOff, CheckCheck, ChevronRight, ChevronLeft } from "lucide-react";
-import {
-  SAMPLE_NOTIFICATIONS,
+ import {
+  fetchNotifications,
   categoryAccent,
   categoryLabel,
   getNotificationRoute,
   groupByDate,
 } from "../../data/notifications";
+
 import type { Notification } from "../../data/notifications";
 import SectionHeader from "../SectionHeader";
 
@@ -21,10 +22,13 @@ const CONTAINER =
 export default function Notifications() {
   const navigate = useNavigate();
   // TODO: replace with the same source your Header passes to <NotificationDropdown />
-  const [items, setItems] = useState<Notification[]>(SAMPLE_NOTIFICATIONS);
+  const [items, setItems] = useState<Notification[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
   const [mounted, setMounted] = useState(false);
-
+  const API_PATH =window.location.hostname === "localhost" ||window.location.hostname === "192.168.1.62"? import.meta.env.VITE_LOCAL_API_PATH: import.meta.env.VITE_LIVE_API_PATH;
+  useEffect(() => {
+  fetchNotifications(setItems);
+}, []);
   useEffect(() => {
     const frame = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(frame);
@@ -54,8 +58,52 @@ export default function Notifications() {
 
   const markRead = (id: string) =>
     setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+const markAllRead = async () => {
+  if (items.length === 0 || unreadCount === 0) return;
 
-  const markAllRead = () => setItems((prev) => prev.map((n) => ({ ...n, read: true })));
+  try {
+    const mobileUser = JSON.parse(
+      localStorage.getItem("mobile_user") || "{}"
+    );
+   
+
+    const moduleIds = [
+      ...new Set(
+        items
+          .map((n) => n.id)
+          .filter((id) => id !== undefined && id !== null && id !== "")
+          .map(String)
+      ),
+    ];
+
+    if (!mobileUser?.id) return;
+
+    const response = await fetch(`${API_PATH}/action_layer.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      credentials: "include",
+      body: new URLSearchParams({
+        action: "read_notification",
+        flag: "read_all",
+        user_id: String(mobileUser.id),
+        module_ids: JSON.stringify(moduleIds),
+      }).toString(),
+    });
+
+    const data = await response.json();
+
+    if (data.status) {
+      setItems((prev) =>
+        prev.map((n) => ({ ...n, read: true }))
+      );
+      fetchNotifications(setItems);
+    }
+  } catch (error) {
+    console.error("Mark all notifications read error:", error);
+  }
+};
 
   const handleClick = (n: Notification) => {
     markRead(n.id);
@@ -107,11 +155,10 @@ export default function Notifications() {
                 key={chip.key}
                 type="button"
                 onClick={() => setFilter(chip.key)}
-                className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[11px] font-bold transition-colors duration-150 sm:text-xs md:px-4 md:py-2 md:text-[13px] ${
-                  active
+                className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[11px] font-bold transition-colors duration-150 sm:text-xs md:px-4 md:py-2 md:text-[13px] ${active
                     ? "border-[var(--maroon-800)] bg-[var(--maroon-800)] text-white shadow-sm"
                     : "border-[var(--gold-500)]/50 bg-[var(--paper)] text-[var(--maroon-800)] hover:bg-[var(--gold-100)]"
-                }`}
+                  }`}
               >
                 {chip.label}
               </button>
@@ -124,9 +171,8 @@ export default function Notifications() {
         {/* Empty state */}
         {filtered.length === 0 && (
           <div
-            className={`mt-3 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-[var(--gold-500)]/50 bg-[var(--paper)] px-6 py-14 text-center transition-all duration-500 motion-reduce:transition-none ${
-              mounted ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-            }`}
+            className={`mt-3 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-[var(--gold-500)]/50 bg-[var(--paper)] px-6 py-14 text-center transition-all duration-500 motion-reduce:transition-none ${mounted ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+              }`}
           >
             <BellOff size={24} className="text-[var(--gold-500)]/70" />
             <p className="kc-font-display text-sm font-bold text-[var(--ink)] sm:text-base">
@@ -155,16 +201,14 @@ export default function Notifications() {
                   <li
                     key={n.id}
                     style={{ transitionDelay: `${delay}ms` }}
-                    className={`transition-all duration-500 ease-out motion-reduce:transition-none ${
-                      mounted ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-                    }`}
+                    className={`transition-all duration-500 ease-out motion-reduce:transition-none ${mounted ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+                      }`}
                   >
                     <button
                       type="button"
                       onClick={() => handleClick(n)}
-                      className={`group flex w-full cursor-pointer gap-3 rounded-xl border border-[var(--gold-500)]/25 px-3.5 py-3 text-left transition-colors duration-150 hover:bg-[var(--gold-100)]/50 sm:gap-4 sm:px-4 sm:py-3.5 ${
-                        !n.read ? "bg-[var(--gold-100)]/35" : "bg-[var(--paper)]"
-                      }`}
+                      className={`group flex w-full cursor-pointer gap-3 rounded-xl border border-[var(--gold-500)]/25 px-3.5 py-3 text-left transition-colors duration-150 hover:bg-[var(--gold-100)]/50 sm:gap-4 sm:px-4 sm:py-3.5 ${!n.read ? "bg-[var(--gold-100)]/35" : "bg-[var(--paper)]"
+                        }`}
                     >
                       <div
                         className="w-[3px] shrink-0 self-stretch rounded-full"

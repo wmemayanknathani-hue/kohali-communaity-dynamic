@@ -48,7 +48,7 @@ interface ContactMethod {
 const CONTACT_METHODS: ContactMethod[] = [
   { id: "call", label: "Phone Call" },
   { id: "whatsapp", label: "WhatsApp" },
-  { id: "email", label: "Email" },
+  // { id: "email", label: "Email" },
 ];
 
 /* -------------------------------------------------------------------------- */
