@@ -513,13 +513,6 @@ export default function LiveEvents() {
 
                   {/* WATCH NOW */}
                   <button
-                    onClick={() =>
-                      liveEvent?.youtubeId &&
-                      setPlaying({
-                        youtubeId: liveEvent.youtubeId,
-                        title: liveEvent.titleMr || liveEvent.titleEn,
-                      })
-                    }
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] py-2.5 text-sm font-bold text-[var(--maroon-950)] shadow-[0_8px_22px_-8px_rgba(227,181,74,0.75)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_25px_-8px_rgba(227,181,74,0.9)] active:scale-[0.98] md:py-3 md:text-base"
                   >
                     <PlayIcon className="h-3.5 w-3.5 md:h-4 md:w-4" />
@@ -627,15 +620,15 @@ export default function LiveEvents() {
                         </button>
                       </div> */}
 
-                      {/* {ev.youtubeId && (
+                      {ev.youtubeId && (
                         <button
                           onClick={() => setPlaying({ youtubeId: ev.youtubeId!, title: `${ev.titleEn} — Teaser` })}
                           className="mt-2 flex items-center gap-1 text-[11px] font-semibold text-[var(--maroon-800)]"
                         >
                           <PlayIcon className="h-3 w-3" />
-                          Watch teaser
+                         View more 
                         </button>
-                      )} */}
+                      )}
                     </div>
                   </Link>
                 );
@@ -664,6 +657,15 @@ export default function LiveEvents() {
                         <CalendarIcon className="h-3 w-3" />
                         {item.date}
                       </span>
+
+                      {item.youtubeId && (
+                        <button
+                          className="mt-2 flex items-center gap-1 text-[11px] font-semibold text-[var(--maroon-800)]"
+                        >
+                          <PlayIcon className="h-3 w-3" />
+                          View more
+                        </button>
+                      )}
                       {/* <span className="flex items-center gap-1">
                         <EyeIcon className="h-3 w-3" />
                         {item.views} views
