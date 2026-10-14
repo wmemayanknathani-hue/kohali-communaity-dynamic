@@ -657,8 +657,12 @@ export default function LiveEvents() {
                         <CalendarIcon className="h-3 w-3" />
                         {item.date}
                       </span>
-
-                      {item.youtubeId && (
+                      {/* <span className="flex items-center gap-1">
+                        <EyeIcon className="h-3 w-3" />
+                        {item.views} views
+                      </span> */}
+                    </div>
+                    {item.youtubeId && (
                         <button
                           className="mt-2 flex items-center gap-1 text-[11px] font-semibold text-[var(--maroon-800)]"
                         >
@@ -666,11 +670,6 @@ export default function LiveEvents() {
                           View more
                         </button>
                       )}
-                      {/* <span className="flex items-center gap-1">
-                        <EyeIcon className="h-3 w-3" />
-                        {item.views} views
-                      </span> */}
-                    </div>
                     {/* <p className="truncate text-[12px] text-[var(--text-muted)] flex items-center gap-1 mt-1"> <User className="h-3 w-3" /> {item.host}</p> */}
                   </div>
                 </button>
