@@ -83,9 +83,8 @@ function DetailRow({
 }) {
   return (
     <div
-      className={`group kc-row-shine flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 cursor-pointer transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99] ${
-        last ? "" : "border-t border-[color:var(--gold-300)]/50"
-      }`}
+      className={`group kc-row-shine flex items-center gap-3 px-4 py-3.5 md:gap-4 md:px-5 md:py-4 cursor-pointer transition-colors duration-200 hover:bg-[var(--gold-100)]/40 active:scale-[0.99] ${last ? "" : "border-t border-[color:var(--gold-300)]/50"
+        }`}
     >
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm">
         {icon}
@@ -115,6 +114,7 @@ export default function BusinessDetailPage() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isYoutubePlaying, setIsYoutubePlaying] = useState(false);
   const stripRef = useRef<HTMLDivElement>(null);
   const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const touchStartX = useRef<number | null>(null);
@@ -128,6 +128,7 @@ export default function BusinessDetailPage() {
       left: thumb.offsetLeft - strip.clientWidth / 2 + thumb.clientWidth / 2,
       behavior: "smooth",
     });
+    setIsYoutubePlaying(false);
   }, [activeIndex]);
 
   useEffect(() => {
@@ -203,9 +204,9 @@ export default function BusinessDetailPage() {
   // const youtubeId = adType === "video" && youtubeUrl ? getYouTubeId(youtubeUrl) : null;
 
   // first item = the business's main ad, followed by the gallery items
-const media: MediaItem[] = Array.isArray(business.all_files)
-  ? business.all_files
-  : [];
+  const media: MediaItem[] = Array.isArray(business.all_files)
+    ? business.all_files
+    : [];
   const goTo = (i: number) => setActiveIndex((i + media.length) % media.length);
   const goNext = () => goTo(activeIndex + 1);
   const goPrev = () => goTo(activeIndex - 1);
@@ -228,10 +229,10 @@ const media: MediaItem[] = Array.isArray(business.all_files)
     youtube ? { Icon: FaYoutube, label: "YouTube", href: toWebsiteHref(youtube) } : null,
     (whatsapp ?? mobile)
       ? {
-          Icon: FaWhatsapp,
-          label: "WhatsApp",
-          href: toWhatsAppHref(whatsapp ?? mobile, `Hi ${ownerName}, I found ${name} on Kohali Connect.`),
-        }
+        Icon: FaWhatsapp,
+        label: "WhatsApp",
+        href: toWhatsAppHref(whatsapp ?? mobile, `Hi ${ownerName}, I found ${name} on Kohali Connect.`),
+      }
       : null,
   ].filter(Boolean) as SocialLink[];
 
@@ -324,23 +325,43 @@ const media: MediaItem[] = Array.isArray(business.all_files)
                               </div>
                             ))}
 
-                          {item.type === "youtube" &&
-                            ytId &&
-                            (isActive ? (
+                          {item.type === "youtube" && ytId && (
+                            isActive && isYoutubePlaying ? (
                               <iframe
-                                src={`https://www.youtube.com/embed/${ytId}`}
+                                src={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0`}
                                 title={name}
-                                className="h-full w-full"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                className="absolute inset-0 h-full w-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                                 allowFullScreen
                               />
                             ) : (
-                              <img
-                                src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
-                                alt=""
-                                className="h-full w-full object-cover"
-                              />
-                            ))}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (isActive) {
+                                    setIsYoutubePlaying(true);
+                                  } else {
+                                    setActiveIndex(i);
+                                    setIsYoutubePlaying(false);
+                                  }
+                                }}
+                                aria-label="Play YouTube video"
+                                className="absolute inset-0 h-full w-full cursor-pointer border-0 bg-black p-0"
+                              >
+                                <img
+                                  src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
+                                  alt={`${name} YouTube thumbnail`}
+                                  className="absolute inset-0 h-full w-full object-cover"
+                                />
+
+                                <span className="absolute inset-0 flex items-center justify-center bg-black/10">
+                                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] text-[var(--maroon-800)] shadow-lg transition-transform hover:scale-110">
+                                    <Play size={24} fill="currentColor" strokeWidth={1.5} />
+                                  </span>
+                                </span>
+                              </button>
+                            )
+                          )}
                         </div>
                       );
                     })}
@@ -382,9 +403,8 @@ const media: MediaItem[] = Array.isArray(business.all_files)
                   </span>
                   {typeof isOpen === "boolean" && (
                     <span
-                      className={`pointer-events-auto flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-sm ${
-                        isOpen ? "bg-[#1a9c4d]" : "bg-[var(--maroon-950)]"
-                      }`}
+                      className={`pointer-events-auto flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-sm ${isOpen ? "bg-[#1a9c4d]" : "bg-[var(--maroon-950)]"
+                        }`}
                     >
                       <span className={`h-1.5 w-1.5 rounded-full bg-white ${isOpen ? "animate-pulse" : ""}`} />
                       {isOpen ? "Open Now" : "Closed"}
@@ -404,7 +424,7 @@ const media: MediaItem[] = Array.isArray(business.all_files)
               {media.length > 1 && (
                 <div ref={stripRef} className="relative mt-3 flex gap-2 overflow-x-auto pb-1">
                   {media.map((item, i) => {
-                    const ytId = item.type === "youtube" ? getYouTubeId(item.src) : null;
+                    const ytId = item.type === "video" ? getYouTubeId(item.src) : null;
                     const isActive = i === activeIndex;
                     return (
                       <button
@@ -415,16 +435,15 @@ const media: MediaItem[] = Array.isArray(business.all_files)
                         type="button"
                         onClick={() => setActiveIndex(i)}
                         aria-label={`Show ${item.type} ${i + 1}`}
-                        className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-black transition-all duration-200 active:scale-95 md:h-[68px] md:w-28 ${
-                          isActive
+                        className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-black transition-all duration-200 active:scale-95 md:h-[68px] md:w-28 ${isActive
                             ? "ring-2 ring-[var(--gold-500)] ring-offset-2 ring-offset-[var(--cream)]"
                             : "opacity-70 hover:opacity-100"
-                        }`}
+                          }`}
                       >
                         {item.type === "image" && (
                           <img src={item.src} alt="" className="h-full w-full object-cover" />
                         )}
-                        {item.type === "youtube" && ytId && (
+                        {item.type === "video" && ytId && (
                           <img
                             src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
                             alt=""

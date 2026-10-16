@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { Eye, Play, MapPin, Star } from "lucide-react";
 // import { FaWhatsapp } from "react-icons/fa";
 import type { Business } from "../data/business";
@@ -7,7 +8,34 @@ import { getYouTubeThumbnail, /*toTelHref, toWhatsAppHref*/ } from "../data/busi
 interface BusinessCardProps {
   business: Business;
 }
+const getYoutubeId = (url) => {
+  if (!url) return "";
 
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+    let id = "";
+
+    if (host === "youtu.be") {
+      id = parsed.pathname.split("/").filter(Boolean)[0] || "";
+    } else if (
+      ["youtube.com", "m.youtube.com", "youtube-nocookie.com"].includes(host)
+    ) {
+      if (parsed.pathname === "/watch") {
+        id = parsed.searchParams.get("v") || "";
+      } else {
+        id =
+          parsed.pathname.match(
+            /^\/(?:embed|shorts|live)\/([a-zA-Z0-9_-]{11})/
+          )?.[1] || "";
+      }
+    }
+
+    return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : "";
+  } catch {
+    return "";
+  }
+};
 export function BusinessCard({ business }: BusinessCardProps) {
   const {
     id,
@@ -25,9 +53,10 @@ export function BusinessCard({ business }: BusinessCardProps) {
     rating,
     reviewCount,
   } = business;
-  const mediaSrc =
-    adType === "video" && youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : posterUrl;
+  const mediaSrc = adType === "video" && youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : posterUrl;
   const displayName = nameMr ?? name;
+  const youtubeId = adType?.toLowerCase() === "video" ? getYoutubeId(youtubeUrl) : ""
+  const [isYoutubePlaying, setIsYoutubePlaying] = useState(false);
   return (
     // <div className="group flex flex-col overflow-hidden rounded-2xl bg-[var(--paper)] shadow-[var(--shadow-maroon,0_2px_10px_-2px_rgba(59,10,22,0.15))] ring-1 ring-[var(--gold-500)]/15 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))] focus-within:-translate-y-1 focus-within:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))]">
     <div className="group flex flex-col overflow-hidden rounded-2xl bg-[var(--paper)] ring-1 ring-[var(--gold-500)]/15 transition-all duration-300 hover:-translate-y-1 focus-within:-translate-y-1 focus-within:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))]">
@@ -35,18 +64,49 @@ export function BusinessCard({ business }: BusinessCardProps) {
         to={`/business/${id}`}
         className="block rounded-t-2xl no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)]"
       >
+
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--maroon-800)]">
+
           {mediaSrc ? (
             adType?.toLowerCase() === "video" ? (
-              <video
-                src={mediaSrc}
-                className="absolute inset-0 h-full w-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                controls
-              />
+              youtubeId ? (
+                isYoutubePlaying ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0`}
+                    title={displayName || "YouTube video"}
+                    className="absolute inset-0 h-full w-full"
+                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                    allowFullScreen
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsYoutubePlaying(true)}
+                    className="absolute inset-0 h-full w-full cursor-pointer border-0 p-0"
+                    aria-label="Play YouTube video"
+                  >
+                    <img
+                      src={`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
+                      alt={displayName || "YouTube video thumbnail"}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/10">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-lg transition-transform hover:scale-110">
+                        <Play
+                          size={24}
+                          className="ml-1 text-[var(--maroon-800)]"
+                          fill="currentColor"
+                        />
+                      </span>
+                    </span>
+                  </button>
+                )
+              ) : (
+                <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-[var(--gold-300)]">
+                  YouTube video unavailable
+                </div>
+              )
             ) : (
               <img
                 src={mediaSrc}
@@ -55,27 +115,19 @@ export function BusinessCard({ business }: BusinessCardProps) {
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             )
-          )  : (
-          <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs font-semibold text-[var(--gold-300)]">
-            {name}
-          </div>
+          ) : (
+            <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs font-semibold text-[var(--gold-300)]">
+              {name}
+            </div>
           )}
 
-          {/* category chip — top-left, no overlap with play button */}
-          <span className="absolute left-2 top-2 rounded-full border border-[var(--gold-500)]/25 bg-[var(--paper)]/95 px-2 py-0.5 text-[9px] font-bold text-[var(--maroon-800)] shadow-sm backdrop-blur-sm">
+          {/* Category */}
+          <span className="pointer-events-none absolute left-2 top-2 z-10 rounded-full border border-[var(--gold-500)]/25 bg-[var(--paper)]/95 px-2 py-0.5 text-[9px] font-bold text-[var(--maroon-800)] shadow-sm">
             {categoryMr ?? category}
           </span>
 
-          {adType === "video" && (
-            <>
-              {/* light bottom-only fade so play icon is legible without darkening the whole thumbnail */}
-              <div className="absolute inset-x-0 bottom-0 h-10 bg-[linear-gradient(0deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_100%)]" />
-              <span className="absolute bottom-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] shadow-sm transition-transform duration-200 group-hover:scale-110">
-                <Play size={15} className="text-[var(--maroon-800)]" strokeWidth={2} />
-              </span>
-            </>
-          )}
         </div>
+
 
         <div className="px-3 pt-2.5">
           <div className="text-[14px] font-bold text-[var(--ink)]" title={displayName}>

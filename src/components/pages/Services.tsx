@@ -519,6 +519,7 @@ useEffect(() => {
           <SectionHeader eyebrow="Explore" title="Our Services" />
 
           <button
+            onClick={() => navigate("/home")}
             type="button"
             aria-label="Go back"
             className="flex h-9 w-9 items-center justify-center rounded-full border border-black/5 bg-[linear-gradient(115deg,var(--maroon-900),var(--maroon-700)_65%,var(--maroon-850))] shadow-sm transition-transform duration-150 hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-300)] active:scale-95 sm:h-10 sm:w-10"

@@ -10,6 +10,14 @@ import {
   // MapPin, Phone, Globe, Play,
 } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
+const message = encodeURIComponent("Hello! I am contacting you through the Follow Us section of the Kohali Community app.");
+const socialLinks = [
+  localStorage.getItem("facebook_url") || "",
+  localStorage.getItem("instagram_url") || "",
+  localStorage.getItem("youtube_url") || "",
+  `https://wa.me/${(localStorage.getItem("whatsapp_number") || "").replace(/\D/g, "")}?text=${message}`,
+];
+const socialIcons = [FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp];
 // import hero1 from "../../assets/hero1.jpg";
 // import hero2 from "../../assets/hero2.jpg";
 // import hero3 from "../../assets/hero3.jpg";
@@ -49,7 +57,7 @@ const quickAccess = [
   { to: "/photo-gallery", label: "Gallery", icon: ImageIcon },
   { to: "/video-gallery", label: "Videos", icon: PlayCircle },
   { to: "/books", label: "Books", icon: BookOpen },
-  { to: "/success-stories", label: "Stories",  icon: TrophyIcon },
+  { to: "/success-stories", label: "Stories", icon: TrophyIcon },
 ];
 
 /* ============================= SCROLL REVEAL ============================= */
@@ -60,7 +68,7 @@ const quickAccess = [
 function useRevealVisible() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  
+
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
@@ -146,7 +154,7 @@ function HeroSlider() {
   const [mounted, setMounted] = useState(false);
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const n = heroSlides.length;
-  const API_PATH =window.location.hostname === "localhost" ||window.location.hostname === "192.168.1.62"? import.meta.env.VITE_LOCAL_API_PATH: import.meta.env.VITE_LIVE_API_PATH;
+  const API_PATH = window.location.hostname === "localhost" || window.location.hostname === "192.168.1.62" ? import.meta.env.VITE_LOCAL_API_PATH : import.meta.env.VITE_LIVE_API_PATH;
   useEffect(() => {
     // Fetch hero slides from API
     getHeroSlides();
@@ -162,7 +170,7 @@ function HeroSlider() {
         },
         body: JSON.stringify({
           action: "get_hero_slides",
-          user_id: user.id, 
+          user_id: user.id,
         }),
       });
       const result = await response.json();
@@ -246,9 +254,8 @@ function HeroSlider() {
             key={i}
             aria-label={`Slide ${i + 1}`}
             onClick={() => goTo(i)}
-            className={`h-1.5 rounded-full transition-all duration-300 hover:scale-125 ${
-              i === active ? "w-[22px] bg-[var(--gold-500)]" : "w-1.5 bg-[var(--gold-300)]"
-            }`}
+            className={`h-1.5 rounded-full transition-all duration-300 hover:scale-125 ${i === active ? "w-[22px] bg-[var(--gold-500)]" : "w-1.5 bg-[var(--gold-300)]"
+              }`}
           />
         ))}
       </div>
@@ -353,9 +360,8 @@ function BusinessSlider({ items }: { items: Business[] }) {
                 type="button"
                 aria-label={`Slide ${i + 1}`}
                 onClick={() => setActive(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === current ? "w-[22px] bg-[var(--gold-500)]" : "w-1.5 bg-[var(--gold-300)]"
-                }`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "w-[22px] bg-[var(--gold-500)]" : "w-1.5 bg-[var(--gold-300)]"
+                  }`}
               />
             ))}
           </div>
@@ -378,23 +384,23 @@ function BusinessSlider({ items }: { items: Business[] }) {
 
 export function Home() {
 
-const [businesses, setBusinesses] = useState<Business[]>([]);
-// const [loadingBusinesses, setLoadingBusinesses] = useState(true);
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  // const [loadingBusinesses, setLoadingBusinesses] = useState(true);
 
-useEffect(() => {
-  const loadBusinesses = async () => {
-    try {
-      const data = await getBusinesses();
-      setBusinesses(data);
-    } catch (error) {
-      console.error("Business API error:", error);
-    } finally {
-      // setLoadingBusinesses(false);
-    }
-  };
+  useEffect(() => {
+    const loadBusinesses = async () => {
+      try {
+        const data = await getBusinesses();
+        setBusinesses(data);
+      } catch (error) {
+        console.error("Business API error:", error);
+      } finally {
+        // setLoadingBusinesses(false);
+      }
+    };
 
-  loadBusinesses();
-}, []);
+    loadBusinesses();
+  }, []);
   return (
     <div className="min-h-screen bg-[var(--cream)] pb-10">
 
@@ -480,12 +486,23 @@ useEffect(() => {
               Follow Us
             </p>
           </Reveal>
-          <div className="mt-3 flex items-center justify-center gap-3 rounded-full bg-[var(--paper)] p-2 shadow-[var(--shadow-gold)] mx-auto w-fit">
-            {[FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp].map((Icon, i) => (
+          <div className="mt-3 mx-auto flex w-fit items-center justify-center gap-3 rounded-full bg-[var(--paper)] p-2 shadow-[var(--shadow-gold)]">
+            {socialIcons.map((Icon, i) => (
               <Reveal key={i} delay={i * 60} y={10}>
-                <span className="grid h-9 w-9 md:h-10 md:w-10 place-items-center rounded-full bg-[linear-gradient(160deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:scale-90">
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.open(
+                      socialLinks[i],
+                      "_blank",
+                      "noopener,noreferrer"
+                    );
+                  }}
+                  aria-label={["Facebook", "Instagram", "YouTube", "WhatsApp"][i]}
+                  className="grid h-9 w-9 place-items-center rounded-full bg-[linear-gradient(160deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg active:scale-90 md:h-10 md:w-10"
+                >
                   <Icon size={14} />
-                </span>
+                </button>
               </Reveal>
             ))}
           </div>

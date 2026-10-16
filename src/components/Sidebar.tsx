@@ -109,11 +109,29 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
         }),
       });
       const data = await res.json();
-      // console.log("Auth Settings Response:", data);
+      console.log("Auth Settings Response:", data);
       if (data.status == 1) {
         localStorage.setItem(
           "auth_settings",
-          String(data.data ?? 0)
+          String(data.data.is_edit_auth ?? 0)
+        );
+        localStorage.setItem(
+          "facebook_url",
+          String(data.data.facebook ?? 0)
+        );
+
+        localStorage.setItem(
+          "youtube_url",
+          String(data.data.youtube ?? 0)
+        );
+
+        localStorage.setItem(
+          "whatsapp_number",
+          String(data.data.whatsapp ?? 0)
+        );
+        localStorage.setItem(
+          "instagram_url",
+          String(data.data.instagram ?? 0)
         );
       window.dispatchEvent(new Event("auth-settings-updated"));
       } else {
@@ -223,7 +241,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
               <button
                 type="button"
                 onChange={() => setKohaliSamajOpen(false)}
-                onClick={() => window.location.href = "https://kohaliconnect.vercel.app/kohli-samaj"}
+                onClick={() => window.location.href = "https://kohalisamaj.org/kohli-samaj?type=mobile"}
                 aria-expanded={kohaliSamajOpen}
                 className={`flex w-full cursor-pointer items-center gap-3 rounded-xl py-2 pl-3 pr-2.5 text-[14px] font-medium text-[var(--ink)] transition-colors duration-150 hover:bg-[var(--gold-100)] ${kohaliSamajOpen ? "bg-[var(--gold-100)]" : ""
                   }`}
@@ -341,7 +359,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
             ))}
             <li>
               <a
-                href="https://kohaliconnect.vercel.app"
+                href="https://kohalisamaj.org?type=mobile"
                 target="_blank"
                 rel="noreferrer"
                 className="relative flex items-center gap-3 rounded-xl py-2 pl-3 pr-2.5 text-[14px] font-medium text-[var(--ink)] no-underline transition-colors duration-150 hover:bg-[var(--gold-100)]"

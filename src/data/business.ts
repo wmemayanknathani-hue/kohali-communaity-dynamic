@@ -116,6 +116,7 @@ export async function getBusinesses(): Promise<Business[]> {
       instagram:item.instagram || "",
       facebook:item.facebook || "",
       youtube:item.youtube || "",
+      youtubeUrl:item.youtubeUrl || "",
     }));
   } catch (error) {
     console.error("Failed to fetch businesses:", error);
