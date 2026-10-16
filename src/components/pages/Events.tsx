@@ -80,6 +80,7 @@ interface EventItem {
   titleMr: string;
   titleEn: string;
   category: CategoryId;
+  shortDescription:string;
   descriptionMr: string;
   location: string;
   date: string; // ISO date
@@ -429,7 +430,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
                 {featured.titleEn}
               </h2>
               <p className="mb-3 mt-2 line-clamp-2 max-w-lg text-sm leading-relaxed text-[rgba(247,241,230,0.85)] md:max-w-xl md:text-[15px] lg:max-w-2xl">
-                {featured.descriptionMr}
+                {featured.shortDescription}
               </p>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] font-medium md:text-sm">
                 <span className="flex items-center gap-1.5">
@@ -612,7 +613,7 @@ export default function EventsInitiatives({ }: EventsInitiativesProps) {
                       {event.titleEn}
                     </h3>
                     <p className="mt-1 text-[14px] text-[var(--text-muted)]">
-                      {event.descriptionMr}
+                      {event.shortDescription}
                     </p>
                     <div className="flex items-center justify-between border-t border-[var(--gold-100)] pt-3.5  text-[13px] font-semibold text-[var(--maroon-800)]">
                       अधिक पहा
