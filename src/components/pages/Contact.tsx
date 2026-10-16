@@ -257,17 +257,17 @@ export default function Contact() {
     {
       Icon: FaFacebookF,
       label: "Facebook",
-      url:localStorage.getItem("facebook_url"),
+      url:localStorage.getItem("facebook_url") || "",
     },
     {
       Icon: FaInstagram,
       label: "Instagram",
-      url:localStorage.getItem("instagram_url"),
+      url:localStorage.getItem("instagram_url") || "",
     },
     {
       Icon: FaYoutube,
       label: "YouTube",
-      url:localStorage.getItem("youtube_url"),
+      url:localStorage.getItem("youtube_url") || "",
     },
     {
       Icon: FaWhatsapp,
