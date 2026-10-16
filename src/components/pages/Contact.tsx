@@ -203,6 +203,7 @@ function Field({
 interface SocialItem {
   Icon: IconType;
   label: string;
+  url: string;
 }
 
 export default function Contact() {
@@ -251,23 +252,27 @@ export default function Contact() {
       setSubmitting(false);
     }
   };
-
+  const message = encodeURIComponent("Hello! I am contacting you through the Contact Us section of the Kohali Community app.");
   const socials: SocialItem[] = [
     {
       Icon: FaFacebookF,
       label: "Facebook",
+      url:localStorage.getItem("facebook_url"),
     },
     {
       Icon: FaInstagram,
       label: "Instagram",
+      url:localStorage.getItem("instagram_url"),
     },
     {
       Icon: FaYoutube,
       label: "YouTube",
+      url:localStorage.getItem("youtube_url"),
     },
     {
       Icon: FaWhatsapp,
       label: "WhatsApp",
+      url:`https://wa.me/${(localStorage.getItem("whatsapp_number") || "").replace(/\D/g, "")}?text=${message}`,
     },
   ];
 
@@ -348,9 +353,10 @@ export default function Contact() {
               </span>
 
               <div className="flex flex-1 flex-wrap justify-end gap-2">
-                {socials.map(({ Icon, label }) => (
+                {socials.map(({ Icon, label, url }) => (
                   <button
                     key={label}
+                    onClick={() => window.open(url, "_blank")}
                     type="button"
                     aria-label={label}
                     className="grid h-9 w-9 place-items-center rounded-full text-[var(--maroon-900)] shadow-sm transition active:scale-90"
