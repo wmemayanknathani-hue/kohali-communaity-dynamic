@@ -241,7 +241,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
               <button
                 type="button"
                 onChange={() => setKohaliSamajOpen(false)}
-                onClick={() => window.location.href = "https://kohalisamaj.org/kohli-samaj?type=mobile"}
+                onClick={() => window.location.href = "https://kohalisamaj.org/kohli-samaj?type=mobile_back_btn"}
                 aria-expanded={kohaliSamajOpen}
                 className={`flex w-full cursor-pointer items-center gap-3 rounded-xl py-2 pl-3 pr-2.5 text-[14px] font-medium text-[var(--ink)] transition-colors duration-150 hover:bg-[var(--gold-100)] ${kohaliSamajOpen ? "bg-[var(--gold-100)]" : ""
                   }`}
@@ -359,7 +359,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
             ))}
             <li>
               <a
-                href="https://kohalisamaj.org?type=mobile"
+                href="https://kohalisamaj.org?type=mobile_back_btn"
                 target="_blank"
                 rel="noreferrer"
                 className="relative flex items-center gap-3 rounded-xl py-2 pl-3 pr-2.5 text-[14px] font-medium text-[var(--ink)] no-underline transition-colors duration-150 hover:bg-[var(--gold-100)]"
