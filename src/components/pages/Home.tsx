@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import SectionHeader from "../SectionHeader";
 import { BusinessCard } from "../BusinessCard";
@@ -6,7 +6,7 @@ import { getBusinesses } from "../../data/business";
 import type { Business } from "../../data/business";
 import {
   User, Users, Radio, Megaphone, CalendarDays, Image as ImageIcon,
-  PlayCircle, BookOpen, Store, ChevronRight,TrophyIcon
+  PlayCircle, BookOpen, Store, ChevronRight, ChevronLeft, TrophyIcon
   // MapPin, Phone, Globe, Play,
 } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
@@ -256,6 +256,124 @@ function HeroSlider() {
   );
 }
 
+/* ============================= BUSINESS SLIDER (MOBILE) ============================= */
+/* Auto-sliding carousel, 2 cards per slide (same look as the old grid).
+   No native scroll = no scrollbar. Arrows + dots at the bottom, touch swipe supported.
+   Auto-play pauses while the user touches / hovers. */
+
+const MAX_BUSINESS_SLIDES = 8; // max businesses shown (8 = 4 slides)
+const BUSINESS_PER_PAGE = 2;
+const BUSINESS_AUTOPLAY_MS = 4000;
+
+function BusinessSlider({ items }: { items: Business[] }) {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+
+  const pages: Business[][] = [];
+  for (let i = 0; i < items.length; i += BUSINESS_PER_PAGE) {
+    pages.push(items.slice(i, i + BUSINESS_PER_PAGE));
+  }
+  const total = pages.length;
+  const current = Math.min(active, Math.max(total - 1, 0));
+
+  const next = useCallback(() => setActive((i) => (i + 1) % total), [total]);
+  const prev = useCallback(() => setActive((i) => (i - 1 + total) % total), [total]);
+
+  // auto-play (re-arms after every change, so manual clicks reset the timer)
+  useEffect(() => {
+    if (total < 2 || paused) return;
+    const id = setTimeout(next, BUSINESS_AUTOPLAY_MS);
+    return () => clearTimeout(id);
+  }, [current, total, paused, next]);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    setPaused(true);
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current !== null) {
+      const dx = e.changedTouches[0].clientX - touchStartX.current;
+      if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
+    }
+    touchStartX.current = null;
+    setPaused(false);
+  };
+
+  if (total === 0) return null;
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* viewport */}
+      <div
+        className="overflow-hidden py-1"
+        style={{ touchAction: "pan-y" }}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        <div
+          className="flex transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {pages.map((page, p) => (
+            <div
+              key={p}
+              className="grid w-full shrink-0 grid-cols-2 items-stretch gap-3 sm:gap-3.5"
+            >
+              {page.map((business) => (
+                <div key={business.id} className="h-full min-w-0">
+                  <BusinessCard business={business} />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* bottom controls: arrow · dots · arrow */}
+      {total > 1 && (
+        <div className="mt-3 flex items-center justify-center gap-4">
+          <button
+            type="button"
+            aria-label="Previous businesses"
+            onClick={prev}
+            className="grid h-8 w-8 place-items-center rounded-full border border-[var(--gold-500)] bg-[linear-gradient(160deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow-[var(--shadow-maroon)] transition-all duration-200 active:scale-90"
+          >
+            <ChevronLeft size={16} />
+          </button>
+
+          <div className="flex items-center gap-2">
+            {pages.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Slide ${i + 1}`}
+                onClick={() => setActive(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === current ? "w-[22px] bg-[var(--gold-500)]" : "w-1.5 bg-[var(--gold-300)]"
+                }`}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            aria-label="Next businesses"
+            onClick={next}
+            className="grid h-8 w-8 place-items-center rounded-full border border-[var(--gold-500)] bg-[linear-gradient(160deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow-[var(--shadow-maroon)] transition-all duration-200 active:scale-90"
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ============================= PAGE ============================= */
 
 export function Home() {
@@ -315,13 +433,12 @@ useEffect(() => {
           <Reveal>
             <SectionHeader eyebrow="Directory" title="Our Businesses" actionLabel="सर्व पहा" actionTo="/business" />
           </Reveal>
-          {/* Mobile - 2 cards */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-3.5 md:hidden">
-            {businesses.slice(0,2).map((business, index) => (
-              <Reveal key={business.id} delay={index * 70}>
-                <BusinessCard business={business} />
-              </Reveal>
-            ))}
+
+          {/* Mobile - slider */}
+          <div className="md:hidden">
+            <Reveal>
+              <BusinessSlider items={businesses.slice(0, MAX_BUSINESS_SLIDES)} />
+            </Reveal>
           </div>
 
           {/* iPad & Desktop - 3 cards */}

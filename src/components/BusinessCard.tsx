@@ -29,7 +29,8 @@ export function BusinessCard({ business }: BusinessCardProps) {
     adType === "video" && youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : posterUrl;
   const displayName = nameMr ?? name;
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl bg-[var(--paper)] shadow-[var(--shadow-maroon,0_2px_10px_-2px_rgba(59,10,22,0.15))] ring-1 ring-[var(--gold-500)]/15 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))] focus-within:-translate-y-1 focus-within:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))]">
+    // <div className="group flex flex-col overflow-hidden rounded-2xl bg-[var(--paper)] shadow-[var(--shadow-maroon,0_2px_10px_-2px_rgba(59,10,22,0.15))] ring-1 ring-[var(--gold-500)]/15 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))] focus-within:-translate-y-1 focus-within:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))]">
+    <div className="group flex flex-col overflow-hidden rounded-2xl bg-[var(--paper)] ring-1 ring-[var(--gold-500)]/15 transition-all duration-300 hover:-translate-y-1 focus-within:-translate-y-1 focus-within:shadow-[var(--shadow-gold,0_10px_24px_-6px_rgba(59,10,22,0.25))]">
       <Link
         to={`/business/${id}`}
         className="block rounded-t-2xl no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)]"
