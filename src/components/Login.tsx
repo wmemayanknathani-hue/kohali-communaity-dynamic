@@ -26,8 +26,8 @@ const RESEND_SECONDS = 30;
 // Default language is Marathi (mr). Add/adjust keys here only —
 const STRINGS: Record<Lang, Record<string, string>> = {
   mr: {
-    logoname: "कोहली समाज",
-    welcomeBack: "कोहाली समाजात आपले स्वागत आहे",
+    logoname: "कोहळी समाज",
+    welcomeBack: "कोहळी समाजामध्ये आपले स्वागत आहे.",
     member: "सदस्य", 
     admin: "प्रशासक",
     communityMember: "समाज सदस्य",

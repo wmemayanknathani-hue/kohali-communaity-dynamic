@@ -513,7 +513,14 @@ export default function LiveEvents() {
 
                   {/* WATCH NOW */}
                   <button
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] py-2.5 text-sm font-bold text-[var(--maroon-950)] shadow-[0_8px_22px_-8px_rgba(227,181,74,0.75)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_25px_-8px_rgba(227,181,74,0.9)] active:scale-[0.98] md:py-3 md:text-base"
+                    className="cursor-pointer flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[linear-gradient(160deg,var(--gold-300),var(--gold-500))] py-2.5 text-sm font-bold text-[var(--maroon-950)] shadow-[0_8px_22px_-8px_rgba(227,181,74,0.75)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_25px_-8px_rgba(227,181,74,0.9)] active:scale-[0.98] md:py-3 md:text-base"
+                    onClick={() =>
+                      liveEvent?.youtubeId &&
+                      setPlaying({
+                        youtubeId: liveEvent.youtubeId,
+                        title: liveEvent.titleMr || liveEvent.titleEn,
+                      })
+                    }
                   >
                     <PlayIcon className="h-3.5 w-3.5 md:h-4 md:w-4" />
                     Watch Now
@@ -522,7 +529,14 @@ export default function LiveEvents() {
                   {/* SHARE / YOUTUBE */}
                   <button
                     aria-label="Share"
-                    className="flex items-center justify-center rounded-xl border border-white/30 bg-black/15 px-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:border-[var(--gold-400)]/60 hover:bg-white/10 hover:text-[var(--gold-200)] active:scale-[0.98] md:px-4"
+                    className="cursor-pointer flex items-center justify-center rounded-xl border border-white/30 bg-black/15 px-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:border-[var(--gold-400)]/60 hover:bg-white/10 hover:text-[var(--gold-200)] active:scale-[0.98] md:px-4"
+                    onClick={() =>
+                      liveEvent?.youtubeId &&
+                      setPlaying({
+                        youtubeId: liveEvent.youtubeId,
+                        title: liveEvent.titleMr || liveEvent.titleEn,
+                      })
+                    }
                   >
                     <svg
                       className="h-4 w-4 md:h-[18px] md:w-[18px]"

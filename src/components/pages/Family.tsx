@@ -195,7 +195,7 @@ export default function Family() {
 
 
   const pathUrlMain = window.location.hostname === "localhost" ||
-  window.location.hostname === "192.168.1.62" ? "http://192.168.1.62/webmedia/wme/kohli_community/" : "https://wmegroup.in/wmeclient/kohali_connect/";
+  window.location.hostname === "192.168.1.62" ? "http://192.168.1.62/webmedia/wme/kohli_community/" : "https://kohalisamaj.org/kcadmin/";
   
 
   useEffect(() => {
