@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
+import { getFcmToken } from "../../fcmToken";
 
-function FCMTest() {
-  const [fcmToken, setFcmToken] = useState("");
+export default function FCMTest() {
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    const token = window.fcm?.getFCMToken?.();
+    const fcm = getFcmToken();
 
-    console.log("Android FCM object:", window.fcm);
-    console.log("Android FCM token:", token);
+    setToken(fcm);
 
-    if (typeof token === "string" && token) {
-      setFcmToken(token);
-    }
+    console.log("FCM token:", fcm || "Token nahi mila");
   }, []);
 
   return (
     <div>
       <h3>FCM Token Test</h3>
-      <p>{fcmToken || "Wait for Token"}</p>
+      <p>{token ? "FCM token mil gaya" : "FCM token nahi mila"}</p>
+      {token && (
+        <button onClick={() => navigator.clipboard.writeText(token)}>
+          Copy Token
+        </button>
+      )}
     </div>
   );
 }
-
-export default FCMTest;

@@ -47,7 +47,7 @@ const socialIcons = [FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp];
 //     image: hero3,
 //   },
 // ];
-const user1 = JSON.parse(localStorage.getItem("mobile_user") || "{}");
+// const user1 = JSON.parse(localStorage.getItem("mobile_user") || "{}");
 const quickAccess = [
   { to: "/profile", label: "Profile", icon: User },
   { to: "/family", label: "Family", icon: Users },
