@@ -58,9 +58,7 @@ const quickAccess = [
   { to: "/video-gallery", label: "Videos", icon: PlayCircle },
   { to: "/books", label: "Books", icon: BookOpen },
   { to: "/success-stories", label: "Stories", icon: TrophyIcon },
-  ...(user1?.phone_number === "9510532823"
-  ? [{ to: "/testfcm", label: "FCM", icon: TrophyIcon }]
-  : []),
+  { to: "/testfcm", label: "FCM", icon: TrophyIcon },
 ];
 
 /* ============================= SCROLL REVEAL ============================= */
