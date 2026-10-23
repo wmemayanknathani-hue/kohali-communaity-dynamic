@@ -36,6 +36,7 @@ import SuccessStories from "./components/pages/SuccessStories";
 import SuccessstoriesDetail from "./components/pages/SuccessstoriesDetail";
 import EventDetails from "./components/pages/EventDetails";
 import Notifications from "./components/pages/Notifications";
+import FCMTest from "./components/pages/Testfcm";
 
 // import { getBookById } from "./data/books";
 
@@ -109,6 +110,7 @@ function AppContent() {
           <Route path="/success-stories" element={<SuccessStories />} />
           <Route path="/success-stories/:storySlug" element={<SuccessstoriesDetail />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/testfcm" element={<FCMTest/>} />
         </Route>
       </Routes>
     </>
