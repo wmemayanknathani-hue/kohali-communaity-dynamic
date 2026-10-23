@@ -47,7 +47,7 @@ const socialIcons = [FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp];
 //     image: hero3,
 //   },
 // ];
-
+const user1 = JSON.parse(localStorage.getItem("mobile_user") || "{}");
 const quickAccess = [
   { to: "/profile", label: "Profile", icon: User },
   { to: "/family", label: "Family", icon: Users },
@@ -58,7 +58,9 @@ const quickAccess = [
   { to: "/video-gallery", label: "Videos", icon: PlayCircle },
   { to: "/books", label: "Books", icon: BookOpen },
   { to: "/success-stories", label: "Stories", icon: TrophyIcon },
-  { to: "/testfcm", label: "FCM", icon: TrophyIcon },
+  ...(user1?.phone_number === "9510532823"
+  ? [{ to: "/testfcm", label: "FCM", icon: TrophyIcon }]
+  : []),
 ];
 
 /* ============================= SCROLL REVEAL ============================= */
