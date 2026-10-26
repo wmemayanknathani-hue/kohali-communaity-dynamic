@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
 const message = encodeURIComponent("Hello! I am contacting you through the Follow Us section of the Kohali Community app.");
+
 const socialLinks = [
   localStorage.getItem("facebook_url") || "",
   localStorage.getItem("instagram_url") || "",
@@ -58,7 +59,7 @@ const quickAccess = [
   { to: "/video-gallery", label: "Videos", icon: PlayCircle },
   { to: "/books", label: "Books", icon: BookOpen },
   { to: "/success-stories", label: "Stories", icon: TrophyIcon },
-  { to: "/testfcm", label: "FCM", icon: TrophyIcon },
+  // { to: "/testfcm", label: "FCM", icon: TrophyIcon },
 ];
 
 /* ============================= SCROLL REVEAL ============================= */

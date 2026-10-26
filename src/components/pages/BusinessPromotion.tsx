@@ -17,7 +17,7 @@ import {
   Link2,
   Image as ImageIcon,
   Video,
-  Layers,
+  // Layers,
   Send,
   CheckCircle2,
   ShieldCheck,
@@ -145,11 +145,11 @@ const AD_TYPES: AdType[] = [
     label: "Video",
     Icon: Video,
   },
-  {
-    key: "both",
-    label: "Poster + Video",
-    Icon: Layers,
-  },
+  // {
+  //   key: "both",
+  //   label: "Poster + Video",
+  //   Icon: Layers,
+  // },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -369,12 +369,12 @@ export default function BusinessPromotion() {
     if (adType === "poster" && !posterFile) {
       newErrors["poster"] = "Please upload a poster image";
     }
-    if (adType === "video" && !videoFile) {
-      newErrors["video"] = "Please upload a video";
-    }
-    if (adType === "both" && (!posterFile || !videoFile)) {
-      newErrors["media"] = "Please upload both poster and video";
-    }
+    // if (adType === "video" && ) {
+    //   newErrors["video"] = "Please upload a video";
+    // }
+    // if (adType === "both" && (!posterFile || !videoFile)) {
+    //   newErrors["media"] = "Please upload both poster and video";
+    // }
 
     // If there are errors, set them and return
     if (Object.keys(newErrors).length > 0) {
@@ -407,6 +407,7 @@ export default function BusinessPromotion() {
       "youtube",
       "advertisement_title",
       "advertisement_description",
+      "youtube_video_url"
     ];
 
     allFields.forEach((fieldName) => {
@@ -824,8 +825,13 @@ export default function BusinessPromotion() {
                         Advertisement Video <span className="text-[var(--gold-600)]">*</span>
                       </span>
                     </div>
-
-                    <div className={`rounded-2xl border-[1.5px] border-dashed bg-[var(--cream)]/50 px-4 py-5 text-center transition-all ${
+                  <Field
+                  Icon={Link2}
+                  label="Youtube Link"
+                  placeholder="Youtube profile links"
+                  name="youtube_video_url"
+                />
+                    {/* <div className={`rounded-2xl border-[1.5px] border-dashed bg-[var(--cream)]/50 px-4 py-5 text-center transition-all ${
                       errors.video
                         ? "border-red-500 hover:border-red-600"
                         : "border-[var(--gold-500)] hover:border-[var(--maroon-700)]"
@@ -851,7 +857,7 @@ export default function BusinessPromotion() {
                           }
                         }}
                       />
-                    </div>
+                    </div> */}
                     {errors.video && (
                       <p className="mt-1.5 text-[11px] font-medium text-red-600 flex items-center gap-1">
                         <span>⚠</span> {errors.video}

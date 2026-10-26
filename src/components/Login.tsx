@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-// 
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/kohali-logo.png";
+import { getFcmToken } from "../fcmToken";
 import {
   Phone,
   ShieldCheck,
@@ -28,7 +28,7 @@ const STRINGS: Record<Lang, Record<string, string>> = {
   mr: {
     logoname: "कोहळी समाज",
     welcomeBack: "कोहळी समाजामध्ये आपले स्वागत आहे.",
-    member: "सदस्य", 
+    member: "सदस्य",
     admin: "प्रशासक",
     communityMember: "समाज सदस्य",
     loginWithMobile: "आपल्या मोबाईल क्रमांकाने लॉगिन करा",
@@ -135,6 +135,25 @@ export function LoginPage() {
   const mobileValid = /^\d{10}$/.test(mobile);
   const adminValid = username.trim().length > 0 && password.length > 0;
   const otpValid = otp.every((d) => d.length === 1);
+  const [fcm, setFcm] = useState<string>("");
+
+  const [dName, setDName] = useState<{
+    brandName: string;
+    deviceName: string;
+    androidId: string;
+    deviceUUID: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchFcmToken = async () => {
+      const result = await getFcmToken();
+
+      setFcm(result.token);
+      setDName(result.dname);
+    };
+
+    fetchFcmToken();
+  }, []);
 
   useEffect(() => {
 
@@ -176,6 +195,8 @@ export function LoginPage() {
         body: JSON.stringify({
           action: "login_mobile",
           mobile: mobile,
+          token: fcm,
+          dName: dName,
         }),
       });
       const data = await res.json();
@@ -199,7 +220,7 @@ export function LoginPage() {
     }
   }
 
-async  function handleResendOtp() {
+  async function handleResendOtp() {
     if (resendIn > 0 || isLoading) return;
     setOtp(Array(OTP_LENGTH).fill(""));
     setOtpError("");
@@ -214,7 +235,7 @@ async  function handleResendOtp() {
         body: JSON.stringify({
           action: "resend_otp",
           user_id: userId,
-          mobile:mobile,
+          mobile: mobile,
         }),
       });
       const result = await response.json();
@@ -412,8 +433,8 @@ async  function handleResendOtp() {
               aria-selected={lang === "mr"}
               onClick={() => setLang("mr")}
               className={`rounded-full px-2.5 py-1 text-[10.5px] font-bold transition-colors duration-150 ${lang === "mr"
-                  ? "bg-[var(--gold-300)] text-[var(--maroon-950)]"
-                  : "text-[var(--gold-100)]/80 hover:text-[var(--gold-100)]"
+                ? "bg-[var(--gold-300)] text-[var(--maroon-950)]"
+                : "text-[var(--gold-100)]/80 hover:text-[var(--gold-100)]"
                 }`}
             >
               मराठी
@@ -423,8 +444,8 @@ async  function handleResendOtp() {
               aria-selected={lang === "en"}
               onClick={() => setLang("en")}
               className={`rounded-full px-2.5 py-1 text-[10.5px] font-bold transition-colors duration-150 ${lang === "en"
-                  ? "bg-[var(--gold-300)] text-[var(--maroon-950)]"
-                  : "text-[var(--gold-100)]/80 hover:text-[var(--gold-100)]"
+                ? "bg-[var(--gold-300)] text-[var(--maroon-950)]"
+                : "text-[var(--gold-100)]/80 hover:text-[var(--gold-100)]"
                 }`}
             >
               EN
@@ -443,8 +464,8 @@ async  function handleResendOtp() {
                 aria-selected={tab === "member"}
                 onClick={() => switchTab("member")}
                 className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-[13px] font-bold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${tab === "member"
-                    ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow-[var(--shadow-gold)]"
-                    : "text-[var(--maroon-800)] hover:bg-white/60"
+                  ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow-[var(--shadow-gold)]"
+                  : "text-[var(--maroon-800)] hover:bg-white/60"
                   }`}
               >
                 <Phone size={14} />
@@ -455,8 +476,8 @@ async  function handleResendOtp() {
                 aria-selected={tab === "admin"}
                 onClick={() => switchTab("admin")}
                 className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-[13px] font-bold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${tab === "admin"
-                    ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow-[var(--shadow-gold)]"
-                    : "text-[var(--maroon-800)] hover:bg-white/60"
+                  ? "bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))] text-[var(--gold-300)] shadow-[var(--shadow-gold)]"
+                  : "text-[var(--maroon-800)] hover:bg-white/60"
                   }`}
               >
                 <ShieldCheck size={14} />
@@ -480,8 +501,8 @@ async  function handleResendOtp() {
                 </label>
                 <div
                   className={`flex items-center gap-2 rounded-xl border bg-[var(--cream)] px-3 py-3 transition-colors duration-150 ${mobile.length > 0 && !mobileValid
-                      ? "border-red-400"
-                      : "border-[var(--gold-500)]/35 focus-within:border-[var(--gold-500)]"
+                    ? "border-red-400"
+                    : "border-[var(--gold-500)]/35 focus-within:border-[var(--gold-500)]"
                     }`}
                 >
                   <span className="text-[13.5px] font-bold text-[var(--maroon-800)] pr-2 border-r border-[var(--gold-500)]/30">
@@ -565,8 +586,8 @@ async  function handleResendOtp() {
                       onChange={(e) => handleOtpDigitChange(i, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(i, e)}
                       className={`w-[44px] h-[52px] shrink-0 text-center text-[19px] font-extrabold rounded-xl border bg-[var(--cream)] text-[var(--maroon-950)] outline-none shadow-[inset_0_1px_3px_rgba(90,10,20,0.08)] transition-all duration-150 ${otpError
-                          ? "border-red-400"
-                          : "border-[var(--gold-500)]/35 focus:border-[var(--gold-500)] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.18)]"
+                        ? "border-red-400"
+                        : "border-[var(--gold-500)]/35 focus:border-[var(--gold-500)] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.18)]"
                         }`}
                     />
                   ))}
@@ -620,8 +641,8 @@ async  function handleResendOtp() {
                   aria-pressed={adminRole === "master"}
                   onClick={() => setAdminRole("master")}
                   className={`flex flex-col items-center gap-2 rounded-xl border py-3.5 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${adminRole === "master"
-                      ? "border-[var(--gold-500)] bg-[var(--gold-100)]"
-                      : "border-[var(--gold-500)]/25 bg-transparent hover:border-[var(--gold-500)]/50 hover:bg-[var(--gold-100)]/50"
+                    ? "border-[var(--gold-500)] bg-[var(--gold-100)]"
+                    : "border-[var(--gold-500)]/25 bg-transparent hover:border-[var(--gold-500)]/50 hover:bg-[var(--gold-100)]/50"
                     }`}
                 >
                   <span className="grid h-9 w-9 place-items-center rounded-full bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))]">
@@ -633,8 +654,8 @@ async  function handleResendOtp() {
                   aria-pressed={adminRole === "survey"}
                   onClick={() => setAdminRole("survey")}
                   className={`flex flex-col items-center gap-2 rounded-xl border py-3.5 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold-500)] ${adminRole === "survey"
-                      ? "border-[var(--gold-500)] bg-[var(--gold-100)]"
-                      : "border-[var(--gold-500)]/25 bg-transparent hover:border-[var(--gold-500)]/50 hover:bg-[var(--gold-100)]/50"
+                    ? "border-[var(--gold-500)] bg-[var(--gold-100)]"
+                    : "border-[var(--gold-500)]/25 bg-transparent hover:border-[var(--gold-500)]/50 hover:bg-[var(--gold-100)]/50"
                     }`}
                 >
                   <span className="grid h-9 w-9 place-items-center rounded-full bg-[linear-gradient(150deg,var(--maroon-800),var(--maroon-950))]">

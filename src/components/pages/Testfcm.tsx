@@ -7,9 +7,11 @@ export default function FCMTest() {
   useEffect(() => {
     const fcm = getFcmToken();
 
-    setToken(fcm);
+    fcm.then((res) => {
+      setToken(res.token);
+      console.log("FCM token:", res.token || "Token nahi mila");
+    })
 
-    console.log("FCM token:", fcm || "Token nahi mila");
   }, []);
 
   return (
