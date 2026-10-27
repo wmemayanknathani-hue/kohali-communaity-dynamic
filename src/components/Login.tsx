@@ -147,11 +147,9 @@ export function LoginPage() {
   useEffect(() => {
     const fetchFcmToken = async () => {
       const result = await getFcmToken();
-
       setFcm(result.token);
       setDName(result.dname);
     };
-
     fetchFcmToken();
   }, []);
 
@@ -372,7 +370,7 @@ export function LoginPage() {
         ) {
           authUrl = "http://192.168.1.62/webmedia/wme/kohli_community/auth-login.php";
         } else {
-          authUrl = "https://wmegroup.in/wmeclient/kohali_connect/auth-login.php";
+          authUrl = "https://kohalisamaj.org/kcadmin/auth-login.php";
         }
         window.location.href =
           authUrl +
