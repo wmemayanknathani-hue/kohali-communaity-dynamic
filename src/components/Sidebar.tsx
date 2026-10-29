@@ -141,11 +141,39 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
       console.error("Auth Settings API Error:", error);
     }
   };
+
+  const logout = async (id: string) => {
+    try {
+      const res = await fetch(`${API_PATH}/action_layer.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+        action: "logout",
+        id: String(id),
+    }),
+      });
+      const data = await res.json();
+      console.log("logout response ", data);
+      if (data.status == 1) {
+        
+      } else {
+        console.error("API Error:");
+      }
+    } catch (error) {
+      console.error("Auth Settings API Error:", error);
+    }
+  };
   const fullName = user?.name || "";
   const mobile = user?.phone_number || "";
+  const id = user?.id || "";
   const initials = fullName.trim().split(/\s+/).filter(Boolean).map(word => word[0]).join("").toUpperCase();
   function handleLogout() {
     localStorage.clear();
+  //  useEffect(() => {
+      logout(String(id));
+  // }, []);
     onClose();
     navigate("/login", { replace: true });
   }
