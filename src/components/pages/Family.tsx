@@ -332,7 +332,7 @@ useEffect(() => {
                 <button
                   aria-label="Edit profile"
                   className="kc-edit-pulse absolute -bottom-5 -right-2 flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(155deg,var(--gold-300),var(--gold-600))] text-[var(--maroon-950)] shadow-[var(--shadow-gold)] transition-transform duration-150 hover:scale-105 active:scale-95 md:-bottom-6 md:-right-3 md:h-14 md:w-14"
-                   onClick={() => { window.location.href = pathUrlMain+"step_survey_mobile.php?eid="+eid+"&callFrom=edit&is_mobile=1&mobile_no="+mobile_no }}
+                   onClick={() => { window.location.href = pathUrlMain+"step_survey_mobile.php?eid="+eid+"&callFrom=edit&is_mobile=1&mobile_no="+mobile_no+"&type=mobile_back_btn" }}
                 >
                   <Pencil className="h-4.5 w-4.5 md:h-5 md:w-5" />
                 </button>

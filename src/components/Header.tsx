@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell, User, Globe, Check, ChevronDown } from "lucide-react";
 import logo from "../assets/kohali-logo.png";
@@ -6,6 +6,7 @@ import {
   NotificationDropdown,
   type Notification,
 } from "./NotificationDropdown";
+import { clearGoogTransCookie } from "./GoogleTranslate";
 
 
 
@@ -23,6 +24,12 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   setLang(language);
 
   localStorage.setItem("language", language);
+  // Keep googtrans cookie in sync so the widget restores on page/route change
+  if (language === "mr") {
+    clearGoogTransCookie();
+  } else {
+    document.cookie = "googtrans=/auto/" + language + ";path=/";
+  }
 
   const applyLanguage = () => {
     const googleSelect = document.querySelector(

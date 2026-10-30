@@ -37,9 +37,19 @@ import SuccessstoriesDetail from "./components/pages/SuccessstoriesDetail";
 import EventDetails from "./components/pages/EventDetails";
 import Notifications from "./components/pages/Notifications";
 import FCMTest from "./components/pages/Testfcm";
-
+import { Navigate } from "react-router-dom";
+import { type ReactNode } from "react";
 // import { getBookById } from "./data/books";
+function PublicRoute({ children }: { children: ReactNode }) {
+  const otpStatus = localStorage.getItem("otp_status");
+  const isDeviceLogin = localStorage.getItem("is_device_login");
 
+  if (otpStatus === "done" && isDeviceLogin === "1") {
+    return <Navigate to="/home" replace />;
+  }
+
+  return <>{children}</>;
+}
 function BookDetailRoute() {
   const { bookId } = useParams<{ bookId: string }>();
 
@@ -76,8 +86,25 @@ function AppContent() {
       {!isLoginPage && <GoogleTranslate />}
       <Routes>
         {/* login sits outside MobileLayout — no bottom nav / sidebar here */}
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        {/* <Route path="/" element={<LoginPage />} /> */}
+
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        {/* <Route path="/login" element={<LoginPage />} /> */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
 
         {/* public policy pages — must stay outside MobileLayout's auth guard
             so they're reachable without logging in (app store review links) */}
@@ -110,7 +137,7 @@ function AppContent() {
           <Route path="/success-stories" element={<SuccessStories />} />
           <Route path="/success-stories/:storySlug" element={<SuccessstoriesDetail />} />
           <Route path="/notifications" element={<Notifications />} />
-          <Route path="/testfcm" element={<FCMTest/>} />
+          <Route path="/testfcm" element={<FCMTest />} />
         </Route>
       </Routes>
     </>

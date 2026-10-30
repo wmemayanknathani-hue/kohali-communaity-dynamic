@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+﻿import { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/kohali-logo.png";
+import { clearGoogTransCookie } from "./GoogleTranslate";
 import { getFcmToken } from "../fcmToken";
 import {
   Phone,
@@ -204,6 +205,7 @@ export function LoginPage() {
         startResendTimer();
         otpInputRefs.current[0]?.focus();
         localStorage.clear();
+        clearGoogTransCookie(); // wipe stale translation cookie on new login
         localStorage.setItem("mobile_user", JSON.stringify(data.data));
         setUserId(data.data.id);
         localStorage.setItem("auth_settings", data.settings);
