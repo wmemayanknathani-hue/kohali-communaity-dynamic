@@ -8,6 +8,7 @@ export interface SuccessStory {
   person: string;
   org: string;
   desc: string;
+  long_desc: string,
   body?: string[];
   youtube_url?: string;
   quote?: {
@@ -95,6 +96,9 @@ export async function getSuccessStories(): Promise<SuccessStory[]> {
           item.short_description ||
           item.description ||
           "",
+
+        long_desc:
+          item.long_desc,
 
         body:
           Array.isArray(item.body)

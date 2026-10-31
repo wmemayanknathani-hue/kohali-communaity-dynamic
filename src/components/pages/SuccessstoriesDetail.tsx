@@ -93,7 +93,7 @@ export default function SuccessStoryDetail() {
     );
   }
 
-  const bodyParagraphs = [story.desc];
+  const bodyParagraphs = [story.long_desc];
   console.log("bodyParagraphs", bodyParagraphs);
 
   const related = successStories
